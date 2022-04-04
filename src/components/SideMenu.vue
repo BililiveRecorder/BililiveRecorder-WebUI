@@ -1,0 +1,113 @@
+<template>
+  <n-layout-sider
+    bordered
+    collapse-mode="width"
+    :collapsed-width="64"
+    :width="240"
+    :collapsed="collapsed"
+    show-trigger
+    @collapse="collapsed = true"
+    @expand="collapsed = false"
+  >
+    <n-menu
+      :collapsed="collapsed"
+      :collapsed-width="64"
+      :collapsed-icon-size="22"
+      :options="menuOptions"
+      :render-label="renderMenuLabel"
+      :expand-icon="expandIcon"
+    />
+  </n-layout-sider>
+</template>
+<script setup lang="ts">
+import { Component, h, ref } from 'vue';
+import type { MenuOption } from 'naive-ui';
+import { NLayoutSider, NIcon, NMenu } from 'naive-ui';
+import { BookmarkOutline, CaretDownOutline, ListOutline, Hammer, SettingsOutline, DocumentTextOutline, InformationOutline } from '@vicons/ionicons5';
+import { RouterLink } from 'vue-router';
+
+const collapsed = ref(true);
+
+function renderIcon(icon: Component) {
+  return () => h(NIcon, null, { default: () => h(icon) });
+}
+const menuOptions = [
+  {
+    label: '公告',
+    key: 'announcement',
+    path: '/',
+    icon: renderIcon(BookmarkOutline),
+  },
+  {
+    label: '房间列表',
+    key: 'room-list',
+    path: '/room-list',
+    icon: renderIcon(ListOutline),
+  },
+  {
+    label: '工具箱',
+    key: 'toolkit',
+    icon: renderIcon(Hammer),
+    children: [
+      {
+        label: '录播修复',
+        key: 'record-fix',
+        path: '/toolkit/record-fix',
+        icon: renderIcon(Hammer),
+        disabled: true,
+      },
+      {
+        label: '转封装',
+        key: 'encode',
+        path: '/toolkit/encode',
+        icon: renderIcon(Hammer),
+        disabled: true,
+      },
+      {
+        label: '弹幕合并',
+        key: 'danmaku-merge',
+        path: '/toolkit/danmaku-merge',
+        icon: renderIcon(Hammer),
+        disabled: true,
+      },
+    ],
+  },
+  {
+    label: '设置',
+    key: 'settings',
+    path: '/settings',
+    icon: renderIcon(SettingsOutline),
+  },
+  {
+    label: '日志',
+    key: 'log',
+    path: '/log',
+    disabled: true,
+    icon: renderIcon(DocumentTextOutline),
+  },
+  {
+    label: '关于',
+    key: 'about',
+    path: '/about',
+    icon: renderIcon(InformationOutline),
+  },
+];
+
+function renderMenuLabel(option: MenuOption) {
+  if (option.path && !option.disabled) {
+    return h(
+      RouterLink,
+      {
+        to: {
+          path: option.path as string,
+        },
+      },
+      { default: () => option.label },
+    );
+  }
+  return option.label as string;
+}
+function expandIcon() {
+  return h(NIcon, null, { default: () => h(CaretDownOutline) });
+}
+</script>
