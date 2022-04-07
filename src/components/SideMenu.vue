@@ -40,37 +40,15 @@ const menuOptions = [
   },
   {
     label: '房间列表',
-    key: 'room-list',
-    path: '/room-list',
+    key: 'rooms',
+    path: '/rooms',
     icon: renderIcon(ListOutline),
   },
   {
     label: '工具箱',
-    key: 'toolkit',
+    key: 'filebrowser',
+    path: '/filebrowser',
     icon: renderIcon(Hammer),
-    children: [
-      {
-        label: '录播修复',
-        key: 'record-fix',
-        path: '/toolkit/record-fix',
-        icon: renderIcon(Hammer),
-        disabled: true,
-      },
-      {
-        label: '转封装',
-        key: 'encode',
-        path: '/toolkit/encode',
-        icon: renderIcon(Hammer),
-        disabled: true,
-      },
-      {
-        label: '弹幕合并',
-        key: 'danmaku-merge',
-        path: '/toolkit/danmaku-merge',
-        icon: renderIcon(Hammer),
-        disabled: true,
-      },
-    ],
   },
   {
     label: '设置',

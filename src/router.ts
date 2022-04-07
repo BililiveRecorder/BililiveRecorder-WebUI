@@ -8,8 +8,10 @@ const routes: RouteRecordRaw[] = [
   { path: '/:pathMatch(.*)*', component: Blank },
   { path: '/', component: Blank },
   { path: '/about', component: About },
-  { path: '/room-list', name: 'RoomList', component: RoomList },
+  { path: '/rooms', name: 'Rooms', component: RoomList },
   { path: '/settings', name: 'Settings', component: Settings },
+  { path: '/logs', name: 'Logs', component: Blank },
+  { path: '/filebrowser', name: 'File Browser', component: Blank },
 ];
 export const router = createRouter({
   history: createWebHistory(),
