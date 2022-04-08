@@ -12,7 +12,7 @@
         position="absolute"
         style="height: 64px; padding: 24px"
         bordered
-      >CopyrightHere</n-layout-footer>
+      >Copyright (C) 2022 Shugen002. All rights reserved.(这人还在想用什么协议，寄！)</n-layout-footer>
     </n-layout>
   </global-provider>
 </template>
