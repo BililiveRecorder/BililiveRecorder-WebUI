@@ -21,6 +21,6 @@ module.exports = {
     'object-curly-spacing': ['warn', 'always'],
     'vue/no-v-model-argument': 'off',
     'require-jsdoc': 'off',
-    'indent': ['error', 2],
+    'indent': ['error', 2, { 'SwitchCase': 1 }],
   },
 };

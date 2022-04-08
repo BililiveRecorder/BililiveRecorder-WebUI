@@ -41,7 +41,7 @@ export interface DefaultConfig {
   recordDanmakuGift: boolean;
   recordDanmakuGuard: boolean;
   recordingQuality: string;
-  recordFilenameFormat: string;
+  fileNameRecordTemplate: string;
   webHookUrls: string;
   webHookUrlsV2: string;
   wpfShowTitleAndArea: boolean;
@@ -66,7 +66,7 @@ export interface GlobalConfigDto {
   optionalRecordDanmakuGift: BooleanOptional;
   optionalRecordDanmakuGuard: BooleanOptional;
   optionalRecordingQuality: StringOptional;
-  optionalRecordFilenameFormat: StringOptional;
+  optionalFileNameRecordTemplate: StringOptional;
   optionalWebHookUrls: StringOptional;
   optionalWebHookUrlsV2: StringOptional;
   optionalWpfShowTitleAndArea: BooleanOptional;
@@ -217,6 +217,12 @@ export interface SetRoomConfig {
 /* eslint-enable no-unused-vars */
 export class RecorderController {
   public readonly host: string;
+  private cache: {
+    [key: string]: {
+      data: any;
+      timestamp: number;
+    }
+  } = {};
   constructor(host: string) {
     this.host = host;
   }
@@ -240,20 +246,54 @@ export class RecorderController {
     }
     return await response.json();
   }
+
+
   async getVersion(): Promise<RecorderVersion> {
-    return await this.request<RecorderVersion>('GET', '/api/version');
+    if (this.cache.version) {
+      return JSON.parse(JSON.stringify(this.cache.version.data));
+    } else {
+      const version = await this.request<RecorderVersion>('GET', '/api/version');
+      this.cache.version = {
+        data: version,
+        timestamp: Date.now(),
+      };
+      return JSON.parse(JSON.stringify(version));
+    }
   }
 
   async getDefaultConfig(): Promise<DefaultConfig> {
-    return await this.request<DefaultConfig>('GET', '/api/config/default');
+    if (this.cache.defaultConfig && this.cache.defaultConfig.timestamp > Date.now() - 1000 * 60 * 60) {
+      return JSON.parse(JSON.stringify(this.cache.defaultConfig.data));
+    } else {
+      const result = await this.request<DefaultConfig>('GET', '/api/config/default');
+      this.cache.defaultConfig = {
+        data: result,
+        timestamp: Date.now(),
+      };
+      return JSON.parse(JSON.stringify(result));
+    }
   }
 
   async getGlobalConfig(): Promise<GlobalConfigDto> {
-    return await this.request<GlobalConfigDto>('GET', '/api/config/global');
+    if (this.cache.globalConfig && this.cache.globalConfig.timestamp > Date.now() - 1000 * 60 * 5) {
+      return JSON.parse(JSON.stringify(this.cache.globalConfig.data));
+    } else {
+      const result = await this.request<GlobalConfigDto>('GET', '/api/config/global');
+      this.cache.globalConfig = {
+        data: result,
+        timestamp: Date.now(),
+      };
+      return JSON.parse(JSON.stringify(result));
+    }
   }
 
   async setGlobalConfig(config: SetGlobalConfig): Promise<GlobalConfigDto> {
-    return await this.request<GlobalConfigDto>('POST', '/api/config/global', config);
+    const result = await this.request<GlobalConfigDto>('POST', '/api/config/global', config);
+    this.cache.globalConfig = {
+      data: result,
+      timestamp: Date.now(),
+    };
+    return JSON.parse(JSON.stringify(result));
   }
 
   async getRoomList(): Promise<RoomDto[]> {
@@ -346,7 +386,7 @@ export class RecorderController {
       'recordDanmakuGift': false,
       'recordDanmakuGuard': true,
       'recordingQuality': '10000',
-      'recordFilenameFormat': '{roomid}-{name}/录制-{roomid}-{date}-{time}-{ms}-{title}.flv',
+      'fileNameRecordTemplate': '{{ roomId }}-{{ name }}/录制-{{ roomId }}-{{ \"now\" | time_zone: \"Asia/Shanghai\" | format_date: \"yyyyMMdd-HHmmss-fff\" }}-{{ title }}.flv',
       'webHookUrls': '',
       'webHookUrlsV2': '',
       'wpfShowTitleAndArea': true,
@@ -399,7 +439,7 @@ export class RecorderController {
         'hasValue': false,
         'value': null,
       },
-      'optionalRecordFilenameFormat': {
+      'optionalFileNameRecordTemplate': {
         'hasValue': false,
         'value': null,
       },

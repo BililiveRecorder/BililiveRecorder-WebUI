@@ -17,8 +17,8 @@
         <n-button @click="toggleNewRoomDialog">添加房间</n-button>
       </n-space>
     </n-space>
-    <n-grid x-gap="12" cols="2 600:4 800:5">
-      <n-grid-item v-for="room in orderedRoom" :key="room.objectId">
+    <n-grid x-gap="12" y-gap="12" cols="1 750:2 1100:3 1450:4 1800:5 2150:6 2500:7 2850:8">
+      <n-grid-item v-for="room, i in orderedRoom" :key="room.objectId">
         <room-card
           :room="room"
           v-on:start-record="startRecord(room)"
@@ -26,7 +26,7 @@
           v-on:start-auto-record="startAutoRecord(room)"
           v-on:stop-auto-record="stopAutoRecord(room)"
           v-on:delete="deleteRoom(room)"
-          v-on:room-setting="openRoomSetting(room)"
+          v-on:self-update="(room) => { selfUpdateRoom(room, i) }"
         />
       </n-grid-item>
     </n-grid>
@@ -191,8 +191,14 @@ async function deleteRoom(room: RoomDto) {
   }
 }
 
-function openRoomSetting(room: RoomDto) {
-  console.log(room);
+function selfUpdateRoom(room: RoomDto, i: number) {
+  debugger;
+  orderedRoom.value = rooms.map((r) => {
+    if (r.objectId === room.objectId) {
+      return room;
+    }
+    return r;
+  });
 }
 
 // new room
@@ -236,7 +242,7 @@ async function onNewRoomFormSubmit() {
     addNewRoom(parseInt(roomId[1], 10), newRoomModel.value.autoRecord);
   });
 }
-// end new room
+
 
 </script>
 

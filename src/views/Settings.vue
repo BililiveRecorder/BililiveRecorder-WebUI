@@ -7,7 +7,7 @@
           <span>高级设置</span>
           <n-switch v-model:value="showAdvanced"></n-switch>
         </n-space>
-        <n-button>保存</n-button>
+        <n-button @click="saveConfig">保存</n-button>
       </n-space>
       <div id="danmaku-record" class="setting-box">
         <n-h3>弹幕录制</n-h3>
@@ -100,12 +100,18 @@
         <optional-input
           style="max-width: 700px;"
           type="text"
-          v-model:value="newConfig['optionalRecordFilenameFormat']"
+          v-model:value="newConfig['optionalFileNameRecordTemplate']"
           :same-as-default="false"
         />
       </div>
       <div id="record-quality" class="setting-box">
         <n-h3>录制画质</n-h3>
+        <optional-input
+          style="max-width: 700px;"
+          type="text"
+          v-model:value="newConfig['optionalRecordingQuality']"
+          :same-as-default="false"
+        />
       </div>
       <div id="webhook" class="setting-box">
         <n-h3>Webhook</n-h3>
@@ -226,12 +232,13 @@
 </template>
 
 <script setup lang="ts">
-import { NH2, NH3, NCollapseTransition, NAnchor, NAnchorLink, NSpace, NSwitch, NA, useThemeVars, NButton } from 'naive-ui';
+import { NH2, NH3, NCollapseTransition, NAnchor, NAnchorLink, NSpace, NSwitch, NA, useThemeVars, NButton, useLoadingBar, useMessage } from 'naive-ui';
 import { inject, onMounted, ref, Ref } from 'vue';
 import { RecorderController, Optional } from '../api';
 import OptionalInput from '../components/OptionalInput.vue';
 
-const themeVars = useThemeVars().value;
+const loadingbar = useLoadingBar();
+const message = useMessage();
 
 const controller = inject<Ref<RecorderController>>('controller') as Ref<RecorderController>;
 
@@ -281,7 +288,8 @@ const newConfig = ref<{ [key: string]: ConfigItem }>({
   'optionalRecordDanmakuGuard': getEmptyConfigItem(defaultConfig.value.recordDanmakuGuard),
   'optionalRecordDanmakuFlushInterval': getEmptyConfigItem(defaultConfig.value.recordDanmakuFlushInterval),
   'optionalCuttingMode': getEmptyConfigItem(defaultConfig.value.cuttingMode),
-  'optionalRecordFilenameFormat': getEmptyConfigItem(defaultConfig.value.recordFilenameFormat),
+  'optionalFileNameRecordTemplate': getEmptyConfigItem(defaultConfig.value.fileNameRecordTemplate),
+  'optionalRecordingQuality': getEmptyConfigItem(defaultConfig.value.recordingQuality),
   'optionalCuttingNumber': getEmptyConfigItem(defaultConfig.value.cuttingNumber),
   'optionalLiveApiHost': getEmptyConfigItem(defaultConfig.value.liveApiHost),
   'optionalCookie': getEmptyConfigItem(defaultConfig.value.cookie),
@@ -298,25 +306,78 @@ const newConfig = ref<{ [key: string]: ConfigItem }>({
 let lastload: string | undefined = '';
 
 async function init(): Promise<void> {
+  loadingbar.start();
+  const loadMessage = message.loading('正在加载配置...', {
+    duration: 0,
+  });
   if (controller.value && lastload != controller.value.host) {
     const host = controller?.value.host;
     try {
       defaultConfig.value = await controller.value.getDefaultConfig();
       lastload = host;
-    } catch (error) {
+    } catch (error: any) {
+      message.error(error?.message || error.toString(), {
+        keepAliveOnHover: true,
+      });
+      message.error(`加载默认配置失败，可能部分设置项默认值与服务器不一致，请注意。`);
       console.error(error);
     }
   }
-  const globalConfig = (await controller.value.getGlobalConfig()) as unknown as { [key: string]: Optional<any> };
-  const keys = Object.keys(globalConfig);
-  keys.forEach((key) => {
-    const rawkey = key.substring(8, 8).toLowerCase() + key.substring(9);
-    newConfig.value[key] = {
-      hasValue: globalConfig[key].hasValue,
-      value: globalConfig[key].value,
-      defaultValue: defaultConfig.value[rawkey],
-    };
+  try {
+    const globalConfig = (await controller.value.getGlobalConfig()) as unknown as { [key: string]: Optional<any> };
+    const keys = Object.keys(globalConfig);
+    const temp: any = {};
+    keys.forEach((key) => {
+      const rawkey = key.substring(8, 9).toLowerCase() + key.substring(9);
+      temp[key] = {
+        hasValue: globalConfig[key].hasValue,
+        value: globalConfig[key].hasValue ? globalConfig[key].value : defaultConfig.value[rawkey],
+        defaultValue: defaultConfig.value[rawkey],
+      };
+    });
+    newConfig.value = temp;
+    loadingbar.finish();
+    loadMessage.destroy();
+  } catch (error: any) {
+    loadMessage.destroy();
+    message.error('加载设置时出错：' + (error?.message || error.toString()), {
+      keepAliveOnHover: true,
+    });
+    loadingbar.error();
+    console.error(error);
+  }
+}
+
+async function saveConfig() {
+  loadingbar.start();
+  const loadMessage = message.loading('正在保存配置...', {
+    duration: 0,
   });
+  try {
+    const globalConfig = (await controller.value.setGlobalConfig(newConfig.value)) as unknown as { [key: string]: Optional<any> };
+    const keys = Object.keys(globalConfig);
+    const temp: any = {};
+    keys.forEach((key) => {
+      const rawkey = key.substring(8, 9).toLowerCase() + key.substring(9);
+      temp[key] = {
+        hasValue: globalConfig[key].hasValue,
+        value: globalConfig[key].hasValue ? globalConfig[key].value : defaultConfig.value[rawkey],
+        defaultValue: defaultConfig.value[rawkey],
+      };
+    });
+    newConfig.value = temp;
+    loadingbar.finish();
+    loadMessage.destroy();
+    message.success('保存成功');
+  } catch (error: any) {
+    loadMessage.destroy();
+    message.error('保存设置时出错：' + (error?.message || error.toString()), {
+      keepAliveOnHover: true,
+    });
+
+    loadingbar.error();
+    console.error(error);
+  }
 }
 
 onMounted(() => {

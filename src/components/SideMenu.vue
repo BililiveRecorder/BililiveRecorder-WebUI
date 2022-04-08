@@ -23,7 +23,7 @@
 import { Component, h, ref } from 'vue';
 import type { MenuOption } from 'naive-ui';
 import { NLayoutSider, NIcon, NMenu } from 'naive-ui';
-import { BookmarkOutline, CaretDownOutline, ListOutline, Hammer, SettingsOutline, DocumentTextOutline, InformationOutline } from '@vicons/ionicons5';
+import { BookmarkOutline, CaretDownOutline, ListOutline, FolderOpenOutline, SettingsOutline, DocumentTextOutline, InformationOutline } from '@vicons/ionicons5';
 import { RouterLink } from 'vue-router';
 
 const collapsed = ref(true);
@@ -45,10 +45,11 @@ const menuOptions = [
     icon: renderIcon(ListOutline),
   },
   {
-    label: '工具箱',
+    label: '文件管理器',
     key: 'filebrowser',
     path: '/filebrowser',
-    icon: renderIcon(Hammer),
+    disabled: true,
+    icon: renderIcon(FolderOpenOutline),
   },
   {
     label: '设置',

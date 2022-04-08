@@ -58,20 +58,15 @@
       </n-input>
       {{ props.suffix }}
     </div>
-    <div class="default" v-if="!sameAsDefault">
+    <div class="default" v-if="!(sameAsDefault || hideDefault)">
       <n-checkbox :checked="!props.value.hasValue" @update-checked="handleHasValueInput">使用默认值</n-checkbox>
     </div>
   </div>
 </template>
 <script lang="ts">
-// eslint-disable-next-line no-unused-vars
-import * as CSS from 'csstype';
-
-declare module 'csstype' {
-  // eslint-disable-next-line no-unused-vars
-  interface Properties {
-    // ...or allow any other property
-    [index: string]: any;
+declare module '@vue/runtime-dom' {
+  export interface CSSProperties {
+    [key: string]: any
   }
 }
 </script>
@@ -86,6 +81,11 @@ interface ConfigItem {
   hasValue: boolean,
   value: any,
   defaultValue: any,
+}
+
+interface EnumItem {
+  value: any,
+  label: string,
 }
 
 const props = defineProps({
@@ -105,8 +105,12 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  hideDefault: {
+    type: Boolean,
+    default: false,
+  },
   value: {
-    type: Object,
+    type: Object as PropType<ConfigItem>,
     default: () => {
       return {
         hasValue: false,
@@ -116,9 +120,9 @@ const props = defineProps({
     },
   },
   enums: {
-    type: Array,
+    type: Array as PropType<EnumItem[]>,
     default: () => {
-      return [] as { label: string, value: any }[];
+      return [];
     },
   },
   unit: {
@@ -138,7 +142,6 @@ const props = defineProps({
     default: '',
   },
 });
-
 watch(props.value, (newValue) => {
   if (!newValue.hasValue) {
     emit('update:value', {
@@ -152,6 +155,7 @@ watch(props.value, (newValue) => {
 const emit = defineEmits(['update:value']);
 
 function handleValueInput(value: any) {
+  console.log(value, typeof value);
   if (props.sameAsDefault && value === props.value.defaultValue) {
     emit('update:value', {
       value,
