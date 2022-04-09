@@ -1,5 +1,5 @@
 <template>
-  <n-card size="small">
+  <n-card size="small" :style="{ height: '100%' }">
     <template #header>
       <n-h3 style="margin: 0;">{{ props.room.name }}</n-h3>
     </template>
@@ -27,7 +27,7 @@
       </n-tooltip>
       <n-tooltip v-if="props.room.streaming" trigger="hover">
         <template #trigger>
-          <n-icon :component="Radio" color="#f00" />
+          <n-icon :component="Radio" color="#a00" />
         </template>
         直播中
       </n-tooltip>
@@ -57,7 +57,7 @@
     </div>
     <div class="record-status">
       <div class="recording" v-if="props.room.recording">
-        <n-icon size="20" :component="Recording" color="#f00" />录制中
+        <n-icon size="20" :component="RecordingOutline" color="#a00" />录制中
       </div>
       <div class="recording" v-show="!props.room.recording && props.room.autoRecord">
         <n-icon size="20" :component="Analytics" :color="themeVars.warningColor" />监控中
@@ -175,7 +175,7 @@
 <script setup lang="ts">
 import { Component, h, inject, onMounted, onUnmounted, Ref, ref } from 'vue';
 import { DropdownOption, useLoadingBar, useMessage, NCollapseTransition, NCard, NH3, NIcon, NSpace, NTooltip, NDropdown, NButton, NModal, NSkeleton, useThemeVars } from 'naive-ui';
-import { Radio, CloudDone, CloudOffline, Recording, Analytics, EllipsisVertical, PlayCircle, StopCircle, Refresh, Open, Settings, Trash } from '@vicons/ionicons5';
+import { Radio, CloudDone, CloudOffline, RecordingOutline, Analytics, EllipsisVertical, PlayCircle, StopCircle, Refresh, Open, Settings, Trash } from '@vicons/ionicons5';
 import { RecorderController, RoomDto, Optional } from '../api';
 import OptionalInput from '../components/OptionalInput.vue';
 
