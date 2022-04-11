@@ -58,6 +58,7 @@ import {
 import RoomCard from '../components/RoomCard.vue';
 import { Sync } from '@vicons/ionicons5';
 import { FormInst, FormRules } from 'naive-ui/lib/form/src/interface';
+import { router } from '../router';
 
 const loadingBar = useLoadingBar();
 const controller = inject<Ref<RecorderController>>('controller');
@@ -94,6 +95,10 @@ async function getRoomList() {
 }
 
 onMounted(() => {
+  if (!controller || !controller.value) {
+    router.push('/');
+    return;
+  }
   getRoomList();
 });
 

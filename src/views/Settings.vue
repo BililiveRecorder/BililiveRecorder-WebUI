@@ -232,10 +232,11 @@
 </template>
 
 <script setup lang="ts">
-import { NH2, NH3, NCollapseTransition, NAnchor, NAnchorLink, NSpace, NSwitch, NA, useThemeVars, NButton, useLoadingBar, useMessage } from 'naive-ui';
+import { NH2, NH3, NCollapseTransition, NAnchor, NAnchorLink, NSpace, NSwitch, NA, NButton, useLoadingBar, useMessage } from 'naive-ui';
 import { inject, onMounted, ref, Ref } from 'vue';
 import { RecorderController, Optional } from '../api';
 import OptionalInput from '../components/OptionalInput.vue';
+import { router } from '../router';
 
 const loadingbar = useLoadingBar();
 const message = useMessage();
@@ -381,6 +382,10 @@ async function saveConfig() {
 }
 
 onMounted(() => {
+  if (!controller || !controller.value) {
+    router.push('/');
+    return;
+  }
   init();
 });
 

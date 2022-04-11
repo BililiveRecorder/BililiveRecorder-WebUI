@@ -223,8 +223,12 @@ export class RecorderController {
       timestamp: number;
     }
   } = {};
-  constructor(host: string) {
+  private headers: { [key: string]: string; } | undefined;
+  public extra: any;
+  constructor(host: string, headers?: { [key: string]: string }, extra?: any) {
     this.host = host;
+    this.headers = headers || {};
+    this.extra = extra;
   }
   private async request<T>(method: string, path: string, body?: any): Promise<T> {
     const url = `${this.host}${path}`;
@@ -232,6 +236,7 @@ export class RecorderController {
       method,
       headers: {
         'Content-Type': 'application/json',
+        ...this.headers,
       },
       body: body ? JSON.stringify(body) : undefined,
     });

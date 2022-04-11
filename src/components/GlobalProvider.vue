@@ -14,11 +14,14 @@ import { RecorderController } from '../api';
 import { NConfigProvider, NLoadingBarProvider, NDialogProvider, NMessageProvider, darkTheme, useMessage } from 'naive-ui';
 import { provide, ref } from 'vue';
 
-const controller = ref<RecorderController>(new RecorderController(location.origin));
+const controller = ref<RecorderController | null>(null);
 
 provide('controller', controller);
-provide('changeHost', (host: string) => {
-  controller.value = new RecorderController(host);
+provide('changeHost', (host: string, headers?: { [key: string]: string }, extra?: any) => {
+  controller.value = new RecorderController(host, headers, extra);
+});
+provide('resetHost', () => {
+  controller.value = null;
 });
 
 </script>
