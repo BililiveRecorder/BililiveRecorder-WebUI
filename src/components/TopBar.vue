@@ -14,9 +14,10 @@
 import { NLayoutHeader, NH3, NInput, NInputGroup, NButton } from 'naive-ui';
 import { inject, Ref } from 'vue';
 import { RecorderController } from '../api';
-import { router } from '../router';
+import { useRouter } from 'vue-router';
 
 const controller = inject<Ref<RecorderController>>('controller');
+const router = useRouter();
 
 function switchHost() {
   router.push('/');

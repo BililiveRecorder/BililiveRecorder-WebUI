@@ -121,7 +121,6 @@ import { NH2, NH3, NCollapseTransition, NAnchor, NAnchorLink, NSpace, NSwitch, N
 import { inject, onMounted, ref, Ref } from 'vue';
 import { RecorderController, Optional } from '../api';
 import OptionalInput from '../components/OptionalInput.vue';
-import { router } from '../router';
 
 const loadingbar = useLoadingBar();
 const message = useMessage();
@@ -267,10 +266,6 @@ async function saveConfig() {
 }
 
 onMounted(() => {
-  if (!controller || !controller.value) {
-    router.push('/');
-    return;
-  }
   init();
 });
 

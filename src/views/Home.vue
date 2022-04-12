@@ -38,9 +38,11 @@
   </div>
 </template>
 <script setup lang="ts">
+import { VERSION } from '../const';
 import { useMessage, NH1, NEmpty, NButton, NScrollbar, NList, NModal, NForm, NFormItem, NInput, NDynamicInput } from 'naive-ui';
 import { inject, onMounted, reactive, Ref, ref } from 'vue';
 import { RecorderController } from '../api';
+import { router } from '../router';
 import ServerOption from '../components/ServerOption.vue';
 
 interface kvpairs {
@@ -55,7 +57,7 @@ interface Server {
   extraHeaders: kvpairs[];
 }
 
-const selfversion = window.__WebUI.version;
+const selfversion = VERSION;
 
 const message = useMessage();
 
@@ -224,7 +226,6 @@ function setServer(server: Server) {
   });
   changeHost(server.path, headers, server);
 };
-
 
 onMounted(() => {
   loadServers();
