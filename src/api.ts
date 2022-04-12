@@ -302,7 +302,7 @@ export class RecorderController {
   }
 
   async getRoomList(): Promise<RoomDto[]> {
-    return await this.request<RoomDto[]>('GET', '/api/room/list');
+    return await this.request<RoomDto[]>('GET', '/api/room');
   }
 
   async addRoom(roomId: number, autoRecord: boolean = true): Promise<RoomDto> {
