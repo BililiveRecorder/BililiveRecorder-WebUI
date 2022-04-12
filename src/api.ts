@@ -231,8 +231,8 @@ export class RecorderController {
     this.extra = extra;
   }
   private async request<T>(method: string, path: string, body?: any): Promise<T> {
-    const url = `${this.host}${path}`;
-    const response = await fetch(url, {
+    const url = new URL(path, this.host);
+    const response = await fetch(url.toString(), {
       method,
       headers: {
         'Content-Type': 'application/json',
@@ -257,7 +257,7 @@ export class RecorderController {
     if (this.cache.version) {
       return JSON.parse(JSON.stringify(this.cache.version.data));
     } else {
-      const version = await this.request<RecorderVersion>('GET', '/api/version');
+      const version = await this.request<RecorderVersion>('GET', 'api/version');
       this.cache.version = {
         data: version,
         timestamp: Date.now(),
@@ -270,7 +270,7 @@ export class RecorderController {
     if (this.cache.defaultConfig && this.cache.defaultConfig.timestamp > Date.now() - 1000 * 60 * 60) {
       return JSON.parse(JSON.stringify(this.cache.defaultConfig.data));
     } else {
-      const result = await this.request<DefaultConfig>('GET', '/api/config/default');
+      const result = await this.request<DefaultConfig>('GET', 'api/config/default');
       this.cache.defaultConfig = {
         data: result,
         timestamp: Date.now(),
@@ -283,7 +283,7 @@ export class RecorderController {
     if (this.cache.globalConfig && this.cache.globalConfig.timestamp > Date.now() - 1000 * 60 * 5) {
       return JSON.parse(JSON.stringify(this.cache.globalConfig.data));
     } else {
-      const result = await this.request<GlobalConfigDto>('GET', '/api/config/global');
+      const result = await this.request<GlobalConfigDto>('GET', 'api/config/global');
       this.cache.globalConfig = {
         data: result,
         timestamp: Date.now(),
@@ -293,7 +293,7 @@ export class RecorderController {
   }
 
   async setGlobalConfig(config: SetGlobalConfig): Promise<GlobalConfigDto> {
-    const result = await this.request<GlobalConfigDto>('POST', '/api/config/global', config);
+    const result = await this.request<GlobalConfigDto>('POST', 'api/config/global', config);
     this.cache.globalConfig = {
       data: result,
       timestamp: Date.now(),
@@ -302,83 +302,83 @@ export class RecorderController {
   }
 
   async getRoomList(): Promise<RoomDto[]> {
-    return await this.request<RoomDto[]>('GET', '/api/room');
+    return await this.request<RoomDto[]>('GET', 'api/room');
   }
 
   async addRoom(roomId: number, autoRecord: boolean = true): Promise<RoomDto> {
-    return await this.request<RoomDto>('POST', `/api/room/`, { roomId, autoRecord });
+    return await this.request<RoomDto>('POST', `api/room/`, { roomId, autoRecord });
   }
 
   async removeRoom(roomId: number): Promise<void> {
-    await this.request<void>('DELETE', `/api/room/${roomId}`);
+    await this.request<void>('DELETE', `api/room/${roomId}`);
   }
 
   async removeRoomByObjectId(objectId: string): Promise<void> {
-    await this.request<void>('DELETE', `/api/room/${objectId}`);
+    await this.request<void>('DELETE', `api/room/${objectId}`);
   }
 
   async getRoom(roomId: number): Promise<RoomDto> {
-    return await this.request<RoomDto>('GET', `/api/room/${roomId}`);
+    return await this.request<RoomDto>('GET', `api/room/${roomId}`);
   }
 
   async getRoomByObjectId(objectId: string): Promise<RoomDto> {
-    return await this.request<RoomDto>('GET', `/api/room/${objectId}`);
+    return await this.request<RoomDto>('GET', `api/room/${objectId}`);
   }
 
   async getRoomStats(roomId: number): Promise<RoomStatsDto> {
-    return await this.request<RoomStatsDto>('GET', `/api/room/${roomId}/stats`);
+    return await this.request<RoomStatsDto>('GET', `api/room/${roomId}/stats`);
   }
 
   async getRoomConfig(roomId: number): Promise<RoomConfigDto> {
-    return await this.request<RoomConfigDto>('GET', `/api/room/${roomId}/config`);
+    return await this.request<RoomConfigDto>('GET', `api/room/${roomId}/config`);
   }
 
   async setRoomConfig(roomId: number, config: SetRoomConfig): Promise<RoomConfigDto> {
-    return await this.request<RoomConfigDto>('POST', `/api/room/${roomId}/config`, config);
+    return await this.request<RoomConfigDto>('POST', `api/room/${roomId}/config`, config);
   }
 
   async getRoomStatsByObjectId(objectId: string): Promise<RoomStatsDto> {
-    return await this.request<RoomStatsDto>('GET', `/api/room/${objectId}/stats`);
+    return await this.request<RoomStatsDto>('GET', `api/room/${objectId}/stats`);
   }
 
   async getRoomConfigByObjectId(objectId: string): Promise<RoomConfigDto> {
-    return await this.request<RoomConfigDto>('GET', `/api/room/${objectId}/config`);
+    return await this.request<RoomConfigDto>('GET', `api/room/${objectId}/config`);
   }
 
   async setRoomConfigByObjectId(objectId: string, config: SetRoomConfig): Promise<RoomConfigDto> {
-    return await this.request<RoomConfigDto>('POST', `/api/room/${objectId}/config`, config);
+    return await this.request<RoomConfigDto>('POST', `api/room/${objectId}/config`, config);
   }
 
   async startRecord(roomId: number): Promise<RoomDto> {
-    return await this.request<RoomDto>('POST', `/api/room/${roomId}/start`, {});
+    return await this.request<RoomDto>('POST', `api/room/${roomId}/start`, {});
   }
 
   async startRecordByObjectId(objectId: string): Promise<RoomDto> {
-    return await this.request<RoomDto>('POST', `/api/room/${objectId}/start`, {});
+    return await this.request<RoomDto>('POST', `api/room/${objectId}/start`, {});
   }
 
   async stopRecord(roomId: number): Promise<RoomDto> {
-    return await this.request<RoomDto>('POST', `/api/room/${roomId}/stop`, {});
+    return await this.request<RoomDto>('POST', `api/room/${roomId}/stop`, {});
   }
 
   async stopRecordByObjectId(objectId: string): Promise<RoomDto> {
-    return await this.request<RoomDto>('POST', `/api/room/${objectId}/stop`, {});
+    return await this.request<RoomDto>('POST', `api/room/${objectId}/stop`, {});
   }
 
   async splitRecord(roomId: number): Promise<RoomDto> {
-    return await this.request<RoomDto>('POST', `/api/room/${roomId}/split`, {});
+    return await this.request<RoomDto>('POST', `api/room/${roomId}/split`, {});
   }
 
   async splitRecordByObjectId(objectId: string): Promise<RoomDto> {
-    return await this.request<RoomDto>('POST', `/api/room/${objectId}/split`, {});
+    return await this.request<RoomDto>('POST', `api/room/${objectId}/split`, {});
   }
 
   async refreshRoomInfo(roomId: number): Promise<RoomDto> {
-    return await this.request<RoomDto>('POST', `/api/room/${roomId}/refresh`, {});
+    return await this.request<RoomDto>('POST', `api/room/${roomId}/refresh`, {});
   }
 
   async refreshRoomInfoByObjectId(objectId: string): Promise<RoomDto> {
-    return await this.request<RoomDto>('POST', `/api/room/${objectId}/refresh`, {});
+    return await this.request<RoomDto>('POST', `api/room/${objectId}/refresh`, {});
   }
   static getMockDefaultConfig(): DefaultConfig {
     return {

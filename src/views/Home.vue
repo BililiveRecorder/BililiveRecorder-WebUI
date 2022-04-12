@@ -168,7 +168,7 @@ async function saveAndVerify() {
     server.extraHeaders.forEach((h) => {
       extraHeaders[h.key] = h.value;
     });
-    await (new RecorderController(server.path, extraHeaders)).getVersion();
+    const res = await (new RecorderController(server.path, extraHeaders)).getVersion();
     verifying.value = false;
     const newServer: any = {};
     newServer.path = server.path;
@@ -186,6 +186,7 @@ async function saveAndVerify() {
       newServer.id = generateRandomId;
       servers.value.push(newServer);
     }
+    message.success('验证成功 v' + res.fullSemVer);
     saveServers();
     showNewServerModal.value = false;
   } catch (error) {
