@@ -67,6 +67,10 @@ const resetHost: () => void = inject('resetHost') as any;
 
 const servers = ref([] as Server[]);
 
+function generateRandomId() {
+  return Math.random().toString(36).substring(2, 8);
+}
+
 function loadServers() {
   if (window.localStorage) {
     const data = window.localStorage.getItem('servers');
@@ -75,7 +79,7 @@ function loadServers() {
         const parsed = JSON.parse(data) as Server[];
         parsed.forEach((s) => {
           if (typeof s.id === 'undefined') {
-            s.id = `${s.path}-${s.name}`;
+            s.id = generateRandomId();
           }
           if (typeof s.path !== 'string') {
             throw new Error('path is not a string');
@@ -120,6 +124,7 @@ function saveServers() {
     const data = [];
     servers.value.forEach((s) => {
       data.push({
+        id: s.id,
         path: s.path,
         name: s.name,
         extraHeaders: s.extraHeaders.slice(),
@@ -144,10 +149,6 @@ const server = reactive({
 
 function toggleNewServerModal() {
   showNewServerModal.value = !showNewServerModal.value;
-}
-
-function generateRandomId() {
-  return Math.random().toString(36).substring(2, 8);
 }
 
 async function saveAndVerify() {
