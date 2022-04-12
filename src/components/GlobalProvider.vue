@@ -29,11 +29,13 @@ provide('resetHost', () => {
 router.beforeEach((to, from, next) => {
   if (to.meta.requireController) {
     if (controller.value) {
+      document.title = (to?.meta.title ? `${to.meta.title}@${controller.value.extra?.name} - ` : '') + '录播姬';
       next();
     } else {
       next('/');
     }
   } else {
+    document.title = (to?.meta.title ? `${to.meta.title} - ` : '') + '录播姬';
     next();
   }
 });
