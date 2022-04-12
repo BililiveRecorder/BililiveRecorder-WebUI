@@ -3,12 +3,7 @@
     <n-space justify="space-between">
       <n-h2>房间列表</n-h2>
       <n-space>
-        <n-select
-          style="min-width: 100px;"
-          v-model:value="order"
-          :options="orderOptions"
-          @update:value="getRoomList"
-        />
+        <n-select style="min-width: 100px;" v-model:value="order" :options="orderOptions" @update:value="getRoomList" />
         <n-button @click="getRoomList">
           <template #icon>
             <n-icon :component="Sync" />
@@ -19,15 +14,9 @@
     </n-space>
     <n-grid x-gap="12" y-gap="12" cols="1 750:2 1100:3 1450:4 1800:5 2150:6 2500:7 2850:8">
       <n-grid-item v-for="room, i in orderedRoom" :key="room.objectId">
-        <room-card
-          :room="room"
-          v-on:start-record="startRecord(room)"
-          v-on:stop-record="stopRecord(room)"
-          v-on:start-auto-record="startAutoRecord(room)"
-          v-on:stop-auto-record="stopAutoRecord(room)"
-          v-on:delete="deleteRoom(room)"
-          v-on:self-update="(room) => { selfUpdateRoom(room, i) }"
-        />
+        <room-card :room="room" v-on:start-record="startRecord(room)" v-on:stop-record="stopRecord(room)"
+          v-on:start-auto-record="startAutoRecord(room)" v-on:stop-auto-record="stopAutoRecord(room)"
+          v-on:delete="deleteRoom(room)" v-on:self-update="(room) => { selfUpdateRoom(room, i) }" />
       </n-grid-item>
     </n-grid>
     <n-modal v-model:show="showNewRoomDialog" style="max-width: 600px;" preset="card" title="添加房间">
