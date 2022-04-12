@@ -34,9 +34,11 @@ jobs:
           name: dist
           path: dist
       - name: Build for Github Pages
+        env:
+          BASE_URL: '/BililiveRecorder-WebUI/'
         run: |
           rm -rf dist
-          npx vite build --base /BililiveRecorder-WebUI/
+          npx vite build
           cp dist/index.html dist/404.html
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3

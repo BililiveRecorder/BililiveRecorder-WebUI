@@ -56,18 +56,6 @@
     </n-modal>
   </div>
 </template>
-
-<script lang="ts">
-declare global {
-  // eslint-disable-next-line no-unused-vars
-  interface Window {
-    WebUI: {
-      version: string;
-    };
-  }
-}
-</script>
-
 <script setup lang="ts">
 import { useMessage, NH1, NEmpty, NButton, NScrollbar, NList, NModal, NForm, NFormItem, NInput, NDynamicInput } from 'naive-ui';
 import { inject, onMounted, reactive, Ref, ref } from 'vue';
@@ -86,7 +74,7 @@ interface Server {
   extraHeaders: kvpairs[];
 }
 
-const selfversion = window.WebUI.version;
+const selfversion = window.__WebUI.version;
 
 const message = useMessage();
 

@@ -14,7 +14,9 @@ const routes: RouteRecordRaw[] = [
   { path: '/logs', name: 'Logs', component: Blank },
   { path: '/filebrowser', name: 'File Browser', component: Blank },
 ];
-export const router = createRouter({
-  history: createWebHistory(),
-  routes,
-});
+export const router = (base: string = '/') => {
+  return createRouter({
+    history: createWebHistory(base),
+    routes,
+  });
+};
