@@ -3,57 +3,31 @@
     '--label-width': labelWidth,
   }">
     <div v-if="props.label" class="label">{{ props.label }}</div>
-    <n-switch
-      v-if="props.type == 'boolean'"
-      :value="props.value.value"
-      @update-value="handleValueInput"
-    ></n-switch>
-    <n-radio-group
-      v-else-if="props.type == 'enum'"
-      :value="props.value.value"
-      @update-value="handleValueInput"
-    >
-      <n-radio
-        v-for="option in props.enums"
-        :key="option.value"
-        :value="option.value"
-      >{{ option.label }}</n-radio>
+    <n-switch v-if="props.type == 'boolean'" :value="props.value.value" @update-value="handleValueInput"></n-switch>
+    <n-radio-group v-else-if="props.type == 'enum'" :value="props.value.value" @update-value="handleValueInput">
+      <n-radio v-for="option in props.enums" :key="option.value" :value="option.value">{{ option.label }}</n-radio>
     </n-radio-group>
     <div v-else-if="props.type == 'number'" class="text-input">
       {{ props.prefix }}
-      <n-input-number
-        :style="{
-          maxWidth: props.maxInputWidth,
-        }"
-        :value="props.value.value"
-        @update-value="handleValueInput"
-        :show-button="false"
-      >
+      <n-input-number :style="{
+        maxWidth: props.maxInputWidth,
+      }" :value="props.value.value" @update-value="handleValueInput" :show-button="false">
         <template #suffix>{{ props.unit }}</template>
       </n-input-number>
       {{ props.suffix }}
     </div>
     <div v-else-if="props.type == 'textarea'" class="text-input">
       {{ props.prefix }}
-      <n-input
-        :style="{
-          maxWidth: props.maxInputWidth,
-        }"
-        :type="'textarea'"
-        :value="props.value.value"
-        @update-value="handleValueInput"
-        :show-button="false"
-      ></n-input>
+      <n-input :style="{
+        maxWidth: props.maxInputWidth,
+      }" :type="'textarea'" :value="props.value.value" @update-value="handleValueInput" :show-button="false">
+      </n-input>
     </div>
     <div v-else class="text-input">
       {{ props.prefix }}
-      <n-input
-        :style="{
-          maxWidth: props.maxInputWidth,
-        }"
-        :value="props.value.value"
-        @update-value="handleValueInput"
-      >
+      <n-input :style="{
+        maxWidth: props.maxInputWidth,
+      }" :value="props.value.value" @update-value="handleValueInput">
         <template #suffix>{{ props.unit }}</template>
       </n-input>
       {{ props.suffix }}
@@ -155,7 +129,6 @@ watch(props.value, (newValue) => {
 const emit = defineEmits(['update:value']);
 
 function handleValueInput(value: any) {
-  console.log(value, typeof value);
   if (props.sameAsDefault && value === props.value.defaultValue) {
     emit('update:value', {
       value,

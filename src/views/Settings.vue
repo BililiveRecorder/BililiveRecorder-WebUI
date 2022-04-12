@@ -11,107 +11,52 @@
       </n-space>
       <div id="danmaku-record" class="setting-box">
         <n-h3>弹幕录制</n-h3>
-        <optional-input
-          type="boolean"
-          label="保存弹幕"
-          v-model:value="newConfig['optionalRecordDanmaku']"
-          :same-as-default="true"
-        />
+        <optional-input type="boolean" label="保存弹幕" v-model:value="newConfig['optionalRecordDanmaku']"
+          :same-as-default="true" />
         <p>本设置同时是所有“弹幕录制”的总开关，当本设置为 false 时其他所有“弹幕录制”设置无效，不会写入弹幕XML文件。</p>
         <n-collapse-transition :show="newConfig['optionalRecordDanmaku'].value || false">
-          <optional-input
-            type="boolean"
-            label="保存 SuperChat"
-            v-model:value="newConfig['optionalRecordDanmakuSuperChat']"
-            :same-as-default="true"
-          />
-          <optional-input
-            type="boolean"
-            label="保存 舰长购买"
-            v-model:value="newConfig['optionalRecordDanmakuGuard']"
-            :same-as-default="true"
-          />
-          <optional-input
-            type="boolean"
-            label="保存 送礼信息"
-            v-model:value="newConfig['optionalRecordDanmakuGift']"
-            :same-as-default="true"
-          />
-          <optional-input
-            type="boolean"
-            label="保存 弹幕原始数据"
-            v-model:value="newConfig['optionalRecordDanmakuRaw']"
-            :same-as-default="true"
-          />
+          <optional-input type="boolean" label="保存 SuperChat"
+            v-model:value="newConfig['optionalRecordDanmakuSuperChat']" :same-as-default="true" />
+          <optional-input type="boolean" label="保存 舰长购买" v-model:value="newConfig['optionalRecordDanmakuGuard']"
+            :same-as-default="true" />
+          <optional-input type="boolean" label="保存 送礼信息" v-model:value="newConfig['optionalRecordDanmakuGift']"
+            :same-as-default="true" />
+          <optional-input type="boolean" label="保存 弹幕原始数据" v-model:value="newConfig['optionalRecordDanmakuRaw']"
+            :same-as-default="true" />
           <n-collapse-transition :show="showAdvanced">
-            <optional-input
-              type="number"
-              label="触发写硬盘所需的弹幕数量"
-              v-model:value="newConfig['optionalRecordDanmakuFlushInterval']"
-              :same-as-default="true"
-              unit="个"
-              max-input-width="150px"
-            />
+            <optional-input type="number" label="触发写硬盘所需的弹幕数量"
+              v-model:value="newConfig['optionalRecordDanmakuFlushInterval']" :same-as-default="true" unit="个"
+              max-input-width="150px" />
           </n-collapse-transition>
         </n-collapse-transition>
       </div>
       <div id="record-mode" class="setting-box">
         <n-h3>录制模式</n-h3>
-        <optional-input
-          type="enum"
-          v-model:value="newConfig['optionalRecordMode']"
-          :enums="RecordModes"
-          :same-as-default="true"
-        />
+        <optional-input type="enum" v-model:value="newConfig['optionalRecordMode']" :enums="RecordModes"
+          :same-as-default="true" />
       </div>
       <div id="auto-split" class="setting-box">
         <n-h3>自动分段</n-h3>
-        <optional-input
-          type="enum"
-          v-model:value="newConfig['optionalCuttingMode']"
-          :enums="CuttingModes"
-          :same-as-default="true"
-        />
+        <optional-input type="enum" v-model:value="newConfig['optionalCuttingMode']" :enums="CuttingModes"
+          :same-as-default="true" />
         <n-collapse-transition :show="newConfig['optionalCuttingMode'].value == 1">
-          <optional-input
-            type="number"
-            prefix="每"
-            suffix="保存为一个文件"
-            v-model:value="newConfig['optionalCuttingNumber']"
-            :same-as-default="true"
-            unit="分"
-            max-input-width="150px"
-          />
+          <optional-input type="number" prefix="每" suffix="保存为一个文件" v-model:value="newConfig['optionalCuttingNumber']"
+            :same-as-default="true" unit="分" max-input-width="150px" />
         </n-collapse-transition>
         <n-collapse-transition :show="newConfig['optionalCuttingMode'].value == 2">
-          <optional-input
-            type="number"
-            prefix="每"
-            suffix="保存为一个文件"
-            v-model:value="newConfig['optionalCuttingNumber']"
-            :same-as-default="true"
-            unit="MiB"
-            max-input-width="150px"
-          />
+          <optional-input type="number" prefix="每" suffix="保存为一个文件" v-model:value="newConfig['optionalCuttingNumber']"
+            :same-as-default="true" unit="MiB" max-input-width="150px" />
         </n-collapse-transition>
       </div>
       <div id="filename" class="setting-box">
         <n-h3>文件名</n-h3>
-        <optional-input
-          style="max-width: 700px;"
-          type="text"
-          v-model:value="newConfig['optionalFileNameRecordTemplate']"
-          :same-as-default="false"
-        />
+        <optional-input style="max-width: 700px;" type="text"
+          v-model:value="newConfig['optionalFileNameRecordTemplate']" :same-as-default="false" />
       </div>
       <div id="record-quality" class="setting-box">
         <n-h3>录制画质</n-h3>
-        <optional-input
-          style="max-width: 700px;"
-          type="text"
-          v-model:value="newConfig['optionalRecordingQuality']"
-          :same-as-default="false"
-        />
+        <optional-input style="max-width: 700px;" type="text" v-model:value="newConfig['optionalRecordingQuality']"
+          :same-as-default="false" />
       </div>
       <div id="webhook" class="setting-box">
         <n-h3>Webhook</n-h3>
@@ -120,103 +65,43 @@
           <n-a href="https://rec.danmuji.org/docs/basic/webhook/">文档</n-a>
         </p>
         <p>Webhook V1</p>
-        <optional-input
-          type="textarea"
-          :max-input-width="'700px'"
-          v-model:value="newConfig['optioanalWebHookUrls']"
-          :same-as-default="true"
-        />
+        <optional-input type="textarea" :max-input-width="'700px'" v-model:value="newConfig['optioanalWebHookUrls']"
+          :same-as-default="true" />
         <p>Webhook V2</p>
-        <optional-input
-          type="textarea"
-          :max-input-width="'700px'"
-          v-model:value="newConfig['optioanalWebHookUrlsV2']"
-          :same-as-default="true"
-        />
+        <optional-input type="textarea" :max-input-width="'700px'" v-model:value="newConfig['optioanalWebHookUrlsV2']"
+          :same-as-default="true" />
       </div>
       <n-collapse-transition :show="showAdvanced">
         <div id="live-api-host">
           <n-h3>请求的 API Host</n-h3>
-          <optional-input
-            style="max-width: 700px;"
-            type="text"
-            v-model:value="newConfig['optionalLiveApiHost']"
-            :same-as-default="false"
-          />
+          <optional-input style="max-width: 700px;" type="text" v-model:value="newConfig['optionalLiveApiHost']"
+            :same-as-default="false" />
         </div>
         <div id="cookie" class="setting-box">
           <n-h3>Cookie</n-h3>
-          <optional-input
-            type="text"
-            :max-input-width="'700px'"
-            v-model:value="newConfig['optionalCookie']"
-            :same-as-default="true"
-          />
+          <optional-input type="text" :max-input-width="'700px'" v-model:value="newConfig['optionalCookie']"
+            :same-as-default="true" />
         </div>
         <div id="timing" class="setting-box">
           <n-h3>时间间隔</n-h3>
-          <optional-input
-            style="max-width: 700px;"
-            type="number"
-            label="HTTP API 检查时间间隔"
-            v-model:value="newConfig['optionalTimingCheckInterval']"
-            unit="秒"
-            max-input-width="150px"
-          />
-          <optional-input
-            style="max-width: 700px;"
-            type="number"
-            label="录制断开重连时间间隔"
-            v-model:value="newConfig['optionalTimingStreamRetry']"
-            unit="毫秒"
-            max-input-width="150px"
-          />
-          <optional-input
-            style="max-width: 700px;"
-            type="number"
-            label="录制无指定画质重连时间间隔"
-            v-model:value="newConfig['optionalTimingStreamRetryNoQn']"
-            unit="秒"
-            max-input-width="150px"
-          />
-          <optional-input
-            style="max-width: 700px;"
-            type="number"
-            label="连接直播服务器超时时间"
-            v-model:value="newConfig['optionalTimingStreamConnect']"
-            unit="毫秒"
-            max-input-width="150px"
-          />
-          <optional-input
-            style="max-width: 700px;"
-            type="number"
-            label="弹幕服务器重连时间间隔"
-            v-model:value="newConfig['optionalTimingDanmakuRetry']"
-            unit="毫秒"
-            max-input-width="150px"
-          />
-          <optional-input
-            style="max-width: 700px;"
-            type="number"
-            label="最大允许未收到直播数据时间"
-            v-model:value="newConfig['optionalTimingWatchdogTimeout']"
-            unit="毫秒"
-            max-input-width="150px"
-          />
+          <optional-input style="max-width: 700px;" type="number" label="HTTP API 检查时间间隔"
+            v-model:value="newConfig['optionalTimingCheckInterval']" unit="秒" max-input-width="150px" />
+          <optional-input style="max-width: 700px;" type="number" label="录制断开重连时间间隔"
+            v-model:value="newConfig['optionalTimingStreamRetry']" unit="毫秒" max-input-width="150px" />
+          <optional-input style="max-width: 700px;" type="number" label="录制无指定画质重连时间间隔"
+            v-model:value="newConfig['optionalTimingStreamRetryNoQn']" unit="秒" max-input-width="150px" />
+          <optional-input style="max-width: 700px;" type="number" label="连接直播服务器超时时间"
+            v-model:value="newConfig['optionalTimingStreamConnect']" unit="毫秒" max-input-width="150px" />
+          <optional-input style="max-width: 700px;" type="number" label="弹幕服务器重连时间间隔"
+            v-model:value="newConfig['optionalTimingDanmakuRetry']" unit="毫秒" max-input-width="150px" />
+          <optional-input style="max-width: 700px;" type="number" label="最大允许未收到直播数据时间"
+            v-model:value="newConfig['optionalTimingWatchdogTimeout']" unit="毫秒" max-input-width="150px" />
         </div>
       </n-collapse-transition>
     </div>
     <div class="anchor">
-      <n-anchor
-        affix
-        :show-rail="false"
-        listen-to=".n-scrollbar-container"
-        offset-target=".n-scrollbar-container"
-        ignore-gap
-        :trigger-top="12"
-        :top="88"
-        z-index="1"
-      >
+      <n-anchor affix :show-rail="false" listen-to=".n-scrollbar-container" offset-target=".n-scrollbar-container"
+        ignore-gap :trigger-top="12" :top="88" z-index="1">
         <n-anchor-link title="弹幕录制" href="#danmaku-record" />
         <n-anchor-link title="录制模式" href="#record-mode" />
         <n-anchor-link title="自动分段" href="#auto-split" />

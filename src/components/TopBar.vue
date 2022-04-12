@@ -1,8 +1,5 @@
 <template>
-  <n-layout-header
-    style="height: 64px;display: flex;align-items: center;justify-content: space-between"
-    bordered
-  >
+  <n-layout-header style="height: 64px;display: flex;align-items: center;justify-content: space-between" bordered>
     <n-h3 style="margin: 0 24px">录播姬</n-h3>
     <div style="margin: 0 24px">
       <n-input-group>

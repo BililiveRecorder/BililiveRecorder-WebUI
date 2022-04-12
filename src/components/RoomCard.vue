@@ -42,10 +42,7 @@
           props.room.roomId
         }}
       </span>
-      <span
-        v-if="props.room.shortId"
-        :style="{ color: themeVars.textColor3, fontSize: themeVars.fontSizeSmall }"
-      >
+      <span v-if="props.room.shortId" :style="{ color: themeVars.textColor3, fontSize: themeVars.fontSizeSmall }">
         id {{
           props.room.shortId
         }}
@@ -63,12 +60,8 @@
         <n-icon size="20" :component="Analytics" :color="themeVars.warningColor" />监控中
       </div>
     </div>
-    <n-modal
-      :title="'房间设置 ' + props.room.roomId"
-      v-model:show="showSettingDialog"
-      preset="card"
-      :style="{ maxWidth: '800px', maxHeight: '95vh' }"
-    >
+    <n-modal :title="'房间设置 ' + props.room.roomId" v-model:show="showSettingDialog" preset="card"
+      :style="{ maxWidth: '800px', maxHeight: '95vh' }">
       <n-space vertical v-if="loading">
         <n-skeleton height="40px" width="33%" />
         <n-skeleton height="40px" round />
@@ -80,87 +73,42 @@
       <div v-else>
         <div id="auto-record" class="setting-box">
           <n-h3>自动录制</n-h3>
-          <optional-input
-            type="boolean"
-            label="自动录制"
-            v-model:value="newRoomConfig['autoRecord']"
-            :hide-default="true"
-          />
+          <optional-input type="boolean" label="自动录制" v-model:value="newRoomConfig['autoRecord']"
+            :hide-default="true" />
         </div>
         <div id="record-mode" class="setting-box">
           <n-h3>录制模式</n-h3>
-          <optional-input
-            type="enum"
-            v-model:value="newRoomConfig['optionalRecordMode']"
-            :enums="RecordModes"
-          />
+          <optional-input type="enum" v-model:value="newRoomConfig['optionalRecordMode']" :enums="RecordModes" />
         </div>
         <div id="auto-split" class="setting-box">
           <n-h3>自动分段</n-h3>
-          <optional-input
-            type="enum"
-            v-model:value="newRoomConfig['optionalCuttingMode']"
-            :enums="CuttingModes"
-          />
+          <optional-input type="enum" v-model:value="newRoomConfig['optionalCuttingMode']" :enums="CuttingModes" />
           <n-collapse-transition :show="newRoomConfig['optionalCuttingMode'].value == 1">
-            <optional-input
-              type="number"
-              prefix="每"
-              suffix="保存为一个文件"
-              v-model:value="newRoomConfig['optionalCuttingNumber']"
-              unit="分"
-              max-input-width="150px"
-            />
+            <optional-input type="number" prefix="每" suffix="保存为一个文件"
+              v-model:value="newRoomConfig['optionalCuttingNumber']" unit="分" max-input-width="150px" />
           </n-collapse-transition>
           <n-collapse-transition :show="newRoomConfig['optionalCuttingMode'].value == 2">
-            <optional-input
-              type="number"
-              prefix="每"
-              suffix="保存为一个文件"
-              v-model:value="newRoomConfig['optionalCuttingNumber']"
-              unit="MiB"
-              max-input-width="150px"
-            />
+            <optional-input type="number" prefix="每" suffix="保存为一个文件"
+              v-model:value="newRoomConfig['optionalCuttingNumber']" unit="MiB" max-input-width="150px" />
           </n-collapse-transition>
         </div>
         <div id="record-quality" class="setting-box">
           <n-h3>录制画质</n-h3>
-          <optional-input
-            style="max-width: 700px;"
-            type="text"
-            v-model:value="newRoomConfig['optionalRecordingQuality']"
-            :same-as-default="false"
-          />
+          <optional-input style="max-width: 700px;" type="text"
+            v-model:value="newRoomConfig['optionalRecordingQuality']" :same-as-default="false" />
         </div>
         <div id="danmaku-record" class="setting-box">
           <n-h3>弹幕录制</n-h3>
-          <optional-input
-            type="boolean"
-            label="保存弹幕"
-            v-model:value="newRoomConfig['optionalRecordDanmaku']"
-          />
+          <optional-input type="boolean" label="保存弹幕" v-model:value="newRoomConfig['optionalRecordDanmaku']" />
           <p>本设置同时是所有“弹幕录制”的总开关，当本设置为 false 时其他所有“弹幕录制”设置无效，不会写入弹幕XML文件。</p>
           <n-collapse-transition :show="newRoomConfig['optionalRecordDanmaku'].value">
-            <optional-input
-              type="boolean"
-              label="保存 SuperChat"
-              v-model:value="newRoomConfig['optionalRecordDanmakuSuperChat']"
-            />
-            <optional-input
-              type="boolean"
-              label="保存 舰长购买"
-              v-model:value="newRoomConfig['optionalRecordDanmakuGuard']"
-            />
-            <optional-input
-              type="boolean"
-              label="保存 送礼信息"
-              v-model:value="newRoomConfig['optionalRecordDanmakuGift']"
-            />
-            <optional-input
-              type="boolean"
-              label="保存 弹幕原始数据"
-              v-model:value="newRoomConfig['optionalRecordDanmakuRaw']"
-            />
+            <optional-input type="boolean" label="保存 SuperChat"
+              v-model:value="newRoomConfig['optionalRecordDanmakuSuperChat']" />
+            <optional-input type="boolean" label="保存 舰长购买"
+              v-model:value="newRoomConfig['optionalRecordDanmakuGuard']" />
+            <optional-input type="boolean" label="保存 送礼信息" v-model:value="newRoomConfig['optionalRecordDanmakuGift']" />
+            <optional-input type="boolean" label="保存 弹幕原始数据"
+              v-model:value="newRoomConfig['optionalRecordDanmakuRaw']" />
           </n-collapse-transition>
         </div>
       </div>
@@ -431,7 +379,6 @@ function handleSelect(option: any) {
 let recheckTimeout: any;
 
 onMounted(() => {
-  console.log('mounted');
   if (!props.room.danmakuConnected) {
     recheckTimeout = setTimeout(() => {
       controller.value.getRoomByObjectId(props.room.objectId).then((room) => {

@@ -1,22 +1,8 @@
 <template>
-  <n-layout-sider
-    bordered
-    collapse-mode="width"
-    :collapsed-width="64"
-    :width="240"
-    :collapsed="collapsed"
-    show-trigger
-    @collapse="collapsed = true"
-    @expand="collapsed = false"
-  >
-    <n-menu
-      :collapsed="collapsed"
-      :collapsed-width="64"
-      :collapsed-icon-size="22"
-      :options="menuOptions"
-      :render-label="renderMenuLabel"
-      :expand-icon="expandIcon"
-    />
+  <n-layout-sider bordered collapse-mode="width" :collapsed-width="64" :width="240" :collapsed="collapsed" show-trigger
+    @collapse="collapsed = true" @expand="collapsed = false">
+    <n-menu :collapsed="collapsed" :collapsed-width="64" :collapsed-icon-size="22" :options="menuOptions"
+      :render-label="renderMenuLabel" :expand-icon="expandIcon" />
   </n-layout-sider>
 </template>
 <script setup lang="ts">
