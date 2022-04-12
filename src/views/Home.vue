@@ -7,45 +7,26 @@
     <div class="server-container">
       <n-list bordered style="width:100%;">
         <n-scrollbar v-if="servers.length > 0" style="height: var(--max-vh);">
-          <server-option
-            v-for="server in servers"
-            :key="server.id"
-            :server="server"
-            :selected="controller?.extra.id == server.id"
-            @click="setServer(server)"
-            @delete="removeServer(server.id)"
-          ></server-option>
+          <server-option v-for="server in servers" :key="server.id" :server="server"
+            :selected="controller?.extra.id == server.id" @click="setServer(server)" @delete="removeServer(server.id)"
+            @modify="modifyServer(server)"></server-option>
         </n-scrollbar>
         <n-empty v-else style="height: 100%;justify-content: center;" description="点击下方按钮添加服务器"></n-empty>
       </n-list>
     </div>
     <n-button @click="toggleNewServerModal">添加服务器</n-button>
-    <n-modal
-      v-model:show="showNewServerModal"
-      preset="card"
-      style="width: min(600px,100vw);"
-      :title="server.id ? '添加服务器' : '编辑服务器'"
-      @close="resetServer"
-    >
+    <n-modal v-model:show="showNewServerModal" preset="card" style="width: min(600px,100vw);"
+      :title="server.id ? '添加服务器' : '编辑服务器'" @close="resetServer">
       <n-form>
         <n-form-item label="服务器名称">
           <n-input v-model:value="server.name" :disabled="verifying" placeholder="服务器名称"></n-input>
         </n-form-item>
         <n-form-item label="服务器地址">
-          <n-input
-            v-model:value="server.path"
-            :disabled="verifying"
-            placeholder="http://localhost:8000"
-          ></n-input>
+          <n-input v-model:value="server.path" :disabled="verifying" placeholder="http://localhost:8000"></n-input>
         </n-form-item>
         <n-form-item label="额外请求头">
-          <n-dynamic-input
-            :disabled="verifying"
-            v-model="server.extraHeaders"
-            preset="pair"
-            key-placeholder="Name"
-            value-placeholder="Value"
-          ></n-dynamic-input>
+          <n-dynamic-input :disabled="verifying" v-model="server.extraHeaders" preset="pair" key-placeholder="Name"
+            value-placeholder="Value"></n-dynamic-input>
         </n-form-item>
       </n-form>
       <template #footer>
@@ -188,11 +169,21 @@ async function saveAndVerify() {
     await (new RecorderController(server.path, extraHeaders)).getVersion();
     verifying.value = false;
     const newServer: any = {};
-    newServer.id = generateRandomId;
     newServer.path = server.path;
     newServer.name = server.name;
     newServer.extraHeaders = server.extraHeaders.slice();
-    servers.value.push(newServer);
+    if (server.id) {
+      newServer.id = server.id;
+      servers.value = servers.value.map((s) => {
+        if (s.id === server.id) {
+          return newServer;
+        }
+        return s;
+      });
+    } else {
+      newServer.id = generateRandomId;
+      servers.value.push(newServer);
+    }
     saveServers();
     showNewServerModal.value = false;
   } catch (error) {
@@ -216,6 +207,15 @@ function removeServer(id: string) {
   servers.value = servers.value.filter((s) => s.id !== id);
   saveServers();
 }
+
+function modifyServer(target: Server) {
+  server.id = target.id;
+  server.path = target.path;
+  server.name = target.name;
+  server.extraHeaders = target.extraHeaders.slice();
+  toggleNewServerModal();
+}
+
 
 function setServer(server: Server) {
   const headers: any = {};
