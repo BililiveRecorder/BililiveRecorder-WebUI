@@ -7,8 +7,9 @@
       <p>Github: <n-a href="https://github.com/shugen002/BililiveRecorder-WebUI" target="_blank">
           https://github.com/shugen002/BililiveRecorder-WebUI</n-a>
       </p>
-      <p>Copyright (C) 2022 <n-a href="https://github.com/shugen002" target="_blank">Shugen002</n-a>. All rights
-        reserved. (这人还在想用什么协议，寄！)</p>
+      <p>Copyright (C) 2022 <n-a href="https://github.com/shugen002" target="_blank">Shugen002</n-a>
+      </p>
+      <p>GNU General Public License v3.0</p>
     </div>
     <div class="server-about">
       <n-h3 prefix="bar">BililiveRecorder<n-tag v-if="serverVersion">{{ serverVersion }}</n-tag>
@@ -17,6 +18,9 @@
           https://github.com/Bililive/BililiveRecorder</n-a>
       </p>
       <p>GNU General Public License v3.0</p>
+    </div>
+    <div class="funthing">
+      <img src="../assets/funthing.png" alt="">
     </div>
   </div>
 </template>

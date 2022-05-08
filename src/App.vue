@@ -10,7 +10,7 @@
       </n-layout>
       <n-layout-footer position="absolute"
         style="height: 64px;display: flex; justify-content: flex-start; align-items: center" bordered>Copyright (C) 2022
-        Shugen002. All rights reserved.(这人还在想用什么协议，寄！)</n-layout-footer>
+        Shugen002. GPL v3.0</n-layout-footer>
     </n-layout>
   </global-provider>
 </template>
