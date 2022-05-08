@@ -72,7 +72,10 @@ let rooms: RoomDto[] = [];
 async function getRoomList() {
   loadingBar.start();
   try {
-    const res = await controller?.value?.getRoomList();
+    if (!controller?.value) {
+      return;
+    }
+    const res = await controller.value.getRoomList();
     rooms = res;
     loadingBar.finish();
     resort();
