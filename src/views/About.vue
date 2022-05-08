@@ -4,8 +4,8 @@
     <div class="webui-about">
       <n-h3 prefix="bar">BililiveRecorder-WebUI <n-tag>{{ VERSION }}</n-tag>
       </n-h3>
-      <p>Github: <n-a href="https://github.com/shugen002/BililiveRecorder-WebUI" target="_blank">
-          https://github.com/shugen002/BililiveRecorder-WebUI</n-a>
+      <p>Github: <n-a href="https://github.com/BililiveRecorder/BililiveRecorder-WebUI" target="_blank">
+          https://github.com/BililiveRecorder/BililiveRecorder-WebUI</n-a>
       </p>
       <p>Copyright (C) 2022 <n-a href="https://github.com/shugen002" target="_blank">Shugen002</n-a>
       </p>
