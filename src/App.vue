@@ -17,11 +17,21 @@
 
 <script setup lang="ts">
 import { NLayout, NLayoutFooter } from 'naive-ui';
+import { onMounted, onUnmounted, ref } from 'vue';
 import GlobalProvider from './components/GlobalProvider.vue';
 import SideMenu from './components/SideMenu.vue';
 import TopBar from './components/TopBar.vue';
 
-const vh100 = window.innerHeight;
+const vh100 = ref(window.innerHeight);
+function resize() {
+  vh100.value = window.innerHeight;
+}
+onMounted(() => {
+  window.addEventListener('resize', resize);
+});
+onUnmounted(() => {
+  window.removeEventListener('resize', resize);
+});
 </script>
 
 <style>
