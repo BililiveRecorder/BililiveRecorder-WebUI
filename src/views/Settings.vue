@@ -101,7 +101,7 @@
           <n-h3>网络设置</n-h3>
           <optional-input type="boolean" label="使用系统代理"
             v-model:value="newConfig['optionalNetworkTransportUseSystemProxy']" :same-as-default="true" />
-          <optional-input type="enum" label="IP协议版本"
+          <optional-input type="enum" label="允许使用的网络类型"
             v-model:value="newConfig['optionalNetworkTransportAllowedAddressFamily']" :enums="IPFamilies"
             :same-as-default="true" />
         </div>
@@ -180,6 +180,10 @@ const CuttingModes = [{
 }];
 
 const IPFamilies = [
+  {
+    label: '系统(禁用录播姬的IP随机选择)',
+    value: -1,
+  },
   {
     label: '任意',
     value: 0,
