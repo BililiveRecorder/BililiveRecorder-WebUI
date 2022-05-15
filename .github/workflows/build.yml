@@ -23,7 +23,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       - name: fetch all tags
-        run: git fetch --tags
+        run: git fetch --tags --deepen=50 
       # Runs a single command using the runners shell
       - name: NPM install
         run: npm install

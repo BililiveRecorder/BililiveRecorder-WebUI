@@ -26,7 +26,7 @@ jobs:
       - name: NPM install
         run: npm install
       - name: fetch all tags
-        run: git fetch --tags
+        run: git fetch --tags --deepen=50 
       - name: Build
         run: npx vite build
       - name: Upload a Build Artifact
