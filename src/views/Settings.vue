@@ -97,6 +97,19 @@
           <optional-input style="max-width: 700px;" type="number" label="最大允许未收到直播数据时间"
             v-model:value="newConfig['optionalTimingWatchdogTimeout']" unit="毫秒" max-input-width="150px" />
         </div>
+        <div id="network" class="setting-box">
+          <n-h3>网络设置</n-h3>
+          <optional-input type="boolean" label="使用系统代理"
+            v-model:value="newConfig['optionalNetworkTransportUseSystemProxy']" :same-as-default="true" />
+          <optional-input type="enum" label="IP协议版本"
+            v-model:value="newConfig['optionalNetworkTransportAllowedAddressFamily']" :enums="IPFamilies"
+            :same-as-default="true" />
+        </div>
+        <div id="network" class="setting-box">
+          <n-h3>用户脚本</n-h3>
+          <optional-input type="textarea" :max-input-width="'700px'" v-model:value="newConfig['optionalUserScript']"
+            :same-as-default="true" />
+        </div>
       </n-collapse-transition>
     </div>
     <div class="anchor">
@@ -111,6 +124,8 @@
         <n-anchor-link v-if="showAdvanced" title="请求的 API Host" href="#live-api-host" />
         <n-anchor-link v-if="showAdvanced" title="Cookie" href="#cookie" />
         <n-anchor-link v-if="showAdvanced" title="时间间隔" href="#timing" />
+        <n-anchor-link v-if="showAdvanced" title="网络设置" href="#network" />
+        <n-anchor-link v-if="showAdvanced" title="用户脚本" href="#userscript" />
       </n-anchor>
     </div>
   </div>
@@ -164,6 +179,20 @@ const CuttingModes = [{
   value: 2,
 }];
 
+const IPFamilies = [
+  {
+    label: '任意',
+    value: 0,
+  },
+  {
+    label: '仅IPv4',
+    value: 1,
+  },
+  {
+    label: '仅IPv6',
+    value: 2,
+  }];
+
 const newConfig = ref<{ [key: string]: ConfigItem }>({
   'optionalRecordDanmaku': getEmptyConfigItem(defaultConfig.value.recordDanmaku),
   'optionalRecordMode': getEmptyConfigItem(defaultConfig.value.recordMode),
@@ -186,6 +215,9 @@ const newConfig = ref<{ [key: string]: ConfigItem }>({
   'optionalTimingStreamConnect': getEmptyConfigItem(defaultConfig.value.timingStreamConnect),
   'optionalTimingDanmakuRetry': getEmptyConfigItem(defaultConfig.value.timingDanmakuRetry),
   'optionalTimingWatchdogTimeout': getEmptyConfigItem(defaultConfig.value.timingWatchdogTimeout),
+  'optionalNetworkTransportUseSystemProxy': getEmptyConfigItem(defaultConfig.value.networkTransportUseSystemProxy),
+  'optionalNetworkTransportAllowedAddressFamily': getEmptyConfigItem(defaultConfig.value.networkTransportAllowedAddressFamily),
+  'optionalUserScript': getEmptyConfigItem(defaultConfig.value.userScript),
 });
 
 let lastload: string | undefined = '';

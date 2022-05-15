@@ -54,6 +54,9 @@ export interface DefaultConfig {
   timingDanmakuRetry: number;
   timingWatchdogTimeout: number;
   recordDanmakuFlushInterval: number;
+  networkTransportUseSystemProxy: boolean;
+  networkTransportAllowedAddressFamily: number;
+  userScript: string;
 }
 
 export interface GlobalConfigDto {
@@ -79,6 +82,9 @@ export interface GlobalConfigDto {
   optionalTimingDanmakuRetry: UInt32Optional;
   optionalTimingWatchdogTimeout: UInt32Optional;
   optionalRecordDanmakuFlushInterval: UInt32Optional;
+  optionalNetworkTransportUseSystemProxy: BooleanOptional;
+  optionalNetworkTransportAllowedAddressFamily: UInt32Optional;
+  optionalUserScript: StringOptional;
 }
 
 export interface RecorderVersion {
@@ -133,7 +139,7 @@ enum RestApiErrorCode {
   RoomNotFound = -4,
 }
 
-export interface RestApiErroe {
+export interface RestApiError {
   code: RestApiErrorCode;
   message: string;
 }
@@ -404,6 +410,9 @@ export class RecorderController {
       'timingDanmakuRetry': 9000,
       'timingWatchdogTimeout': 10000,
       'recordDanmakuFlushInterval': 20,
+      'networkTransportUseSystemProxy': false,
+      'networkTransportAllowedAddressFamily': 0,
+      'userScript': '',
     };
   }
   static getMockGlobalConfig(): GlobalConfigDto {
@@ -495,6 +504,18 @@ export class RecorderController {
       'optionalRecordDanmakuFlushInterval': {
         'hasValue': false,
         'value': 0,
+      },
+      'optionalNetworkTransportUseSystemProxy': {
+        'hasValue': false,
+        'value': false,
+      },
+      'optionalNetworkTransportAllowedAddressFamily': {
+        'hasValue': false,
+        'value': 0,
+      },
+      'optionalUserScript': {
+        'hasValue': false,
+        'value': '',
       },
     };
   }
