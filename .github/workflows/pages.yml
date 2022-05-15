@@ -23,10 +23,10 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-
-      # Runs a single command using the runners shell
       - name: NPM install
         run: npm install
+      - name: fetch all tags
+        run: git fetch --tags
       - name: Build
         run: npx vite build
       - name: Upload a Build Artifact
