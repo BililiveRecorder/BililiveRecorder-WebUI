@@ -105,7 +105,7 @@
             v-model:value="newConfig['optionalNetworkTransportAllowedAddressFamily']" :enums="IPFamilies"
             :same-as-default="true" />
         </div>
-        <div id="network" class="setting-box">
+        <div id="userscript" class="setting-box">
           <n-h3>用户脚本</n-h3>
           <optional-input type="textarea" :max-input-width="'700px'" v-model:value="newConfig['optionalUserScript']"
             :same-as-default="true" />
