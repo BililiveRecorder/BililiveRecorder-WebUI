@@ -106,9 +106,13 @@
             :same-as-default="true" />
         </div>
         <div id="userscript" class="setting-box">
-          <n-h3>用户脚本</n-h3>
-          <optional-input type="textarea" :max-input-width="'700px'" v-model:value="newConfig['optionalUserScript']"
-            :same-as-default="true" />
+          <n-space :justify="'space-between'">
+            <n-h3>用户脚本</n-h3>
+            <n-button  v-if="!useAdvancedEditor" size="small" @click="UseAdvancedEditor">加载高级编辑器</n-button>
+          </n-space>
+          <optional-input v-if="!useAdvancedEditor" type="textarea" :max-input-width="'700px'"
+            v-model:value="newConfig['optionalUserScript']" :same-as-default="true" />
+          <advanced-editor v-else v-model:value="newConfig['optionalUserScript'].value" style="height: 300px;" />
         </div>
       </n-collapse-transition>
     </div>
@@ -133,9 +137,13 @@
 
 <script setup lang="ts">
 import { NH2, NH3, NCollapseTransition, NAnchor, NAnchorLink, NSpace, NSwitch, NA, NButton, useLoadingBar, useMessage } from 'naive-ui';
-import { inject, onMounted, ref, Ref } from 'vue';
+import { inject, onMounted, ref, Ref, defineAsyncComponent } from 'vue';
 import { RecorderController, Optional } from '../api';
 import OptionalInput from '../components/OptionalInput.vue';
+
+const AdvancedEditor = defineAsyncComponent(() => {
+  return import('../components/AdvancedEditor.vue');
+});
 
 const loadingbar = useLoadingBar();
 const message = useMessage();
@@ -306,6 +314,13 @@ onMounted(() => {
 });
 
 const showAdvanced = ref(false);
+
+const useAdvancedEditor = ref(false);
+
+function UseAdvancedEditor() {
+  useAdvancedEditor.value = true;
+  newConfig.value['optionalUserScript'].hasValue = true;
+}
 
 </script>
 <style scoped lang="sass">

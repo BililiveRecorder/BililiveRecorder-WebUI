@@ -8,10 +8,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "codemirror": "^5.65.4",
     "vue": "^3.2.25"
   },
   "devDependencies": {
     "@rollup/plugin-replace": "^4.0.0",
+    "@types/codemirror": "^5.60.5",
     "@typescript-eslint/eslint-plugin": "^5.17.0",
     "@typescript-eslint/parser": "^5.17.0",
     "@vicons/ionicons5": "^0.12.0",
