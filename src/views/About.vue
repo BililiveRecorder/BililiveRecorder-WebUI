@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="about-container">
     <n-h2>关于</n-h2>
     <div class="webui-about">
       <n-h3 prefix="bar">BililiveRecorder-WebUI <n-tag>{{ VERSION }}</n-tag>

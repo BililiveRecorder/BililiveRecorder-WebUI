@@ -11,7 +11,7 @@
 </template>
 <script setup lang="ts">
 import { RecorderController } from '../api';
-import { NConfigProvider, NLoadingBarProvider, NDialogProvider, NMessageProvider, darkTheme, useMessage } from 'naive-ui';
+import { NConfigProvider, NLoadingBarProvider, NDialogProvider, NMessageProvider, darkTheme } from 'naive-ui';
 import { provide, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -39,5 +39,4 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
-
 </script>

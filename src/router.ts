@@ -15,6 +15,7 @@ const routes: RouteRecordRaw[] = [
   { path: '/settings', name: 'Settings', component: Settings, meta: { requireController: true, title: '设置' } },
   { path: '/logs', name: 'Logs', component: Blank, meta: { requireController: true, title: '日志' } },
   { path: '/filebrowser', name: 'File Browser', component: Blank, meta: { requireController: true, title: '文件管理器' } },
+  { path: '/componentsdebug', name: 'Components Debug', component: () => import('./views/ComponentsDebug.vue'), meta: { requireController: false, title: '组件调试' } },
 ];
 
 export const router = createRouter({

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="room-list-container">
     <n-space justify="space-between">
       <n-h2>房间列表</n-h2>
       <n-space>
