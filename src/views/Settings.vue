@@ -220,7 +220,7 @@ const newConfig = ref<{ [key: string]: ConfigItem }>({
   'optionalLiveApiHost': getEmptyConfigItem(defaultConfig.value.liveApiHost),
   'optionalCookie': getEmptyConfigItem(defaultConfig.value.cookie),
   'optioanalWebHookUrls': getEmptyConfigItem(defaultConfig.value.webHookUrls),
-  'optioanalWebHookUrlsV2': getEmptyConfigItem(defaultConfig.value.webHookUrls),
+  'optioanalWebHookUrlsV2': getEmptyConfigItem(defaultConfig.value.webHookUrlsV2),
   'optionalTimingCheckInterval': getEmptyConfigItem(defaultConfig.value.timingCheckInterval),
   'optionalTimingStreamRetry': getEmptyConfigItem(defaultConfig.value.timingStreamRetry),
   'optionalTimingStreamRetryNoQn': getEmptyConfigItem(defaultConfig.value.timingStreamRetryNoQn),
