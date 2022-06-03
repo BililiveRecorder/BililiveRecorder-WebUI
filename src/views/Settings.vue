@@ -65,10 +65,10 @@
           <n-a href="https://rec.danmuji.org/docs/basic/webhook/">文档</n-a>
         </p>
         <p>Webhook V1</p>
-        <optional-input type="textarea" :max-input-width="'700px'" v-model:value="newConfig['optioanalWebHookUrls']"
+        <optional-input type="textarea" :max-input-width="'700px'" v-model:value="newConfig['optionalWebHookUrls']"
           :same-as-default="true" />
         <p>Webhook V2</p>
-        <optional-input type="textarea" :max-input-width="'700px'" v-model:value="newConfig['optioanalWebHookUrlsV2']"
+        <optional-input type="textarea" :max-input-width="'700px'" v-model:value="newConfig['optionalWebHookUrlsV2']"
           :same-as-default="true" />
       </div>
       <n-collapse-transition :show="showAdvanced">
@@ -219,8 +219,8 @@ const newConfig = ref<{ [key: string]: ConfigItem }>({
   'optionalCuttingNumber': getEmptyConfigItem(defaultConfig.value.cuttingNumber),
   'optionalLiveApiHost': getEmptyConfigItem(defaultConfig.value.liveApiHost),
   'optionalCookie': getEmptyConfigItem(defaultConfig.value.cookie),
-  'optioanalWebHookUrls': getEmptyConfigItem(defaultConfig.value.webHookUrls),
-  'optioanalWebHookUrlsV2': getEmptyConfigItem(defaultConfig.value.webHookUrlsV2),
+  'optionalWebHookUrls': getEmptyConfigItem(defaultConfig.value.webHookUrls),
+  'optionalWebHookUrlsV2': getEmptyConfigItem(defaultConfig.value.webHookUrlsV2),
   'optionalTimingCheckInterval': getEmptyConfigItem(defaultConfig.value.timingCheckInterval),
   'optionalTimingStreamRetry': getEmptyConfigItem(defaultConfig.value.timingStreamRetry),
   'optionalTimingStreamRetryNoQn': getEmptyConfigItem(defaultConfig.value.timingStreamRetryNoQn),
