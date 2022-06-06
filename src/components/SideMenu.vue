@@ -87,6 +87,7 @@ const changeController = (() => {
 })();
 
 if (EMBEDED_BUILD) {
+  // 删除 “首页”
   menuOptions.value.shift();
 }
 

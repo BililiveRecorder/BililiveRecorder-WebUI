@@ -8,7 +8,7 @@
       <n-list bordered style="width:100%;">
         <n-scrollbar v-if="servers.length > 0" style="height: var(--max-vh);">
           <server-option v-for="server in servers" :key="server.id" :server="server"
-            :selected="controller?.extra.id == server.id" @click="setServer(server)" @delete="removeServer(server.id)"
+            :selected="controller?.extra.id == server.id" @click="changeHost(server)" @delete="removeServer(server.id)"
             @modify="modifyServer(server)"></server-option>
         </n-scrollbar>
         <n-empty v-else style="height: 100%;justify-content: center;" description="点击下方按钮添加服务器"></n-empty>
@@ -40,100 +40,22 @@
 <script setup lang="ts">
 import { VERSION } from '../const';
 import { useMessage, NH1, NEmpty, NButton, NScrollbar, NList, NModal, NForm, NFormItem, NInput, NDynamicInput } from 'naive-ui';
-import { inject, onMounted, reactive, Ref, ref } from 'vue';
+import { inject, reactive, Ref, ref } from 'vue';
 import { RecorderController } from '../api';
 import ServerOption from '../components/ServerOption.vue';
-
-interface kvpairs {
-  key: string;
-  value: string;
-}
-
-interface Server {
-  id: string;
-  path: string;
-  name: string;
-  extraHeaders: kvpairs[];
-}
+import { Server } from '../server';
 
 const selfversion = VERSION;
-
 const message = useMessage();
 
 const controller = inject<Ref<RecorderController>>('controller');
-const changeHost: (host: string, headers?: { [key: string]: string }, extra?: any) => void = inject('changeHost') as any;
-const resetHost: () => void = inject('resetHost') as any;
-
-const servers = ref([] as Server[]);
+const changeHost = inject('changeHost') as (server: Server) => void;
+const resetHost = inject('resetHost') as () => void;
+const saveServers = inject('saveServers') as () => void;
+const servers = inject('servers') as Ref<Server[]>;
 
 function generateRandomId() {
   return Math.random().toString(36).substring(2, 8);
-}
-
-function loadServers() {
-  if (window.localStorage) {
-    const data = window.localStorage.getItem('servers');
-    if (data) {
-      try {
-        const parsed = JSON.parse(data) as Server[];
-        parsed.forEach((s) => {
-          if (typeof s.id === 'undefined') {
-            s.id = generateRandomId();
-          }
-          if (typeof s.path !== 'string') {
-            throw new Error('path is not a string');
-          }
-          if (typeof s.name !== 'string') {
-            throw new Error('name is not a string');
-          }
-          if (!Array.isArray(s.extraHeaders)) {
-            throw new Error('extraHeaders is not an array');
-          }
-          s.extraHeaders.forEach((h) => {
-            if (typeof h.key !== 'string') {
-              throw new Error('extraHeaders.name is not a string');
-            }
-            if (typeof h.value !== 'string') {
-              throw new Error('extraHeaders.value is not a string');
-            }
-          });
-        });
-        servers.value = parsed;
-        return;
-      } catch (error) {
-        console.error(error);
-        message.error('载入服务器列表失败');
-      }
-    }
-    servers.value = [{
-      id: document.location.hostname,
-      path: document.location.origin,
-      name: document.location.hostname,
-      extraHeaders: [],
-    }];
-    saveServers();
-  } else {
-    message.info('您的浏览器不支持本地存储，请更换浏览器');
-  }
-}
-
-function saveServers() {
-  if (window.localStorage) {
-    // copy
-    const data = [];
-    servers.value.forEach((s) => {
-      data.push({
-        id: s.id,
-        path: s.path,
-        name: s.name,
-        extraHeaders: s.extraHeaders.slice(),
-      });
-    });
-
-    window.localStorage.setItem('servers', JSON.stringify(servers.value));
-  } else {
-    message.info('您的浏览器不支持本地存储，请更换浏览器');
-  }
 }
 
 const showNewServerModal = ref(false);
@@ -183,7 +105,7 @@ async function saveAndVerify() {
         return s;
       });
     } else {
-      newServer.id = generateRandomId;
+      newServer.id = generateRandomId();
       servers.value.push(newServer);
     }
     message.success('验证成功 v' + res.fullSemVer);
@@ -218,20 +140,6 @@ function modifyServer(target: Server) {
   server.extraHeaders = target.extraHeaders.slice();
   toggleNewServerModal();
 }
-
-
-function setServer(server: Server) {
-  const headers: any = {};
-  server.extraHeaders.forEach((h) => {
-    headers[h.key] = h.value;
-  });
-  changeHost(server.path, headers, server);
-};
-
-onMounted(() => {
-  loadServers();
-});
-
 </script>
 
 <style lang="sass" scoped>
