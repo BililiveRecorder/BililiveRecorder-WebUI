@@ -14,6 +14,7 @@ import { RecorderController } from '../api';
 import { NConfigProvider, NLoadingBarProvider, NDialogProvider, NMessageProvider, darkTheme } from 'naive-ui';
 import { provide, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { EMBEDED_BUILD } from '../const';
 
 const controller = ref<RecorderController | null>(null);
 const router = useRouter();
@@ -26,17 +27,25 @@ provide('resetHost', () => {
   controller.value = null;
 });
 
-router.beforeEach((to, from, next) => {
-  if (to.meta.requireController) {
+if (EMBEDED_BUILD) {
+  controller.value = new RecorderController(new URL('/', window.location.href).toString());
+}
+
+router.beforeEach((to, from) => {
+  if (EMBEDED_BUILD && to.path === '/') {
+    return '/rooms';
+  }
+
+  if (!EMBEDED_BUILD && to.meta.requireController) {
     if (controller.value) {
       document.title = (to?.meta.title ? `${to.meta.title}@${controller.value.extra?.name} - ` : '') + '录播姬';
-      next();
+      return true;
     } else {
-      next('/');
+      return '/';
     }
-  } else {
-    document.title = (to?.meta.title ? `${to.meta.title} - ` : '') + '录播姬';
-    next();
   }
+
+  document.title = (to?.meta.title ? `${to.meta.title} - ` : '') + '录播姬';
+  return true;
 });
 </script>

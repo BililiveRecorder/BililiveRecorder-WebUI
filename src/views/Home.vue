@@ -42,7 +42,6 @@ import { VERSION } from '../const';
 import { useMessage, NH1, NEmpty, NButton, NScrollbar, NList, NModal, NForm, NFormItem, NInput, NDynamicInput } from 'naive-ui';
 import { inject, onMounted, reactive, Ref, ref } from 'vue';
 import { RecorderController } from '../api';
-import { router } from '../router';
 import ServerOption from '../components/ServerOption.vue';
 
 interface kvpairs {

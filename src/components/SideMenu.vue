@@ -12,6 +12,7 @@ import { NLayoutSider, NIcon, NMenu } from 'naive-ui';
 import { HomeOutline, CaretDownOutline, ListOutline, FolderOpenOutline, SettingsOutline, DocumentTextOutline, InformationOutline } from '@vicons/ionicons5';
 import { RouterLink } from 'vue-router';
 import { RecorderController } from '../api';
+import { EMBEDED_BUILD } from '../const';
 
 const collapsed = ref(true);
 
@@ -25,7 +26,13 @@ const menuOptions = ref([
     label: '首页',
     key: 'index',
     path: '/',
+    disabled: EMBEDED_BUILD,
     icon: renderIcon(HomeOutline),
+    props: {
+      id: 'test',
+      style: 'display: none',
+      class: 'fdjhkafhjkdsahsfkjdhsa',
+    },
   },
   {
     label: '房间列表',
@@ -60,22 +67,28 @@ const menuOptions = ref([
     key: 'about',
     path: '/about',
     icon: renderIcon(InformationOutline),
+    disabled: false,
   },
 ]);
 
-const changeController = () => {
-  if (controller!.value) {
-    menuOptions.value[1].disabled = false;
-    // menuOptions.value[2].disabled = false;
-    menuOptions.value[3].disabled = false;
-    // menuOptions.value[4].disabled = false;
-  } else {
-    menuOptions.value[1].disabled = true;
-    // menuOptions.value[2].disabled = true;
-    menuOptions.value[3].disabled = true;
-    // menuOptions.value[4].disabled = true;
-  }
-};
+const changeController = (() => {
+  const menuItemRooms = menuOptions.value[1];
+  const menuItemSettings = menuOptions.value[3];
+
+  return () => {
+    if (controller!.value) {
+      menuItemRooms.disabled = false;
+      menuItemSettings.disabled = false;
+    } else {
+      menuItemRooms.disabled = true;
+      menuItemSettings.disabled = true;
+    }
+  };
+})();
+
+if (EMBEDED_BUILD) {
+  menuOptions.value.shift();
+}
 
 watch([controller], changeController);
 
@@ -97,6 +110,7 @@ function renderMenuLabel(option: MenuOption) {
   }
   return option.label as string;
 }
+
 function expandIcon() {
   return h(NIcon, null, { default: () => h(CaretDownOutline) });
 }
