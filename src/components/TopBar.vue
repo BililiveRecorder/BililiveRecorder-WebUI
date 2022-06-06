@@ -1,6 +1,11 @@
 <template>
   <n-layout-header style="height: 64px;display: flex;align-items: center;justify-content: space-between" bordered>
-    <n-h3 style="margin: 0 24px">录播姬</n-h3>
+    <div style="display: flex;align-items: center">
+      <img src="/favicon.svg" style="height: 36px;margin-left: 12px;" />
+      <n-h3 style="margin: 0 24px">
+        B站录播姬
+      </n-h3>
+    </div>
     <div style="margin: 0 24px" v-if="!EMBEDED_BUILD">
       <n-input-group>
         <n-input size="small" :disabled="true" :value="(controller?.extra?.name)"></n-input>

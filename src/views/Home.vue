@@ -1,7 +1,7 @@
 <template>
   <div class="home-container">
     <div style="text-align: center;">
-      <n-h1 style="margin:0">录播姬 WebUI</n-h1>
+      <n-h1 style="margin:0">B站录播姬 WebUI</n-h1>
       <p style="margin:0">{{ selfversion }}</p>
     </div>
     <div class="server-container">

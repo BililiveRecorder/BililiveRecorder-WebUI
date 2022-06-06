@@ -52,14 +52,14 @@ router.beforeEach((to, from) => {
 
   if (!EMBEDED_BUILD && to.meta.requireController) {
     if (controller.value) {
-      document.title = (to?.meta.title ? `${to.meta.title}@${controller.value.extra?.name} - ` : '') + '录播姬';
+      document.title = (to?.meta.title ? `${to.meta.title}@${controller.value.extra?.name} - ` : '') + 'B站录播姬';
       return true;
     } else {
       return '/';
     }
   }
 
-  document.title = (to?.meta.title ? `${to.meta.title} - ` : '') + '录播姬';
+  document.title = (to?.meta.title ? `${to.meta.title} - ` : '') + 'B站录播姬';
   return true;
 });
 
