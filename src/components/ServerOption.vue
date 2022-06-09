@@ -82,7 +82,11 @@ function stopPropagation(e: MouseEvent) {
 }
 
 onMounted(() => {
-  const controller = new RecorderController(props.server.path);
+  const extraHeaders: { [key: string]: any } = {};
+  props.server.extraHeaders.forEach((h) => {
+    extraHeaders[h.key] = h.value;
+  });
+  const controller = new RecorderController(props.server.path, extraHeaders);
   controller.getVersion().then((v) => {
     version.value = v.fullSemVer;
   }).catch(() => {

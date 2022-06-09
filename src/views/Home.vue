@@ -25,7 +25,7 @@
           <n-input v-model:value="server.path" :disabled="verifying" placeholder="http://localhost:8000"></n-input>
         </n-form-item>
         <n-form-item label="额外请求头">
-          <n-dynamic-input :disabled="verifying" v-model="server.extraHeaders" preset="pair" key-placeholder="Name"
+          <n-dynamic-input :disabled="verifying" v-model:value="server.extraHeaders" preset="pair" key-placeholder="Name"
             value-placeholder="Value"></n-dynamic-input>
         </n-form-item>
       </n-form>
