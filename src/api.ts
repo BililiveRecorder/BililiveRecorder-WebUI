@@ -223,12 +223,6 @@ export interface SetRoomConfig {
 /* eslint-enable no-unused-vars */
 export class RecorderController {
   public readonly host: string;
-  private cache: {
-    [key: string]: {
-      data: any;
-      timestamp: number;
-    }
-  } = {};
   private headers: { [key: string]: string; } | undefined;
   public extra: any;
   constructor(host: string, headers?: { [key: string]: string }, extra?: any) {
@@ -260,51 +254,19 @@ export class RecorderController {
 
 
   async getVersion(): Promise<RecorderVersion> {
-    if (this.cache.version) {
-      return JSON.parse(JSON.stringify(this.cache.version.data));
-    } else {
-      const version = await this.request<RecorderVersion>('GET', 'api/version');
-      this.cache.version = {
-        data: version,
-        timestamp: Date.now(),
-      };
-      return JSON.parse(JSON.stringify(version));
-    }
+    return await this.request<RecorderVersion>('GET', 'api/version');
   }
 
   async getDefaultConfig(): Promise<DefaultConfig> {
-    if (this.cache.defaultConfig && this.cache.defaultConfig.timestamp > Date.now() - 1000 * 60 * 60) {
-      return JSON.parse(JSON.stringify(this.cache.defaultConfig.data));
-    } else {
-      const result = await this.request<DefaultConfig>('GET', 'api/config/default');
-      this.cache.defaultConfig = {
-        data: result,
-        timestamp: Date.now(),
-      };
-      return JSON.parse(JSON.stringify(result));
-    }
+    return await this.request<DefaultConfig>('GET', 'api/config/default');
   }
 
   async getGlobalConfig(): Promise<GlobalConfigDto> {
-    if (this.cache.globalConfig && this.cache.globalConfig.timestamp > Date.now() - 1000 * 60 * 5) {
-      return JSON.parse(JSON.stringify(this.cache.globalConfig.data));
-    } else {
-      const result = await this.request<GlobalConfigDto>('GET', 'api/config/global');
-      this.cache.globalConfig = {
-        data: result,
-        timestamp: Date.now(),
-      };
-      return JSON.parse(JSON.stringify(result));
-    }
+    return await this.request<GlobalConfigDto>('GET', 'api/config/global');
   }
 
   async setGlobalConfig(config: SetGlobalConfig): Promise<GlobalConfigDto> {
-    const result = await this.request<GlobalConfigDto>('POST', 'api/config/global', config);
-    this.cache.globalConfig = {
-      data: result,
-      timestamp: Date.now(),
-    };
-    return JSON.parse(JSON.stringify(result));
+    return await this.request<GlobalConfigDto>('POST', 'api/config/global', config);
   }
 
   async getRoomList(): Promise<RoomDto[]> {
