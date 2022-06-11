@@ -8,7 +8,7 @@
       <n-list bordered style="width:100%;">
         <n-scrollbar v-if="recorders.length > 0" style="height: var(--max-vh);">
           <server-option v-for="server in recorders" :key="server.id" :server="server"
-            :selected="currentRecorderId == server.id" @click="router.push(`/recorder/${server.id}`)">
+            :selected="currentRecorderId == server.id" @click="router.push(`/recorder/${server.id}`)"
             @delete="removeServer(server.id)" @modify="modifyServer(server)"></server-option>
         </n-scrollbar>
         <n-empty v-else style="height: 100%;justify-content: center;" description="点击下方按钮添加服务器"></n-empty>
