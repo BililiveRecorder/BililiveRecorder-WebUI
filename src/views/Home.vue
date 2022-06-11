@@ -41,10 +41,10 @@
 import { VERSION } from '../const';
 import { useMessage, NH1, NEmpty, NButton, NScrollbar, NList, NModal, NForm, NFormItem, NInput, NDynamicInput } from 'naive-ui';
 import { onMounted, onUnmounted, reactive, ref } from 'vue';
-import { Recorder } from '../api';
+import { Recorder } from '../utils/api';
 import ServerOption from '../components/ServerOption.vue';
 import { Server } from '../server';
-import { recorderController } from '../components/RecorderProvider';
+import { recorderController } from '../utils/RecorderController';
 import { useRouter } from 'vue-router';
 
 const selfversion = VERSION;

@@ -29,7 +29,7 @@
 import { NH2, NH3, NA, NTag } from 'naive-ui';
 import { VERSION } from '../const';
 import { onMounted, ref } from 'vue';
-import { recorderController } from '../components/RecorderProvider';
+import { recorderController } from '../utils/RecorderController';
 
 const serverVersion = ref('');
 

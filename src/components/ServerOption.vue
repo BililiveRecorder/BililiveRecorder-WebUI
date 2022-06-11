@@ -16,8 +16,9 @@
 import { onMounted, PropType, ref, computed, StyleValue } from 'vue';
 import { useThemeVars, NTag, NButton, NListItem, NIcon, NDropdown } from 'naive-ui';
 import { EllipsisHorizontal } from '@vicons/ionicons5';
-import { Recorder } from '../api';
-import { rgba, hexToRgb } from '../utils';
+import { Recorder } from '../utils/api';
+import { rgba, hexToRgb } from '../utils/color';
+import { Server } from '../server';
 
 
 const themeVars = useThemeVars();

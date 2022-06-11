@@ -1,4 +1,4 @@
-import { Recorder } from '../api';
+import { Recorder } from './api';
 import { EMBEDED_BUILD } from '../const';
 import { Server } from '../server';
 

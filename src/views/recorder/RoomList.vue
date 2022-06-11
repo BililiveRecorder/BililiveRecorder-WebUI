@@ -47,7 +47,7 @@ import {
 import RoomCard from '../../components/RoomCard.vue';
 import { Sync } from '@vicons/ionicons5';
 import { FormInst, FormRules } from 'naive-ui/lib/form/src/interface';
-import { recorderController } from '../../components/RecorderProvider';
+import { recorderController } from '../../utils/RecorderController';
 
 const loadingBar = useLoadingBar();
 const order = ref('none');

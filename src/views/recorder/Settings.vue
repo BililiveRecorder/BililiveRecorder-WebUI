@@ -138,9 +138,9 @@
 <script setup lang="ts">
 import { NH2, NH3, NCollapseTransition, NAnchor, NAnchorLink, NSpace, NSwitch, NA, NButton, useLoadingBar, useMessage } from 'naive-ui';
 import { onMounted, ref, defineAsyncComponent } from 'vue';
-import { Recorder, Optional } from '../../api';
+import { Recorder, Optional } from '../../utils/api';
 import OptionalInput from '../../components/OptionalInput.vue';
-import { recorderController } from '../../components/RecorderProvider';
+import { recorderController } from '../../utils/RecorderController';
 
 const AdvancedEditor = defineAsyncComponent(() => {
   return import('../../components/AdvancedEditor.vue');

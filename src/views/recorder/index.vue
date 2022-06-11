@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue';
 import { onBeforeRouteUpdate, useRoute, useRouter, RouterLink } from 'vue-router';
 import { NCard, NA, NIcon, NTag } from 'naive-ui';
 import { ListOutline, SettingsOutline } from '@vicons/ionicons5';
-import { recorderController } from '../../components/RecorderProvider';
+import { recorderController } from '../../utils/RecorderController';
 import { EMBEDED_BUILD } from '../../const';
 
 const router = useRouter();

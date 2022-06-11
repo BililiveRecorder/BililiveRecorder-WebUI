@@ -11,7 +11,7 @@ import { NLayoutSider, NIcon, NMenu, MenuOption } from 'naive-ui';
 import { HomeOutline, CaretDownOutline, ListOutline, SpeedometerOutline, FolderOpenOutline, SettingsOutline, DocumentTextOutline, InformationOutline, LayersOutline } from '@vicons/ionicons5';
 import { RouterLink, useRouter } from 'vue-router';
 import { EMBEDED_BUILD } from '../const';
-import { recorderController } from './RecorderProvider';
+import { recorderController } from '../utils/RecorderController';
 
 const router = useRouter();
 const collapsed = ref(true);

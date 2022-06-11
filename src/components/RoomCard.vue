@@ -124,9 +124,9 @@
 import { Component, h, onMounted, onUnmounted, ref } from 'vue';
 import { DropdownOption, useLoadingBar, useMessage, NCollapseTransition, NCard, NH3, NIcon, NSpace, NTooltip, NDropdown, NButton, NModal, NSkeleton, useThemeVars } from 'naive-ui';
 import { Radio, CloudDone, CloudOffline, RecordingOutline, Analytics, EllipsisVertical, PlayCircle, StopCircle, Refresh, Open, Settings, Trash } from '@vicons/ionicons5';
-import { Recorder, RoomDto, Optional } from '../api';
+import { Recorder, RoomDto, Optional } from '../utils/api';
 import OptionalInput from '../components/OptionalInput.vue';
-import { recorderController } from './RecorderProvider';
+import { recorderController } from '../utils/RecorderController';
 
 const RecordModes = [{
   label: '标准模式',

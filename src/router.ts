@@ -6,7 +6,7 @@ import RoomList from './views/recorder/RoomList.vue';
 import Settings from './views/recorder/Settings.vue';
 import Home from './views/Home.vue';
 import { BASE_URL } from './const';
-import { recorderController } from './components/RecorderProvider';
+import { recorderController } from './utils/RecorderController';
 
 
 const routes: RouteRecordRaw[] = [
