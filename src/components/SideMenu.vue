@@ -48,7 +48,7 @@ function disconnectedMenu(): MenuOption[] {
         label: r.name,
         key: r.id,
         path: `/recorder/${r.id}`,
-        icon: renderIcon(SpeedometerOutline),
+        icon: renderIcon(LayersOutline),
         disabled: false,
       });
     });
