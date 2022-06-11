@@ -37,19 +37,19 @@
 </template>
 
 <script setup lang="ts">
-import { RecorderController, RoomDto } from '../api';
-import { inject, onMounted, Ref, ref } from 'vue';
+import { RoomDto } from '../../api';
+import { onMounted, ref } from 'vue';
 import {
   NSpace, NGrid, NGridItem, NModal,
   NH2, NButton, NIcon, NForm, NFormItem, NSelect, NInput, NSwitch,
   useLoadingBar,
 } from 'naive-ui';
-import RoomCard from '../components/RoomCard.vue';
+import RoomCard from '../../components/RoomCard.vue';
 import { Sync } from '@vicons/ionicons5';
 import { FormInst, FormRules } from 'naive-ui/lib/form/src/interface';
+import { recorderController } from '../../components/RecorderProvider';
 
 const loadingBar = useLoadingBar();
-const controller = inject<Ref<RecorderController>>('controller');
 const order = ref('none');
 
 const orderOptions = [
@@ -72,10 +72,11 @@ let rooms: RoomDto[] = [];
 async function getRoomList() {
   loadingBar.start();
   try {
-    if (!controller?.value) {
+    if (recorderController.recorder == null) {
+      loadingBar.error();
       return;
     }
-    const res = await controller.value.getRoomList();
+    const res = await recorderController.recorder.getRoomList();
     rooms = res;
     loadingBar.finish();
     resort();
@@ -113,8 +114,12 @@ function resort() {
 
 async function startRecord(room: RoomDto) {
   loadingBar.start();
+  if (recorderController.recorder == null) {
+    loadingBar.error();
+    return;
+  }
   try {
-    await controller?.value.startRecord(room.roomId);
+    await recorderController.recorder.startRecord(room.roomId);
     loadingBar.finish();
     getRoomList();
   } catch (error) {
@@ -125,8 +130,12 @@ async function startRecord(room: RoomDto) {
 
 async function stopRecord(room: RoomDto) {
   loadingBar.start();
+  if (recorderController.recorder == null) {
+    loadingBar.error();
+    return;
+  }
   try {
-    await controller?.value.stopRecord(room.roomId);
+    await recorderController.recorder.stopRecord(room.roomId);
     loadingBar.finish();
     getRoomList();
   } catch (error) {
@@ -137,8 +146,12 @@ async function stopRecord(room: RoomDto) {
 
 async function startAutoRecord(room: RoomDto) {
   loadingBar.start();
+  if (recorderController.recorder == null) {
+    loadingBar.error();
+    return;
+  }
   try {
-    await controller?.value.setRoomConfig(room.roomId, { autoRecord: true });
+    await recorderController.recorder.setRoomConfig(room.roomId, { autoRecord: true });
     loadingBar.finish();
     getRoomList();
   } catch (error) {
@@ -149,8 +162,12 @@ async function startAutoRecord(room: RoomDto) {
 
 async function stopAutoRecord(room: RoomDto) {
   loadingBar.start();
+  if (recorderController.recorder == null) {
+    loadingBar.error();
+    return;
+  }
   try {
-    await controller?.value.setRoomConfig(room.roomId, { autoRecord: false });
+    await recorderController.recorder.setRoomConfig(room.roomId, { autoRecord: false });
     loadingBar.finish();
     getRoomList();
   } catch (error) {
@@ -161,8 +178,12 @@ async function stopAutoRecord(room: RoomDto) {
 
 async function addNewRoom(roomid: number, autoRecord: boolean = true) {
   loadingBar.start();
+  if (recorderController.recorder == null) {
+    loadingBar.error();
+    return;
+  }
   try {
-    await controller?.value.addRoom(roomid, autoRecord);
+    await recorderController.recorder.addRoom(roomid, autoRecord);
     loadingBar.finish();
     getRoomList();
   } catch (error) {
@@ -173,8 +194,12 @@ async function addNewRoom(roomid: number, autoRecord: boolean = true) {
 
 async function deleteRoom(room: RoomDto) {
   loadingBar.start();
+  if (recorderController.recorder == null) {
+    loadingBar.error();
+    return;
+  }
   try {
-    await controller?.value.removeRoom(room.roomId);
+    await recorderController.recorder.removeRoom(room.roomId);
     loadingBar.finish();
     getRoomList();
   } catch (error) {
@@ -184,7 +209,6 @@ async function deleteRoom(room: RoomDto) {
 }
 
 function selfUpdateRoom(room: RoomDto, i: number) {
-  debugger;
   orderedRoom.value = rooms.map((r) => {
     if (r.objectId === room.objectId) {
       return room;

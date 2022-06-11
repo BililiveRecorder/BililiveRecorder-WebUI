@@ -221,14 +221,14 @@ export interface SetRoomConfig {
   optionalRecordingQuality?: StringOptional;
 }
 /* eslint-enable no-unused-vars */
-export class RecorderController {
+export class Recorder {
   public readonly host: string;
   private headers: { [key: string]: string; } | undefined;
-  public extra: any;
-  constructor(host: string, headers?: { [key: string]: string }, extra?: any) {
+  public meta: any;
+  constructor(host: string, headers?: { [key: string]: string }, meta?: any) {
     this.host = host;
     this.headers = headers || {};
-    this.extra = extra;
+    this.meta = meta;
   }
   private async request<T>(method: string, path: string, body?: any): Promise<T> {
     const url = new URL(path, this.host);

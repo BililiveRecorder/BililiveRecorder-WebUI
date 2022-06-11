@@ -28,17 +28,15 @@
 <script setup lang="ts">
 import { NH2, NH3, NA, NTag } from 'naive-ui';
 import { VERSION } from '../const';
-import { inject, onMounted, ref, Ref } from 'vue';
-import { RecorderController } from '../api';
-
-const controller = inject<Ref<RecorderController>>('controller');
+import { onMounted, ref } from 'vue';
+import { recorderController } from '../components/RecorderProvider';
 
 const serverVersion = ref('');
 
 onMounted(() => {
-  if (controller?.value) {
+  if (recorderController.recorder !== null) {
     try {
-      controller.value.getVersion().then((v) => {
+      recorderController.recorder.getVersion().then((v) => {
         serverVersion.value = v.fullSemVer;
       });
     } catch (error) {

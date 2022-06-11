@@ -108,7 +108,7 @@
         <div id="userscript" class="setting-box">
           <n-space :justify="'space-between'">
             <n-h3>用户脚本</n-h3>
-            <n-button  v-if="!useAdvancedEditor" size="small" @click="UseAdvancedEditor">加载高级编辑器</n-button>
+            <n-button v-if="!useAdvancedEditor" size="small" @click="UseAdvancedEditor">加载高级编辑器</n-button>
           </n-space>
           <optional-input v-if="!useAdvancedEditor" type="textarea" :max-input-width="'700px'"
             v-model:value="newConfig['optionalUserScript']" :same-as-default="true" />
@@ -137,20 +137,19 @@
 
 <script setup lang="ts">
 import { NH2, NH3, NCollapseTransition, NAnchor, NAnchorLink, NSpace, NSwitch, NA, NButton, useLoadingBar, useMessage } from 'naive-ui';
-import { inject, onMounted, ref, Ref, defineAsyncComponent } from 'vue';
-import { RecorderController, Optional } from '../api';
-import OptionalInput from '../components/OptionalInput.vue';
+import { onMounted, ref, defineAsyncComponent } from 'vue';
+import { Recorder, Optional } from '../../api';
+import OptionalInput from '../../components/OptionalInput.vue';
+import { recorderController } from '../../components/RecorderProvider';
 
 const AdvancedEditor = defineAsyncComponent(() => {
-  return import('../components/AdvancedEditor.vue');
+  return import('../../components/AdvancedEditor.vue');
 });
 
 const loadingbar = useLoadingBar();
 const message = useMessage();
 
-const controller = inject<Ref<RecorderController>>('controller') as Ref<RecorderController>;
-
-const defaultConfig = ref<{ [key: string]: any }>(RecorderController.getMockDefaultConfig());
+const defaultConfig = ref<{ [key: string]: any }>(Recorder.getMockDefaultConfig());
 
 interface ConfigItem<T = any> {
   hasValue: boolean,
@@ -235,14 +234,20 @@ const newConfig = ref<{ [key: string]: ConfigItem }>({
 let lastload: string | undefined = '';
 
 async function init(): Promise<void> {
+  console.log('call loadingbar.start');
   loadingbar.start();
+  if (recorderController.recorder == null) {
+    loadingbar.error();
+    message.error('未连接录播姬');
+    return;
+  }
   const loadMessage = message.loading('正在加载配置...', {
     duration: 0,
   });
-  if (controller.value && lastload != controller.value.host) {
-    const host = controller?.value.host;
+  if (lastload != recorderController.recorder.meta.id) {
+    const host = recorderController.recorder.meta.id;
     try {
-      defaultConfig.value = await controller.value.getDefaultConfig();
+      defaultConfig.value = await recorderController.recorder.getDefaultConfig();
       lastload = host;
     } catch (error: any) {
       message.error(error?.message || error.toString(), {
@@ -253,7 +258,7 @@ async function init(): Promise<void> {
     }
   }
   try {
-    const globalConfig = (await controller.value.getGlobalConfig()) as unknown as { [key: string]: Optional<any> };
+    const globalConfig = (await recorderController.recorder.getGlobalConfig(true)) as unknown as { [key: string]: Optional<any> };
     const keys = Object.keys(globalConfig);
     const temp: any = {};
     keys.forEach((key) => {
@@ -265,7 +270,10 @@ async function init(): Promise<void> {
       };
     });
     newConfig.value = temp;
-    loadingbar.finish();
+    // avoid loadingbar bug
+    setTimeout(() => {
+      loadingbar.finish();
+    }, 0);
     loadMessage.destroy();
   } catch (error: any) {
     loadMessage.destroy();
@@ -278,12 +286,18 @@ async function init(): Promise<void> {
 }
 
 async function saveConfig() {
+  console.log('call loadingbar.start');
   loadingbar.start();
+  if (recorderController.recorder == null) {
+    loadingbar.error();
+    message.error('未连接录播姬');
+    return;
+  }
   const loadMessage = message.loading('正在保存配置...', {
     duration: 0,
   });
   try {
-    const globalConfig = (await controller.value.setGlobalConfig(newConfig.value)) as unknown as { [key: string]: Optional<any> };
+    const globalConfig = (await recorderController.recorder.setGlobalConfig(newConfig.value)) as unknown as { [key: string]: Optional<any> };
     const keys = Object.keys(globalConfig);
     const temp: any = {};
     keys.forEach((key) => {

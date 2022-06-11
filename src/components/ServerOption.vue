@@ -16,7 +16,7 @@
 import { onMounted, PropType, ref, computed, StyleValue } from 'vue';
 import { useThemeVars, NTag, NButton, NListItem, NIcon, NDropdown } from 'naive-ui';
 import { EllipsisHorizontal } from '@vicons/ionicons5';
-import { RecorderController } from '../api';
+import { Recorder } from '../api';
 import { rgba, hexToRgb } from '../utils';
 
 
@@ -25,12 +25,6 @@ const themeVars = useThemeVars();
 interface kvpairs {
   key: string;
   value: string;
-}
-
-interface Server {
-  path: string;
-  name: string;
-  extraHeaders: kvpairs[];
 }
 
 const version = ref('');
@@ -86,7 +80,7 @@ onMounted(() => {
   props.server.extraHeaders.forEach((h) => {
     extraHeaders[h.key] = h.value;
   });
-  const controller = new RecorderController(props.server.path, extraHeaders);
+  const controller = new Recorder(props.server.path, extraHeaders, props.server.id);
   controller.getVersion().then((v) => {
     version.value = v.fullSemVer;
   }).catch(() => {

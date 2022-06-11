@@ -6,27 +6,27 @@
     </div>
     <div class="server-container">
       <n-list bordered style="width:100%;">
-        <n-scrollbar v-if="servers.length > 0" style="height: var(--max-vh);">
-          <server-option v-for="server in servers" :key="server.id" :server="server"
-            :selected="controller?.extra.id == server.id" @click="changeHost(server)" @delete="removeServer(server.id)"
-            @modify="modifyServer(server)"></server-option>
+        <n-scrollbar v-if="recorders.length > 0" style="height: var(--max-vh);">
+          <server-option v-for="server in recorders" :key="server.id" :server="server"
+            :selected="currentRecorderId == server.id" @click="controller.changeHost(server.id)"
+            @delete="removeServer(server.id)" @modify="modifyServer(server)"></server-option>
         </n-scrollbar>
         <n-empty v-else style="height: 100%;justify-content: center;" description="点击下方按钮添加服务器"></n-empty>
       </n-list>
     </div>
     <n-button @click="toggleNewServerModal">添加服务器</n-button>
     <n-modal v-model:show="showNewServerModal" preset="card" style="width: min(600px,100vw);"
-      :title="server.id ? '添加服务器' : '编辑服务器'" @close="resetServer">
+      :title="serverField.id ? '添加服务器' : '编辑服务器'" @close="resetServer">
       <n-form>
         <n-form-item label="服务器名称">
-          <n-input v-model:value="server.name" :disabled="verifying" placeholder="服务器名称"></n-input>
+          <n-input v-model:value="serverField.name" :disabled="verifying" placeholder="服务器名称"></n-input>
         </n-form-item>
         <n-form-item label="服务器地址">
-          <n-input v-model:value="server.path" :disabled="verifying" placeholder="http://localhost:8000"></n-input>
+          <n-input v-model:value="serverField.path" :disabled="verifying" placeholder="http://localhost:8000"></n-input>
         </n-form-item>
         <n-form-item label="额外请求头">
-          <n-dynamic-input :disabled="verifying" v-model:value="server.extraHeaders" preset="pair" key-placeholder="Name"
-            value-placeholder="Value"></n-dynamic-input>
+          <n-dynamic-input :disabled="verifying" v-model:value="serverField.extraHeaders" preset="pair"
+            key-placeholder="Name" value-placeholder="Value"></n-dynamic-input>
         </n-form-item>
       </n-form>
       <template #footer>
@@ -40,19 +40,45 @@
 <script setup lang="ts">
 import { VERSION } from '../const';
 import { useMessage, NH1, NEmpty, NButton, NScrollbar, NList, NModal, NForm, NFormItem, NInput, NDynamicInput } from 'naive-ui';
-import { inject, reactive, Ref, ref } from 'vue';
-import { RecorderController } from '../api';
+import { onMounted, onUnmounted, reactive, ref } from 'vue';
+import { Recorder } from '../api';
 import ServerOption from '../components/ServerOption.vue';
 import { Server } from '../server';
+import { recorderController } from '../components/RecorderProvider';
 
 const selfversion = VERSION;
 const message = useMessage();
 
-const controller = inject<Ref<RecorderController>>('controller');
-const changeHost = inject('changeHost') as (server: Server) => void;
-const resetHost = inject('resetHost') as () => void;
-const saveServers = inject('saveServers') as () => void;
-const servers = inject('servers') as Ref<Server[]>;
+const controller = recorderController;
+
+const recorders = ref(controller.listServers());
+
+const updateRecordersList = () => {
+  recorders.value = controller.listServers();
+};
+
+onMounted(() => {
+  recorders.value = controller.listServers();
+  controller.addEventListener('recorders-list-update', updateRecordersList);
+});
+onUnmounted(() => {
+  controller.removeEventListener('recorders-list-update', updateRecordersList);
+});
+
+const currentRecorderId = ref(controller.recorder?.meta.id);
+
+const updateCurrentRecorder = () => {
+  currentRecorderId.value = controller.recorder?.meta.id;
+};
+
+onMounted(() => {
+  currentRecorderId.value = controller.recorder?.meta.id;
+  controller.addEventListener('recorder-change', updateCurrentRecorder);
+});
+onUnmounted(() => {
+  controller.removeEventListener('recorder-change', updateCurrentRecorder);
+});
+
 
 function generateRandomId() {
   return Math.random().toString(36).substring(2, 8);
@@ -61,7 +87,7 @@ function generateRandomId() {
 const showNewServerModal = ref(false);
 const verifying = ref(false);
 
-const server = reactive({
+const serverField = reactive({
   id: null as string | null,
   path: '',
   name: '',
@@ -74,70 +100,63 @@ function toggleNewServerModal() {
 
 async function saveAndVerify() {
   verifying.value = true;
-  server.name = server.name.trim();
-  if (server.name.length === 0) {
+  serverField.name = serverField.name.trim();
+  if (serverField.name.length === 0) {
     message.error('服务器名称不能为空');
     verifying.value = false;
     return;
   }
-  if (server.path.length === 0) {
+  if (serverField.path.length === 0) {
     message.error('服务器地址不能为空');
     verifying.value = false;
     return;
   }
   try {
     const extraHeaders: { [key: string]: any } = {};
-    server.extraHeaders.forEach((h) => {
+    serverField.extraHeaders.forEach((h) => {
       extraHeaders[h.key] = h.value;
     });
-    const res = await (new RecorderController(server.path, extraHeaders)).getVersion();
+    const res = await (new Recorder(serverField.path, extraHeaders, serverField.id)).getVersion();
     verifying.value = false;
     const newServer: any = {};
-    newServer.path = server.path;
-    newServer.name = server.name;
-    newServer.extraHeaders = server.extraHeaders.slice();
-    if (server.id) {
-      newServer.id = server.id;
-      servers.value = servers.value.map((s) => {
-        if (s.id === server.id) {
-          return newServer;
-        }
-        return s;
-      });
+    newServer.path = serverField.path;
+    newServer.name = serverField.name;
+    newServer.extraHeaders = serverField.extraHeaders.slice();
+    if (serverField.id) {
+      controller.updateServer(serverField.id, newServer);
     } else {
       newServer.id = generateRandomId();
-      servers.value.push(newServer);
+      controller.addServer(newServer);
     }
     message.success('验证成功 v' + res.fullSemVer);
-    saveServers();
+    controller.saveServers();
     showNewServerModal.value = false;
   } catch (error) {
-    message.error('无法连接到服务器');
+    message.error('无法连接到 ');
     verifying.value = false;
     return;
   }
 }
 
 function resetServer() {
-  server.id = null;
-  server.path = '';
-  server.name = '';
-  server.extraHeaders = [];
+  serverField.id = null;
+  serverField.path = '';
+  serverField.name = '';
+  serverField.extraHeaders = [];
 }
 
 function removeServer(id: string) {
-  if (controller?.value?.extra?.id === id) {
-    resetHost();
+  if (controller.recorder?.meta?.id === id) {
+    controller.resetRecorder();
   }
-  servers.value = servers.value.filter((s) => s.id !== id);
-  saveServers();
+  controller.removeServer(id);
 }
 
 function modifyServer(target: Server) {
-  server.id = target.id;
-  server.path = target.path;
-  server.name = target.name;
-  server.extraHeaders = target.extraHeaders.slice();
+  serverField.id = target.id;
+  serverField.path = target.path;
+  serverField.name = target.name;
+  serverField.extraHeaders = target.extraHeaders.slice();
   toggleNewServerModal();
 }
 </script>

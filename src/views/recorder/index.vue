@@ -1,0 +1,175 @@
+<script setup lang="ts">
+import { onMounted, ref } from 'vue';
+import { onBeforeRouteUpdate, useRoute, useRouter, RouterLink } from 'vue-router';
+import { NCard, NA, NIcon, NTag } from 'naive-ui';
+import { ListOutline, SettingsOutline } from '@vicons/ionicons5';
+import { recorderController } from '../../components/RecorderProvider';
+import { EMBEDED_BUILD } from '../../const';
+
+const router = useRouter();
+const route = useRoute();
+
+// router.addRoute('Recorder',
+//   { path: '/rooms', name: 'Rooms', component: RoomList, meta: { requireController: true, title: '房间列表' } });
+
+const controller = recorderController;
+
+const version = ref(' unknown');
+
+const id = ref('');
+
+onMounted(() => {
+  if (route.params.id) {
+    id.value = route.params.id as string;
+    if (controller.recorder !== null && controller.recorder.meta.id === route.params.id) {
+      if (route.query.target) {
+        router.push(route.query.target as string);
+      } else {
+        controller.recorder.getVersion().then((v) => {
+          version.value = v.fullSemVer;
+        });
+      }
+    } else {
+      const server = controller.listServers().find((s) => s.id === route.params.id);
+      if (server) {
+        controller.changeHost(server.id);
+        if (route.query.target) {
+          router.push(route.query.target as string);
+        } else {
+          controller.recorder!.getVersion().then((v) => {
+            version.value = v.fullSemVer;
+          });
+        }
+      } else if (!EMBEDED_BUILD) {
+        router.push('/').catch(console.error);
+      }
+    }
+  } else {
+    if (!EMBEDED_BUILD) {
+      router.push('/').catch(console.error);
+    } else {
+      router.push('/recorder/local').catch(console.error);
+    }
+  }
+});
+
+onBeforeRouteUpdate((to, from, next) => {
+  if (to.params.id !== from.params.id) {
+    id.value = to.params.id as string;
+    if (to.params.id) {
+      if (controller.recorder !== null && controller.recorder.meta.id === to.params.id) {
+        next();
+      } else {
+        const server = controller.listServers().find((s) => s.id === to.params.id);
+        if (server) {
+          controller.changeHost(server.id);
+          next();
+        } else if (!EMBEDED_BUILD) {
+          next('/');
+        }
+      }
+    } else {
+      if (!EMBEDED_BUILD) {
+        next('/');
+      } else {
+        next('/recorder/local');
+      }
+    }
+  } else {
+    next();
+  }
+});
+
+</script>
+
+<template>
+  <div class="dashboard-container">
+    <div class="title">
+      <h1>
+        B站录播姬 <n-tag>v{{ version }}</n-tag>
+      </h1>
+      <p>{{ recorderController.recorder?.meta.name }}
+        <n-a :href="recorderController.recorder?.meta.path">
+          {{ recorderController.recorder?.meta.path }}
+        </n-a>
+      </p>
+    </div>
+    <div class="function-list">
+      <router-link :to="`/recorder/${id}/rooms`">
+        <n-card>
+          <div class="function">
+            <div class="icon">
+              <n-icon size="80">
+                <ListOutline />
+              </n-icon>
+            </div>
+            <div class="description">
+              <h3>房间列表</h3>
+              添加、删除或修改录制的直播间
+            </div>
+          </div>
+        </n-card>
+      </router-link>
+      <router-link :to="`/recorder/${id}/settings`">
+        <n-card>
+          <div class="function">
+            <div class="icon">
+              <n-icon size="80">
+                <SettingsOutline />
+              </n-icon>
+            </div>
+            <div class="description">
+              <h3>录播姬设置</h3>
+              修改录播姬的设置
+            </div>
+          </div>
+        </n-card>
+      </router-link>
+    </div>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.dashboard-container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  .title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .function-list {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1em;
+    margin-bottom: 6em;
+  }
+}
+
+.function {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 15em;
+
+  .icon {
+    height: 10em;
+    width: 10em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .description {
+    width: 100%;
+  }
+}
+</style>

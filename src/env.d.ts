@@ -9,3 +9,4 @@ declare module '*.vue' {
 declare const __VERSION__: string;
 declare const __BASE_URL__: string;
 declare const __EMBEDED_BUILD__: boolean;
+/* eslint-enable no-unused-vars */

@@ -39,12 +39,12 @@
       </n-tooltip>
       <span :style="{ color: themeVars.textColor3, fontSize: themeVars.fontSizeSmall }">
         ID {{
-          props.room.roomId
+            props.room.roomId
         }}
       </span>
       <span v-if="props.room.shortId" :style="{ color: themeVars.textColor3, fontSize: themeVars.fontSizeSmall }">
         id {{
-          props.room.shortId
+            props.room.shortId
         }}
       </span>
     </n-space>
@@ -121,11 +121,12 @@
   </n-card>
 </template>
 <script setup lang="ts">
-import { Component, h, inject, onMounted, onUnmounted, Ref, ref } from 'vue';
+import { Component, h, onMounted, onUnmounted, ref } from 'vue';
 import { DropdownOption, useLoadingBar, useMessage, NCollapseTransition, NCard, NH3, NIcon, NSpace, NTooltip, NDropdown, NButton, NModal, NSkeleton, useThemeVars } from 'naive-ui';
 import { Radio, CloudDone, CloudOffline, RecordingOutline, Analytics, EllipsisVertical, PlayCircle, StopCircle, Refresh, Open, Settings, Trash } from '@vicons/ionicons5';
-import { RecorderController, RoomDto, Optional } from '../api';
+import { Recorder, RoomDto, Optional } from '../api';
 import OptionalInput from '../components/OptionalInput.vue';
+import { recorderController } from './RecorderProvider';
 
 const RecordModes = [{
   label: '标准模式',
@@ -155,8 +156,6 @@ const message = useMessage();
 const loadingbar = useLoadingBar();
 
 const newRoomConfig = ref<{ [key: string]: ConfigItem }>({});
-
-const controller = inject<Ref<RecorderController>>('controller') as Ref<RecorderController>;
 
 const props = defineProps({
   room: {
@@ -284,28 +283,32 @@ interface ConfigItem<T = any> {
 }
 
 async function initSetting() {
+  if (recorderController.recorder == null) {
+    return;
+  }
+  console.log('call loadingbar.start');
   loadingbar.start();
   loading.value = true;
   const loadMessage = message.loading('正在加载配置...', {
     duration: 0,
   });
-  let defaultConfig: { [key: string]: Optional<any> } = RecorderController.getMockDefaultConfig() as any;
-  let globalConfig: { [key: string]: Optional<any> } = RecorderController.getMockGlobalConfig() as any;
+  let defaultConfig: { [key: string]: Optional<any> } = Recorder.getMockDefaultConfig() as any;
+  let globalConfig: { [key: string]: Optional<any> } = Recorder.getMockGlobalConfig() as any;
   let roomConfig: { [key: string]: Optional<any> };
   try {
-    defaultConfig = await controller.value.getDefaultConfig() as any;
+    defaultConfig = await recorderController.recorder.getDefaultConfig() as any;
   } catch (error: any) {
     message.error(error?.message || error.toString());
     message.error('获取默认配置失败，部分设置可能与实际不符');
   }
   try {
-    globalConfig = await controller.value.getGlobalConfig() as any;
+    globalConfig = await recorderController.recorder.getGlobalConfig() as any;
   } catch (error: any) {
     message.error(error?.message || error.toString());
     message.error('获取全局配置失败，部分设置可能与实际不符');
   }
   try {
-    roomConfig = await controller.value.getRoomConfigByObjectId(props.room.objectId) as any;
+    roomConfig = await recorderController.recorder.getRoomConfigByObjectId(props.room.objectId) as any;
     const keys = Object.keys(roomConfig).filter((key) => key !== 'autoRecord');
     const temp: any = {};
     keys.forEach((key) => {
@@ -324,7 +327,10 @@ async function initSetting() {
     newRoomConfig.value = temp;
     loadMessage.destroy();
     loading.value = false;
-    loadingbar.finish();
+    // avoid loadingbar bug
+    setTimeout(() => {
+      loadingbar.finish();
+    }, 0);
   } catch (error: any) {
     console.error(error);
     loadMessage.destroy();
@@ -339,15 +345,19 @@ async function initSetting() {
 const saving = ref(false);
 
 async function saveConfig() {
+  if (recorderController.recorder == null) {
+    return;
+  }
   const msg = message.loading('正在保存配置...', {
     duration: 0,
   });
+  console.log('call loadingbar.start');
   loadingbar.start();
   saving.value = true;
   const toSave: any = Object.assign({}, newRoomConfig.value);
   toSave.autoRecord = toSave.autoRecord.value;
   try {
-    await controller.value.setRoomConfig(props.room.objectId, toSave);
+    await recorderController.recorder.setRoomConfig(props.room.objectId, toSave);
     msg.destroy();
     message.success('保存成功');
     loadingbar.finish();
@@ -381,7 +391,10 @@ let recheckTimeout: any;
 onMounted(() => {
   if (!props.room.danmakuConnected) {
     recheckTimeout = setTimeout(() => {
-      controller.value.getRoomByObjectId(props.room.objectId).then((room) => {
+      if (recorderController.recorder == null) {
+        return;
+      }
+      recorderController.recorder.getRoomByObjectId(props.room.objectId).then((room) => {
         emit('self-update', room);
       }).catch((error) => {
         console.error(error);
