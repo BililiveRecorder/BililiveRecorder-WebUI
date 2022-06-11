@@ -6,7 +6,7 @@ name: Build
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [ master ]
+    branches: [master]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -22,8 +22,8 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-      - name: fetch all tags
-        run: git fetch --tags --deepen=50 
+        with:
+          fetch-depth: 0
       # Runs a single command using the runners shell
       - name: NPM install
         run: npm install
