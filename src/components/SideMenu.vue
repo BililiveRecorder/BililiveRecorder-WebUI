@@ -1,17 +1,18 @@
 <template>
   <n-layout-sider bordered collapse-mode="width" :collapsed-width="64" :width="240" :collapsed="collapsed" show-trigger
-    @collapse="collapsed = true" @expand="collapsed = false">
-    <n-menu :collapsed="collapsed" :collapsed-width="64" :collapsed-icon-size="22" :options="menuOptions"
-      :render-label="renderMenuLabel" :expand-icon="expandIcon" :value="current" />
+    @collapse="collapsed = true" @expand="collapsed = false" :native-scrollbar="false">
+    <n-menu style="height:100%" :collapsed="collapsed" :collapsed-width="64" :collapsed-icon-size="22"
+      :options="menuOptions" :render-label="renderMenuLabel" :expand-icon="expandIcon" :value="current" />
   </n-layout-sider>
 </template>
 <script setup lang="ts">
 import { Component, h, onMounted, onUnmounted, ref } from 'vue';
 import { NLayoutSider, NIcon, NMenu, MenuOption } from 'naive-ui';
-import { HomeOutline, CaretDownOutline, ListOutline, SpeedometerOutline, FolderOpenOutline, SettingsOutline, DocumentTextOutline, InformationOutline, LayersOutline } from '@vicons/ionicons5';
+import { HomeOutline, CaretDownOutline, ListOutline, SpeedometerOutline, FolderOpenOutline, SettingsOutline, DocumentTextOutline, InformationOutline } from '@vicons/ionicons5';
 import { RouterLink, useRouter } from 'vue-router';
 import { EMBEDED_BUILD } from '../const';
 import { recorderController } from '../utils/RecorderController';
+import { generateServerIcon } from '../utils/ServerIconGenerator';
 
 const router = useRouter();
 const collapsed = ref(true);
@@ -48,7 +49,7 @@ function disconnectedMenu(): MenuOption[] {
         label: r.name,
         key: r.id,
         path: `/recorder/${r.id}`,
-        icon: renderIcon(LayersOutline),
+        icon: renderIcon(generateServerIcon(r)),
         disabled: false,
       });
     });
@@ -77,7 +78,7 @@ function connectedMenu(id: string): MenuOption[] {
     {
       label: recorderController.recorder?.meta.name ?? '未知',
       key: 'recorder',
-      icon: renderIcon(LayersOutline),
+      icon: renderIcon(generateServerIcon(recorderController.recorder?.meta)),
       disabled: true,
     },
     {
@@ -125,7 +126,7 @@ function connectedMenu(id: string): MenuOption[] {
         label: r.name,
         key: r.id,
         path: `/recorder/${r.id}`,
-        icon: renderIcon(LayersOutline),
+        icon: renderIcon(generateServerIcon(r)),
         disabled: false,
       });
     });
