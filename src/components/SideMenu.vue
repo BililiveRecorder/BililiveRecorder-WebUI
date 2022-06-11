@@ -133,7 +133,42 @@ function connectedMenu(id: string): MenuOption[] {
   return result;
 }
 
-const menuOptions = ref<MenuOption[]>(disconnectedMenu());
+function embededMenu(): MenuOption[] {
+  return [{
+    label: '面板',
+    key: 'dashboard',
+    path: `/recorder/local`,
+    icon: renderIcon(SpeedometerOutline),
+  },
+  {
+    label: '房间列表',
+    key: 'rooms',
+    path: `/recorder/local/rooms`,
+    icon: renderIcon(ListOutline),
+  },
+  {
+    label: '文件管理器',
+    key: 'files',
+    path: `/recorder/local/filebrowser`,
+    icon: renderIcon(FolderOpenOutline),
+    disabled: true,
+  },
+  {
+    label: '设置',
+    key: 'settings',
+    path: `/recorder/local/settings`,
+    icon: renderIcon(SettingsOutline),
+  },
+  {
+    label: '日志',
+    key: 'logs',
+    path: `/recorder/local/logs`,
+    icon: renderIcon(DocumentTextOutline),
+    disabled: true,
+  }];
+}
+
+const menuOptions = ref<MenuOption[]>(EMBEDED_BUILD ? embededMenu() : disconnectedMenu());
 
 const onRecorderChange = () => {
   if (recorderController.recorder != null) {
@@ -150,15 +185,18 @@ router.afterEach((to, from) => {
   current.value = to.meta.key as string;
 });
 
-onMounted(() => {
-  onRecorderChange();
-  recorderController.addEventListener('recorder-change', onRecorderChange);
-  recorderController.addEventListener('recorders-list-update', onRecorderChange);
-});
-onUnmounted(() => {
-  recorderController.removeEventListener('recorder-change', onRecorderChange);
-  recorderController.removeEventListener('recorders-list-update', onRecorderChange);
-});
+if (!EMBEDED_BUILD) {
+  onMounted(() => {
+    onRecorderChange();
+    recorderController.addEventListener('recorder-change', onRecorderChange);
+    recorderController.addEventListener('recorders-list-update', onRecorderChange);
+  });
+  onUnmounted(() => {
+    recorderController.removeEventListener('recorder-change', onRecorderChange);
+    recorderController.removeEventListener('recorders-list-update', onRecorderChange);
+  });
+}
+
 
 function renderMenuLabel(option: MenuOption) {
   if (option.path && !option.disabled) {
