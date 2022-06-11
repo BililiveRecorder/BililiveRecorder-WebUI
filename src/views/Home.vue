@@ -16,7 +16,7 @@
     </div>
     <n-button @click="toggleNewServerModal">添加服务器</n-button>
     <n-modal v-model:show="showNewServerModal" preset="card" style="width: min(600px,100vw);"
-      :title="serverField.id ? '添加服务器' : '编辑服务器'" @close="resetServer">
+      :title="serverField.id ? '添加服务器' : '编辑服务器'" v-on:after-leave="resetServer">
       <n-form>
         <n-form-item label="服务器名称">
           <n-input v-model:value="serverField.name" :disabled="verifying" placeholder="服务器名称"></n-input>
@@ -121,6 +121,7 @@ async function saveAndVerify() {
     const res = await (new Recorder(serverField.path, extraHeaders, serverField.id)).getVersion();
     verifying.value = false;
     const newServer: any = {};
+    newServer.id = serverField.id;
     newServer.path = serverField.path;
     newServer.name = serverField.name;
     newServer.extraHeaders = serverField.extraHeaders.slice();
