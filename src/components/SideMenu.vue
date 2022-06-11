@@ -165,6 +165,12 @@ function embededMenu(): MenuOption[] {
     path: `/recorder/local/logs`,
     icon: renderIcon(DocumentTextOutline),
     disabled: true,
+  },
+  {
+    label: '关于',
+    key: 'about',
+    path: '/about',
+    icon: renderIcon(InformationOutline),
   }];
 }
 
