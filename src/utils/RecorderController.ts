@@ -148,7 +148,7 @@ class RecorderApi extends EventTarget {
     if (index === -1) {
       throw new Error('server not found');
     }
-    this.servers[index] = newServer;
+    this.servers[index] = JSON.parse(JSON.stringify(newServer));
     this.dispatchEvent(new CustomEvent('recorders-list-update'));
     if (this.recorder?.meta.id === id) {
       this.changeHost(id, true);
