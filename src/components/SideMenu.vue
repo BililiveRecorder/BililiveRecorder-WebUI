@@ -2,12 +2,12 @@
   <n-layout-sider bordered collapse-mode="width" :collapsed-width="64" :width="240" :collapsed="collapsed" show-trigger
     @collapse="collapsed = true" @expand="collapsed = false" :native-scrollbar="false">
     <n-menu style="height:100%" :collapsed="collapsed" :collapsed-width="64" :collapsed-icon-size="22"
-      :options="menuOptions" :render-label="renderMenuLabel" :expand-icon="expandIcon" :value="current" />
+      :options="(menuOptions as any)" :render-label="renderMenuLabel" :expand-icon="expandIcon" :value="current" />
   </n-layout-sider>
 </template>
 <script setup lang="ts">
 import { Component, h, onMounted, onUnmounted, ref } from 'vue';
-import { NLayoutSider, NIcon, NMenu, MenuOption } from 'naive-ui';
+import { NLayoutSider, NIcon, NMenu, MenuOption, MenuGroupOption } from 'naive-ui';
 import { HomeOutline, CaretDownOutline, ListOutline, SpeedometerOutline, FolderOpenOutline, SettingsOutline, DocumentTextOutline, InformationOutline } from '@vicons/ionicons5';
 import { RouterLink, useRouter } from 'vue-router';
 import { EMBEDED_BUILD } from '../const';
@@ -21,8 +21,8 @@ function renderIcon(icon: Component) {
   return () => h(NIcon, null, { default: () => h(icon) });
 }
 
-function disconnectedMenu(): MenuOption[] {
-  const result: MenuOption[] = [
+function disconnectedMenu(): Array<MenuOption | MenuGroupOption> {
+  const result: Array<MenuOption | MenuGroupOption> = [
     {
       label: '首页',
       key: 'index',
@@ -57,8 +57,8 @@ function disconnectedMenu(): MenuOption[] {
   return result;
 }
 
-function connectedMenu(id: string): MenuOption[] {
-  const result: MenuOption[] = [
+function connectedMenu(id: string): Array<MenuOption | MenuGroupOption> {
+  const result: Array<MenuOption | MenuGroupOption> = [
     {
       label: '首页',
       key: 'index',
@@ -134,7 +134,7 @@ function connectedMenu(id: string): MenuOption[] {
   return result;
 }
 
-function embededMenu(): MenuOption[] {
+function embededMenu(): Array<MenuOption | MenuGroupOption> {
   return [{
     label: '面板',
     key: 'dashboard',
@@ -175,7 +175,7 @@ function embededMenu(): MenuOption[] {
   }];
 }
 
-const menuOptions = ref<MenuOption[]>(EMBEDED_BUILD ? embededMenu() : disconnectedMenu());
+const menuOptions = ref<Array<MenuOption | MenuGroupOption>>(EMBEDED_BUILD ? embededMenu() : disconnectedMenu());
 
 const onRecorderChange = () => {
   if (recorderController.recorder != null) {

@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Blank from './views/Blank.vue';
-import About from './views/About.vue';
-import RecorderIndex from './views/recorder/index.vue';
+import Dashboard from './views/recorder/Dashboard.vue';
 import RoomList from './views/recorder/RoomList.vue';
 import Settings from './views/recorder/Settings.vue';
 import Home from './views/Home.vue';
@@ -12,8 +11,8 @@ import { recorderController } from './utils/RecorderController';
 const routes: RouteRecordRaw[] = [
   { path: '/:pathMatch(.*)*', component: Blank, meta: { key: '404', allowInEmbeded: true } },
   { path: '/', component: Home, meta: { key: 'index' } },
-  { path: '/about', component: About, meta: { title: '关于', key: 'about', allowInEmbeded: true } },
-  { path: '/recorder/:id', name: 'Recorder', component: RecorderIndex, meta: { title: 'B站录播姬', key: 'dashboard', allowInEmbeded: true } },
+  { path: '/about', component: ()=> import('./views/About.vue'), meta: { title: '关于', key: 'about', allowInEmbeded: true } },
+  { path: '/recorder/:id', name: 'Recorder', component: Dashboard, meta: { title: 'B站录播姬', key: 'dashboard', allowInEmbeded: true } },
   { path: '/recorder/:id/rooms', name: 'Rooms', component: RoomList, meta: { requireController: true, title: '房间列表', key: 'rooms', allowInEmbeded: true } },
   { path: '/recorder/:id/settings', name: 'Settings', component: Settings, meta: { requireController: true, title: '设置', key: 'settings', allowInEmbeded: true } },
   { path: '/recorder/:id/logs', name: 'Logs', component: Blank, meta: { requireController: true, title: '日志', key: 'logs', allowInEmbeded: true } },
