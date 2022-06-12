@@ -258,7 +258,7 @@ async function init(): Promise<void> {
     }
   }
   try {
-    const globalConfig = (await recorderController.recorder.getGlobalConfig(true)) as unknown as { [key: string]: Optional<any> };
+    const globalConfig = (await recorderController.recorder.getGlobalConfig()) as unknown as { [key: string]: Optional<any> };
     const keys = Object.keys(globalConfig);
     const temp: any = {};
     keys.forEach((key) => {

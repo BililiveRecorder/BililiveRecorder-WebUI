@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { RoomDto } from '../../api';
+import { RoomDto } from '../../utils/api';
 import { onMounted, ref } from 'vue';
 import {
   NSpace, NGrid, NGridItem, NModal,
