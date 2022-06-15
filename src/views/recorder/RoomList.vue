@@ -222,6 +222,9 @@ interface NewRoomModelType {
   roomId: string;
   autoRecord: boolean;
 }
+
+const ROOM_ID_FROM_LINK_REGEX = /^(?:(?:https?:\/\/)?live\.bilibili\.com\/(?:blanc\/|h5\/)?)?(\d*)(?:\?.*)?$/;
+
 const showNewRoomDialog = ref(false);
 const newRoomFormRef = ref<FormInst | null>(null);
 const newRoomRules: FormRules = {
@@ -232,7 +235,7 @@ const newRoomRules: FormRules = {
     },
     {
       validator: (rule, value) => {
-        return /(?:^https?:\/\/live\.bilibili\.com\/(?:blanc\/)(\d+)(?:.*)$)|(^\d+$)/.test(value);
+        return ROOM_ID_FROM_LINK_REGEX.test(value);
       },
       message: '请输入正确的房间号或房间链接',
       trigger: ['input', 'blur'],
@@ -252,16 +255,13 @@ async function onNewRoomFormSubmit() {
       return;
     }
     const roomIdString = newRoomModel.value.roomId;
-    const roomId = roomIdString.match(/^https?:\/\/live\.bilibili\.com\/(?:blanc\/)(\d+)(?:.*)$/) || [, roomIdString];
+    const roomId = roomIdString.match(ROOM_ID_FROM_LINK_REGEX) || [, roomIdString];
     toggleNewRoomDialog();
     // @ts-expect-error
     addNewRoom(parseInt(roomId[1], 10), newRoomModel.value.autoRecord);
   });
 }
 
-
 </script>
-
 <style lang="sass">
-
 </style>
