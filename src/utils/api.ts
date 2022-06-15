@@ -170,17 +170,85 @@ export interface RoomDto {
   streaming: boolean;
   danmakuConnected: boolean;
   autoRecordForThisSession: boolean;
-  stats: RoomStatsDto;
+  recordingStats: RoomRecordingStatsDto;
+  ioStats: RoomIOStatsDto;
 }
 
-export interface RoomStatsDto {
+export interface FileApiResult {
+  exist: boolean;
+  path: string;
+  files: Array<FileDto|FolderDto>;
+}
+
+export interface FileDto {
+  isFolder: boolean;
+  name: string;
+  lastModified: string;
+  size: number;
+  url: string;
+}
+
+export interface FileLikeDto {
+  isFolder: boolean;
+  name: string;
+  lastModified: string;
+}
+
+export interface FileNameTemplateContextDto{
+  roomId: number;
+  shortId: number;
+  name: string;
+  title: string;
+  areaParent: string;
+  areaChild: string;
+  qn: number;
+  json: string;
+}
+
+export interface FolderDto {
+  isFolder: boolean;
+  name: string;
+  lastModified: string;
+}
+
+export interface GenerateFileNameInput {
+  template: string;
+  context: FileNameTemplateContextDto;
+}
+
+export interface RoomIOStatsDto{
+  startTime: string;
+  endTime: string;
+  duration: number; // 当前统计区间的时长，毫秒
+  networkBytesDownloaded: number;
+  networkMbps: number;
+  diskWriteDuration: number; // 统计区间内的磁盘写入耗时，毫秒
+  diskBytesWritten: number;
+  diskMBps: number;
+}
+
+export interface RoomRecordingStatsDto {
   sessionDuration: number;
-  sessionMaxTimestamp: number;
-  fileMaxTimestamp: number;
-  durationRatio: number;
   totalInputBytes: number;
   totalOutputBytes: number;
-  networkMbps: number;
+  currentFileSize: number; // 当前文件的大小
+  sessionMaxTimestamp: number; // 本次直播流收到的最大时间戳（已修复过，相当于总时长，毫秒）
+  fileMaxTimestamp: number; // 当前文件的最大时间戳（相当于总时长，毫秒）
+  addedDuration: number; // 当前这一个统计区间的直播数据时长，毫秒
+  passedTime: number; // 当前这一个统计区间所经过的时间长度，毫秒
+  durationRatio: number;
+  inputVideoBytes: number;
+  inputAudioBytes: number;
+  outputVideoFrames: number;
+  outputAudioFrames: number;
+  outputVideoBytes: number;
+  outputAudioBytes: number;
+  totalInputVideoBytes: number;
+  totalInputAudioBytes: number;
+  totalOutputVideoFrames: number;
+  totalOutputAudioFrames: number;
+  totalOutputVideoBytes: number;
+  totalOutputAudioBytes: number;
 }
 
 export interface SetGlobalConfig {
@@ -269,6 +337,14 @@ export class Recorder {
     return await this.request<GlobalConfigDto>('POST', 'api/config/global', config);
   }
 
+  async getFileList(path: string): Promise<FileApiResult> {
+    return await this.request<FileApiResult>('GET', `api/file?${new URLSearchParams({ path }).toString()}`);
+  }
+
+  async generateFileName(template:string, context:FileNameTemplateContextDto): Promise<string> {
+    return await this.request('POST', 'api/misc/generatefilename', { template, context } as GenerateFileNameInput);
+  }
+
   async getRoomList(): Promise<RoomDto[]> {
     return await this.request<RoomDto[]>('GET', 'api/room');
   }
@@ -293,8 +369,8 @@ export class Recorder {
     return await this.request<RoomDto>('GET', `api/room/${objectId}`);
   }
 
-  async getRoomStats(roomId: number): Promise<RoomStatsDto> {
-    return await this.request<RoomStatsDto>('GET', `api/room/${roomId}/stats`);
+  async getRoomStats(roomId: number): Promise<RoomRecordingStatsDto> {
+    return await this.request<RoomRecordingStatsDto>('GET', `api/room/${roomId}/stats`);
   }
 
   async getRoomConfig(roomId: number): Promise<RoomConfigDto> {
@@ -305,8 +381,8 @@ export class Recorder {
     return await this.request<RoomConfigDto>('POST', `api/room/${roomId}/config`, config);
   }
 
-  async getRoomStatsByObjectId(objectId: string): Promise<RoomStatsDto> {
-    return await this.request<RoomStatsDto>('GET', `api/room/${objectId}/stats`);
+  async getRoomStatsByObjectId(objectId: string): Promise<RoomRecordingStatsDto> {
+    return await this.request<RoomRecordingStatsDto>('GET', `api/room/${objectId}/stats`);
   }
 
   async getRoomConfigByObjectId(objectId: string): Promise<RoomConfigDto> {
@@ -348,6 +424,7 @@ export class Recorder {
   async refreshRoomInfoByObjectId(objectId: string): Promise<RoomDto> {
     return await this.request<RoomDto>('POST', `api/room/${objectId}/refresh`, {});
   }
+
   static getMockDefaultConfig(): DefaultConfig {
     return {
       'recordMode': 0,
