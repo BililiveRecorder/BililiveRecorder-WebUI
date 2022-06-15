@@ -38,7 +38,7 @@ function onClose() {
 
 function saveAndClose() {
   emits('update:show', false);
-  emits('close', { value: template });
+  emits('close', template.value);
 }
 
 function test() {
@@ -72,10 +72,10 @@ function syncTemplate() {
         <h3>模拟数据：</h3>
         <n-form label-placement="left" label-width="auto">
           <n-form-item label="房间号">
-            <n-input-number v-model:value="context.roomId" @input="debounceTest" @change="debounceTest" />
+            <n-input-number v-model:value="context.roomId" @input="debounceTest" :show-button="false" />
           </n-form-item>
           <n-form-item label="短位房间号">
-            <n-input-number v-model:value="context.shortId" @input="debounceTest" @change="debounceTest" />
+            <n-input-number v-model:value="context.shortId" @input="debounceTest" :show-button="false" />
           </n-form-item>
           <n-form-item label="用户名">
             <n-input v-model:value="context.name" @input="debounceTest" />
@@ -90,7 +90,7 @@ function syncTemplate() {
             </n-space>
           </n-form-item>
           <n-form-item label="画质">
-            <n-input-number v-model:value="context.qn" @input="debounceTest" />
+            <n-input-number v-model:value="context.qn" @input="debounceTest" :show-button="false" />
           </n-form-item>
           <n-form-item label="JSON">
             <n-input v-model:value="context.json" @input="debounceTest" />
