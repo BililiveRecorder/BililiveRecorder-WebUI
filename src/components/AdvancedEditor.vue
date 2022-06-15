@@ -31,7 +31,6 @@ const props = defineProps({
 const emit = defineEmits(['update:value']);
 
 onMounted(() => {
-  console.log(props.value);
   if (inputRef.value == null) return;
   editor = CodeMirror.fromTextArea(inputRef.value, {
     mode: 'javascript',
@@ -61,12 +60,12 @@ onMounted(() => {
 
 <template>
   <div class="advanced-editor">
-    <input ref="inputRef" type="textarea"/>
+    <input ref="inputRef" type="textarea" />
   </div>
 </template>
 
 <style scoped lang="scss">
-.advanced-editor{
+.advanced-editor {
   height: 100%
 }
 </style>

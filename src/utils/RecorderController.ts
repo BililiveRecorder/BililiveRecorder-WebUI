@@ -156,5 +156,4 @@ class RecorderApi extends EventTarget {
   }
 }
 
-export const recorderController= new RecorderApi();
-console.log(recorderController);
+export const recorderController = new RecorderApi();

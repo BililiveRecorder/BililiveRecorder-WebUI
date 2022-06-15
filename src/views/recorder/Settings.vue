@@ -239,7 +239,6 @@ const newConfig = ref<{ [key: string]: ConfigItem }>({
 let lastload: string | undefined = '';
 
 async function init(): Promise<void> {
-  console.log('call loadingbar.start');
   loadingbar.start();
   if (recorderController.recorder == null) {
     loadingbar.error();
@@ -291,7 +290,6 @@ async function init(): Promise<void> {
 }
 
 async function saveConfig() {
-  console.log('call loadingbar.start');
   loadingbar.start();
   if (recorderController.recorder == null) {
     loadingbar.error();

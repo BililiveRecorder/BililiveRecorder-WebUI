@@ -286,7 +286,6 @@ async function initSetting() {
   if (recorderController.recorder == null) {
     return;
   }
-  console.log('call loadingbar.start');
   loadingbar.start();
   loading.value = true;
   const loadMessage = message.loading('正在加载配置...', {
@@ -351,7 +350,6 @@ async function saveConfig() {
   const msg = message.loading('正在保存配置...', {
     duration: 0,
   });
-  console.log('call loadingbar.start');
   loadingbar.start();
   saving.value = true;
   const toSave: any = Object.assign({}, newRoomConfig.value);
