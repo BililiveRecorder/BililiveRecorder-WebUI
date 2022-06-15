@@ -134,8 +134,8 @@
       </n-anchor>
     </div>
     <file-name-preview-modal v-model:show="showFileNamePreviewModal"
-      :defaultTemplate="newConfig['optionalFileNameRecordTemplate'].hasValue ? newConfig['optionalFileNameRecordTemplate'].value : newConfig['optionalFileNameRecordTemplate'].defaultValue">
-    </file-name-preview-modal>
+      :defaultTemplate="newConfig['optionalFileNameRecordTemplate'].hasValue ? newConfig['optionalFileNameRecordTemplate'].value : newConfig['optionalFileNameRecordTemplate'].defaultValue"
+      @close="handleFileNamePreviewModalClose" />
   </div>
 </template>
 
@@ -347,7 +347,11 @@ const showFileNamePreviewModal = ref(false);
 function toggleFileNamePreviewModal() {
   showFileNamePreviewModal.value = !showFileNamePreviewModal.value;
 }
-
+function handleFileNamePreviewModalClose(newTemplate: string) {
+  console.log(newTemplate);
+  newConfig.value['optionalFileNameRecordTemplate'].value = newTemplate;
+  newConfig.value['optionalFileNameRecordTemplate'].hasValue = true;
+}
 
 </script>
 <style scoped lang="sass">
