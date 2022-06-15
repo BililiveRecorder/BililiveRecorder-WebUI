@@ -298,7 +298,7 @@ export class Recorder {
     this.headers = headers || {};
     this.meta = meta;
   }
-  private async request<T>(method: string, path: string, body?: any): Promise<T> {
+  private async request<T>(method: string, path: string, body?: any, rawText:boolean = false): Promise<T> {
     const url = new URL(path, this.host);
     const response = await fetch(url.toString(), {
       method,
@@ -317,7 +317,7 @@ export class Recorder {
       }
       throw error ? error : new Error(`${response.status} ${response.statusText}`);
     }
-    return await response.json();
+    return rawText ? await response.text() : response.json();
   }
 
 
@@ -342,7 +342,7 @@ export class Recorder {
   }
 
   async generateFileName(template:string, context:FileNameTemplateContextDto): Promise<string> {
-    return await this.request('POST', 'api/misc/generatefilename', { template, context } as GenerateFileNameInput);
+    return await this.request('POST', 'api/misc/generatefilename', { template, context } as GenerateFileNameInput, true);
   }
 
   async getRoomList(): Promise<RoomDto[]> {

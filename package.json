@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "codemirror": "^5.65.4",
+    "lodash-es": "^4.17.21",
     "vue": "^3.2.25"
   },
   "devDependencies": {

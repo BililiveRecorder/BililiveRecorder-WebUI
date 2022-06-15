@@ -14,7 +14,7 @@
         <optional-input type="boolean" label="保存弹幕" v-model:value="newConfig['optionalRecordDanmaku']"
           :same-as-default="true" />
         <p>本设置同时是所有“弹幕录制”的总开关，当本设置为 false 时其他所有“弹幕录制”设置无效，不会写入弹幕XML文件。</p>
-        <n-collapse-transition :show="newConfig['optionalRecordDanmaku'].value || false">
+        <n-collapse-transition :show="newConfig['optionalRecordDanmaku']?.value || false">
           <optional-input type="boolean" label="保存 SuperChat"
             v-model:value="newConfig['optionalRecordDanmakuSuperChat']" :same-as-default="true" />
           <optional-input type="boolean" label="保存 舰长购买" v-model:value="newConfig['optionalRecordDanmakuGuard']"
@@ -39,11 +39,11 @@
         <n-h3>自动分段</n-h3>
         <optional-input type="enum" v-model:value="newConfig['optionalCuttingMode']" :enums="CuttingModes"
           :same-as-default="true" />
-        <n-collapse-transition :show="newConfig['optionalCuttingMode'].value == 1">
+        <n-collapse-transition :show="newConfig['optionalCuttingMode']?.value == 1">
           <optional-input type="number" prefix="每" suffix="保存为一个文件" v-model:value="newConfig['optionalCuttingNumber']"
             :same-as-default="true" unit="分" max-input-width="150px" />
         </n-collapse-transition>
-        <n-collapse-transition :show="newConfig['optionalCuttingMode'].value == 2">
+        <n-collapse-transition :show="newConfig['optionalCuttingMode']?.value == 2">
           <optional-input type="number" prefix="每" suffix="保存为一个文件" v-model:value="newConfig['optionalCuttingNumber']"
             :same-as-default="true" unit="MiB" max-input-width="150px" />
         </n-collapse-transition>
@@ -52,6 +52,7 @@
         <n-h3>文件名</n-h3>
         <optional-input style="max-width: 700px;" type="text"
           v-model:value="newConfig['optionalFileNameRecordTemplate']" :same-as-default="false" />
+        <n-button @click="toggleFileNamePreviewModal">预览</n-button>
       </div>
       <div id="record-quality" class="setting-box">
         <n-h3>录制画质</n-h3>
@@ -132,6 +133,9 @@
         <n-anchor-link v-if="showAdvanced" title="用户脚本" href="#userscript" />
       </n-anchor>
     </div>
+    <file-name-preview-modal v-model:show="showFileNamePreviewModal"
+      :defaultTemplate="newConfig['optionalFileNameRecordTemplate'].hasValue ? newConfig['optionalFileNameRecordTemplate'].value : newConfig['optionalFileNameRecordTemplate'].defaultValue">
+    </file-name-preview-modal>
   </div>
 </template>
 
@@ -141,6 +145,7 @@ import { onMounted, ref, defineAsyncComponent } from 'vue';
 import { Recorder, Optional } from '../../utils/api';
 import OptionalInput from '../../components/OptionalInput.vue';
 import { recorderController } from '../../utils/RecorderController';
+import FileNamePreviewModal from '../../components/FileNamePreviewModal.vue';
 
 const AdvancedEditor = defineAsyncComponent(() => {
   return import('../../components/AdvancedEditor.vue');
@@ -327,6 +332,7 @@ onMounted(() => {
   init();
 });
 
+// 编辑器
 const showAdvanced = ref(false);
 
 const useAdvancedEditor = ref(false);
@@ -335,6 +341,15 @@ function UseAdvancedEditor() {
   useAdvancedEditor.value = true;
   newConfig.value['optionalUserScript'].hasValue = true;
 }
+
+// 文件名预览
+
+const showFileNamePreviewModal = ref(false);
+
+function toggleFileNamePreviewModal() {
+  showFileNamePreviewModal.value = !showFileNamePreviewModal.value;
+}
+
 
 </script>
 <style scoped lang="sass">
