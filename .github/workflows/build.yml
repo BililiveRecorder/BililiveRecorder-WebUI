@@ -34,3 +34,13 @@ jobs:
         with:
           name: dist
           path: dist
+      - name: Build for Embeded
+        run: npx vite build
+        env:
+          EMBEDED_BUILD: true
+          BASE_URL: "/ui/"
+      - name: Upload a Build Artifact for Embeded
+        uses: actions/upload-artifact@v3.0.0
+        with:
+          name: dist-embeded
+          path: dist
