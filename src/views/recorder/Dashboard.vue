@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { onBeforeRouteUpdate, useRoute, useRouter, RouterLink } from 'vue-router';
 import { NCard, NA, NIcon, NTag } from 'naive-ui';
-import { ListOutline, SettingsOutline } from '@vicons/ionicons5';
+import { ListOutline, FolderOpenOutline, SettingsOutline } from '@vicons/ionicons5';
 import { recorderController } from '../../utils/RecorderController';
 import { EMBEDED_BUILD } from '../../const';
 
@@ -23,7 +23,7 @@ onMounted(() => {
     id.value = route.params.id as string;
     if (controller.recorder !== null && controller.recorder.meta.id === route.params.id) {
       if (route.query.target) {
-        router.push(route.query.target as string);
+        router.replace(decodeURIComponent(route.query.target as string));
       } else {
         controller.recorder.getVersion().then((v) => {
           version.value = v.fullSemVer;
@@ -34,7 +34,7 @@ onMounted(() => {
       if (server) {
         controller.changeHost(server.id);
         if (route.query.target) {
-          router.push(route.query.target as string);
+          router.replace(decodeURIComponent(route.query.target as string));
         } else {
           controller.recorder!.getVersion().then((v) => {
             version.value = v.fullSemVer;
@@ -95,13 +95,11 @@ onBeforeRouteUpdate((to, from, next) => {
       </p>
     </div>
     <div class="function-list">
-      <router-link :to="`/recorder/${id}/rooms`">
-        <n-card>
+      <router-link :to="`/recorder/${id}/rooms`" custom v-slot="{ navigate }">
+        <n-card @click="navigate">
           <div class="function">
             <div class="icon">
-              <n-icon size="80">
-                <ListOutline />
-              </n-icon>
+              <list-outline />
             </div>
             <div class="description">
               <h3>房间列表</h3>
@@ -110,13 +108,24 @@ onBeforeRouteUpdate((to, from, next) => {
           </div>
         </n-card>
       </router-link>
-      <router-link :to="`/recorder/${id}/settings`">
-        <n-card>
+      <router-link :to="`/recorder/${id}/files`" custom v-slot="{ navigate }">
+        <n-card @click="navigate">
           <div class="function">
             <div class="icon">
-              <n-icon size="80">
-                <SettingsOutline />
-              </n-icon>
+              <folder-open-outline />
+            </div>
+            <div class="description">
+              <h3>文件管理器</h3>
+              查看当前录播姬工作目录下的文件
+            </div>
+          </div>
+        </n-card>
+      </router-link>
+      <router-link :to="`/recorder/${id}/settings`" custom v-slot="{ navigate }">
+        <n-card @click="navigate">
+          <div class="function">
+            <div class="icon">
+              <settings-outline />
             </div>
             <div class="description">
               <h3>录播姬设置</h3>
@@ -150,26 +159,62 @@ onBeforeRouteUpdate((to, from, next) => {
     justify-content: center;
     gap: 1em;
     margin-bottom: 6em;
+
+    .function {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      width: 15em;
+
+      .icon {
+        height: 8em;
+        width: 8em;
+        padding: 2em;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .description {
+        width: 100%;
+      }
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .function-list {
+      flex-direction: column;
+      width: 100%;
+      margin-bottom: 0;
+
+      .function {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        gap: 1em;
+
+        .icon {
+          height: 5em;
+          width: 5em;
+          padding: 0em;
+        }
+
+        .description {
+          flex: 1;
+
+          h3 {
+            margin: 0;
+          }
+        }
+      }
+    }
   }
 }
 
-.function {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 15em;
-
-  .icon {
-    height: 10em;
-    width: 10em;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .description {
-    width: 100%;
+@media screen and (max-width: 768px) {
+  .dashboard-container {
+    height: unset;
   }
 }
 </style>

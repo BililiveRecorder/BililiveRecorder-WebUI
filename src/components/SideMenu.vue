@@ -96,9 +96,8 @@ function connectedMenu(id: string): Array<MenuOption | MenuGroupOption> {
     {
       label: '文件管理器',
       key: 'files',
-      path: `/recorder/${id}/filebrowser`,
+      path: `/recorder/${id}/files`,
       icon: renderIcon(FolderOpenOutline),
-      disabled: true,
     },
     {
       label: '设置',
@@ -150,9 +149,8 @@ function embededMenu(): Array<MenuOption | MenuGroupOption> {
   {
     label: '文件管理器',
     key: 'files',
-    path: `/recorder/local/filebrowser`,
+    path: `/recorder/local/files`,
     icon: renderIcon(FolderOpenOutline),
-    disabled: true,
   },
   {
     label: '设置',
