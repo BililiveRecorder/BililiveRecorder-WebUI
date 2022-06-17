@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { onBeforeRouteUpdate, useRoute, useRouter, RouterLink } from 'vue-router';
+import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
 import { FileDto, FolderDto } from '../../utils/api';
-import { byteToHuman } from '../../utils/size';
 import { recorderController } from '../../utils/RecorderController';
-import { NBreadcrumb, NBreadcrumbItem, NSpace, NIcon, NA, NTime, useThemeVars } from 'naive-ui';
-import { File, FileVideo, Folder } from '@vicons/fa';
+import { NBreadcrumb, NBreadcrumbItem, NSpace, useThemeVars } from 'naive-ui';
+import FileItem from '../../components/FileItem.vue';
+
 
 const theme = useThemeVars();
 const route = useRoute();
@@ -72,10 +72,6 @@ onBeforeRouteUpdate((to, from) => {
   });
 });
 
-function calcFilePath(url: string) {
-  return new URL(url, recorderController.recorder?.meta.path).toString();
-}
-
 function goFolder(path: string) {
   router.push({ hash: `#${path}` });
 }
@@ -92,46 +88,7 @@ function goFolder(path: string) {
           {{ folder.name }}
         </n-breadcrumb-item>
       </n-breadcrumb>
-      <div v-for="file in files" :key="file.name" class="item">
-        <div class="item-left" :align="'center'">
-          <n-icon size="20">
-            <folder v-if="file.isFolder" />
-            <file-video v-else-if="file.name.endsWith('.flv')" />
-            <file v-else />
-          </n-icon>
-          <router-link v-if="file.isFolder" :to="{
-            hash: '#' + currentPath + file.name,
-          }" custom v-slot="{ navigate, href }">
-            <n-a :href="href" @click="navigate">{{ file.name }}</n-a>
-          </router-link>
-          <n-a v-else :href="calcFilePath(file.url)">
-            {{ file.name }}
-          </n-a>
-          <span v-if="!file.isFolder">{{ byteToHuman(file.size) }}</span>
-        </div>
-        <n-time :time="new Date(file.lastModified)"
-          :type="(Date.now() - new Date(file.lastModified).valueOf() > 2678400000) ? 'datetime' : 'relative'"></n-time>
-      </div>
+      <file-item v-for="file in files" :key="file.name" :file="file" :current-path="currentPath" />
     </n-space>
   </div>
 </template>
-<style lang="scss">
-.file-browser-container {
-  .item {
-    padding: 8px 16px;
-    border-radius: var(--border-radius);
-    background-color: var(--background-color);
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-
-    .item-left {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 8px;
-    }
-  }
-}
-</style>
