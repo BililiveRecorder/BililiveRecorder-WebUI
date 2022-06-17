@@ -181,7 +181,7 @@ export interface FileApiResult {
 }
 
 export interface FileDto {
-  isFolder: boolean;
+  isFolder: false;
   name: string;
   lastModified: string;
   size: number;
@@ -206,7 +206,7 @@ export interface FileNameTemplateContextDto{
 }
 
 export interface FolderDto {
-  isFolder: boolean;
+  isFolder: true;
   name: string;
   lastModified: string;
 }
