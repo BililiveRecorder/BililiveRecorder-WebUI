@@ -80,15 +80,21 @@ function connectedMenu(id: string): Array<MenuOption | MenuGroupOption> {
 
   const recorders = recorderController.listServers();
 
-  recorders.forEach((r) => {
-    result.push({
-      label: r.name,
-      key: r.id,
-      path: `/recorder/${r.id}`,
-      icon: renderIcon(generateServerIcon(r)),
-      disabled: false,
-    });
+  recorders.forEach((r, i) => {
     if (r.id === id) {
+      if (i > 0) {
+        result.push({
+          key: 'divider-1',
+          type: 'divider',
+        });
+      }
+      result.push({
+        label: r.name,
+        key: r.id,
+        path: `/recorder/${r.id}`,
+        icon: renderIcon(generateServerIcon(r)),
+        disabled: false,
+      });
       result[result.length - 1].disabled = true;
       [{
         label: '面板',
@@ -122,6 +128,20 @@ function connectedMenu(id: string): Array<MenuOption | MenuGroupOption> {
         disabled: true,
       }].forEach((item) => {
         result.push(item);
+      });
+      if (i < recorders.length - 1) {
+        result.push({
+          key: 'divider-2',
+          type: 'divider',
+        });
+      }
+    } else {
+      result.push({
+        label: r.name,
+        key: r.id,
+        path: `/recorder/${r.id}`,
+        icon: renderIcon(generateServerIcon(r)),
+        disabled: false,
       });
     }
   });
