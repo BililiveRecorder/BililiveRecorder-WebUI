@@ -89,6 +89,7 @@ function connectedMenu(id: string): Array<MenuOption | MenuGroupOption> {
       disabled: false,
     });
     if (r.id === id) {
+      result[result.length - 1].disabled = true;
       [{
         label: '面板',
         key: 'dashboard',
