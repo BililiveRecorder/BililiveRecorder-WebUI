@@ -25,7 +25,7 @@ export default defineConfig(({ command }) => {
     define: {
       '__VERSION__': command == 'build' ? '"' + require('child_process').execSync('git describe --always --tags --abbrev=8').toString().trim() + '"' : '"dev"',
       '__BASE_URL__': '"' + (process.env.BASE_URL || '/') + '"',
-      '__EMBEDED_BUILD__': process.env.EMBEDED_BUILD || false,
+      '__EMBEDDED_BUILD__': process.env.EMBEDDED_BUILD || false,
     },
   };
 });

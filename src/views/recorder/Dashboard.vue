@@ -4,7 +4,7 @@ import { onBeforeRouteUpdate, useRoute, useRouter, RouterLink } from 'vue-router
 import { NCard, NA, NIcon, NTag } from 'naive-ui';
 import { ListOutline, FolderOpenOutline, SettingsOutline } from '@vicons/ionicons5';
 import { recorderController } from '../../utils/RecorderController';
-import { EMBEDED_BUILD } from '../../const';
+import { EMBEDDED_BUILD } from '../../const';
 
 const router = useRouter();
 const route = useRoute();
@@ -40,12 +40,12 @@ onMounted(() => {
             version.value = v.fullSemVer;
           });
         }
-      } else if (!EMBEDED_BUILD) {
+      } else if (!EMBEDDED_BUILD) {
         router.push('/').catch(console.error);
       }
     }
   } else {
-    if (!EMBEDED_BUILD) {
+    if (!EMBEDDED_BUILD) {
       router.push('/').catch(console.error);
     } else {
       router.push('/recorder/local').catch(console.error);
@@ -64,12 +64,12 @@ onBeforeRouteUpdate((to, from, next) => {
         if (server) {
           controller.changeHost(server.id);
           next();
-        } else if (!EMBEDED_BUILD) {
+        } else if (!EMBEDDED_BUILD) {
           next('/');
         }
       }
     } else {
-      if (!EMBEDED_BUILD) {
+      if (!EMBEDDED_BUILD) {
         next('/');
       } else {
         next('/recorder/local');

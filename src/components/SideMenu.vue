@@ -10,7 +10,7 @@ import { Component, h, onMounted, onUnmounted, ref } from 'vue';
 import { NLayoutSider, NIcon, NMenu, MenuOption, MenuGroupOption } from 'naive-ui';
 import { HomeOutline, CaretDownOutline, ListOutline, SpeedometerOutline, FolderOpenOutline, SettingsOutline, DocumentTextOutline, InformationOutline } from '@vicons/ionicons5';
 import { RouterLink, useRouter } from 'vue-router';
-import { EMBEDED_BUILD } from '../const';
+import { EMBEDDED_BUILD } from '../const';
 import { recorderController } from '../utils/RecorderController';
 import { generateServerIcon } from '../utils/ServerIconGenerator';
 
@@ -27,7 +27,7 @@ function disconnectedMenu(): Array<MenuOption | MenuGroupOption> {
       label: '首页',
       key: 'index',
       path: '/',
-      disabled: EMBEDED_BUILD,
+      disabled: EMBEDDED_BUILD,
       icon: renderIcon(HomeOutline),
     },
     {
@@ -149,7 +149,7 @@ function connectedMenu(id: string): Array<MenuOption | MenuGroupOption> {
   return result;
 }
 
-function embededMenu(): Array<MenuOption | MenuGroupOption> {
+function embeddedMenu(): Array<MenuOption | MenuGroupOption> {
   return [{
     label: '面板',
     key: 'dashboard',
@@ -189,7 +189,7 @@ function embededMenu(): Array<MenuOption | MenuGroupOption> {
   }];
 }
 
-const menuOptions = ref<Array<MenuOption | MenuGroupOption>>(EMBEDED_BUILD ? embededMenu() : disconnectedMenu());
+const menuOptions = ref<Array<MenuOption | MenuGroupOption>>(EMBEDDED_BUILD ? embeddedMenu() : disconnectedMenu());
 
 const onRecorderChange = () => {
   if (recorderController.recorder != null) {
@@ -206,7 +206,7 @@ router.afterEach((to, from) => {
   current.value = to.meta.key as string;
 });
 
-if (!EMBEDED_BUILD) {
+if (!EMBEDDED_BUILD) {
   onMounted(() => {
     onRecorderChange();
     recorderController.addEventListener('recorder-change', onRecorderChange);

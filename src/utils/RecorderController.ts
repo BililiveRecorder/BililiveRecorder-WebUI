@@ -1,5 +1,5 @@
 import { Recorder } from './api';
-import { EMBEDED_BUILD } from '../const';
+import { EMBEDDED_BUILD } from '../const';
 import { Server } from '../server';
 
 const STORAGE_KEY_SERVERS = 'brec.servers';
@@ -15,7 +15,7 @@ class RecorderApi extends EventTarget {
 
   constructor() {
     super();
-    if (EMBEDED_BUILD) {
+    if (EMBEDDED_BUILD) {
       this.recorder = new Recorder(new URL('/', window.location.href).toString(), {}, { id: 'local' });
       return;
     }

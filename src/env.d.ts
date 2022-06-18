@@ -8,5 +8,5 @@ declare module '*.vue' {
 /* eslint-disable no-unused-vars */
 declare const __VERSION__: string;
 declare const __BASE_URL__: string;
-declare const __EMBEDED_BUILD__: boolean;
+declare const __EMBEDDED_BUILD__: boolean;
 /* eslint-enable no-unused-vars */

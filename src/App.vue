@@ -5,7 +5,7 @@
         <top-bar />
         <n-layout position="absolute" style="top:64px" has-sider>
           <side-menu></side-menu>
-          <n-layout content-style="height: 100%;" id="app-layout" :native-scrollbar="true">
+          <n-layout content-style="height: 100%;" id="app-layout" :native-scrollbar="true" :style="{}">
             <n-scrollbar>
               <router-view></router-view>
             </n-scrollbar>
