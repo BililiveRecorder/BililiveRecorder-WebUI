@@ -75,61 +75,56 @@ function connectedMenu(id: string): Array<MenuOption | MenuGroupOption> {
       key: 'divider',
       type: 'divider',
     },
-    {
-      label: recorderController.recorder?.meta.name ?? '未知',
-      key: 'recorder',
-      icon: renderIcon(generateServerIcon(recorderController.recorder?.meta)),
-      disabled: true,
-    },
-    {
-      label: '面板',
-      key: 'dashboard',
-      path: `/recorder/${id}`,
-      icon: renderIcon(SpeedometerOutline),
-    },
-    {
-      label: '房间列表',
-      key: 'rooms',
-      path: `/recorder/${id}/rooms`,
-      icon: renderIcon(ListOutline),
-    },
-    {
-      label: '文件管理器',
-      key: 'files',
-      path: `/recorder/${id}/files`,
-      icon: renderIcon(FolderOpenOutline),
-    },
-    {
-      label: '设置',
-      key: 'settings',
-      path: `/recorder/${id}/settings`,
-      icon: renderIcon(SettingsOutline),
-    },
-    {
-      label: '日志',
-      key: 'logs',
-      path: `/recorder/${id}/logs`,
-      icon: renderIcon(DocumentTextOutline),
-      disabled: true,
-    },
+
   ];
 
   const recorders = recorderController.listServers();
-  if (recorders.length > 1) {
+
+  recorders.forEach((r) => {
     result.push({
-      key: 'divider',
-      type: 'divider',
+      label: r.name,
+      key: r.id,
+      path: `/recorder/${r.id}`,
+      icon: renderIcon(generateServerIcon(r)),
+      disabled: false,
     });
-    recorders.forEach((r) => {
-      result.push({
-        label: r.name,
-        key: r.id,
-        path: `/recorder/${r.id}`,
-        icon: renderIcon(generateServerIcon(r)),
-        disabled: false,
+    if (r.id === id) {
+      [{
+        label: '面板',
+        key: 'dashboard',
+        path: `/recorder/${id}`,
+        icon: renderIcon(SpeedometerOutline),
+      },
+      {
+        label: '房间列表',
+        key: 'rooms',
+        path: `/recorder/${id}/rooms`,
+        icon: renderIcon(ListOutline),
+      },
+      {
+        label: '文件管理器',
+        key: 'files',
+        path: `/recorder/${id}/files`,
+        icon: renderIcon(FolderOpenOutline),
+      },
+      {
+        label: '设置',
+        key: 'settings',
+        path: `/recorder/${id}/settings`,
+        icon: renderIcon(SettingsOutline),
+      },
+      {
+        label: '日志',
+        key: 'logs',
+        path: `/recorder/${id}/logs`,
+        icon: renderIcon(DocumentTextOutline),
+        disabled: true,
+      }].forEach((item) => {
+        result.push(item);
       });
-    });
-  }
+    }
+  });
+
   return result;
 }
 
