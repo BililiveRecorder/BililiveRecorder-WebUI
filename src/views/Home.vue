@@ -167,6 +167,7 @@ function modifyServer(target: Server) {
 <style lang="sass" scoped>
 
 .home-container
+  padding: 24px
   display: flex
   align-items: center
   justify-content: center

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-row" id="settings-container">
+  <div class="settings-container">
     <div style="flex:1;max-width: 700px;margin: auto;">
       <n-space :justify="'space-between'">
         <n-space :align="'baseline'">
@@ -118,8 +118,8 @@
       </n-collapse-transition>
     </div>
     <div class="anchor">
-      <n-anchor affix :show-rail="false" listen-to=".n-scrollbar-container" offset-target=".n-scrollbar-container"
-        ignore-gap :trigger-top="12" :top="88" z-index="1">
+      <n-anchor :show-rail="false" offset-target="#app-layout" position="fix" ignore-gap z-index="1" type="block"
+        :internalScrollable="false" style="position:sticky; top:64px;">
         <n-anchor-link title="弹幕录制" href="#danmaku-record" />
         <n-anchor-link title="录制模式" href="#record-mode" />
         <n-anchor-link title="自动分段" href="#auto-split" />
@@ -354,18 +354,25 @@ function handleFileNamePreviewModalClose(newTemplate: string) {
 }
 
 </script>
-<style scoped lang="sass">
-
-.flex-row
-  display: flex
+<style scoped lang="scss">
+.settings-container {
+  padding: 24px;
+  display: flex;
   flex-direction: row
-.setting-box
+}
+
+.setting-box {
   margin-bottom: 24px
-.anchor
-  min-width: 9em
+}
+
+.anchor {
+  min-width: 9em;
   display: none
-$breakpoint-tablet: 768px
-@media (min-width: $breakpoint-tablet)
-  .anchor
+}
+
+@media (min-width: 768px) {
+  .anchor {
     display: block
+  }
+}
 </style>

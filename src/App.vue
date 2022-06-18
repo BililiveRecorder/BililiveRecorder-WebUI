@@ -5,8 +5,10 @@
         <top-bar />
         <n-layout position="absolute" style="top:64px" has-sider>
           <side-menu></side-menu>
-          <n-layout content-style="padding: 24px;height: 100%;" :native-scrollbar="false">
-            <router-view></router-view>
+          <n-layout content-style="height: 100%;" id="app-layout" :native-scrollbar="true">
+            <n-scrollbar>
+              <router-view></router-view>
+            </n-scrollbar>
           </n-layout>
         </n-layout>
       </n-layout>
@@ -15,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { NLayout, NMessageProvider } from 'naive-ui';
+import { NLayout, NScrollbar, NMessageProvider } from 'naive-ui';
 import { onMounted, onUnmounted, ref } from 'vue';
 import GlobalProvider from './components/GlobalProvider.vue';
 import SideMenu from './components/SideMenu.vue';

@@ -92,3 +92,8 @@ function goFolder(path: string) {
     </n-space>
   </div>
 </template>
+<style lang="scss" scoped>
+.file-browser-container {
+  padding: 24px;
+}
+</style>

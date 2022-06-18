@@ -47,3 +47,9 @@ onMounted(() => {
 });
 
 </script>
+
+<style lang="scss" scoped>
+.about-container {
+  padding: 24px
+}
+</style>

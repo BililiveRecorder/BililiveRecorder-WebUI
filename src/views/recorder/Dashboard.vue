@@ -140,6 +140,7 @@ onBeforeRouteUpdate((to, from, next) => {
 
 <style scoped lang="scss">
 .dashboard-container {
+  padding: 24px;
   height: 100%;
   display: flex;
   justify-content: center;

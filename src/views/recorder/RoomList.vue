@@ -263,5 +263,8 @@ async function onNewRoomFormSubmit() {
 }
 
 </script>
-<style lang="sass">
+<style lang="scss" scoped>
+.room-list-container {
+  padding: 24px;
+}
 </style>
