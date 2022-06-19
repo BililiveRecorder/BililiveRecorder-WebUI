@@ -18,15 +18,9 @@ import { useThemeVars, NTag, NButton, NListItem, NIcon, NDropdown } from 'naive-
 import { EllipsisHorizontal } from '@vicons/ionicons5';
 import { Recorder } from '../utils/api';
 import { rgba, hexToRgb } from '../utils/color';
-import { Server } from '../server';
-
+import { Server } from '../utils/RecorderController';
 
 const themeVars = useThemeVars();
-
-interface kvpairs {
-  key: string;
-  value: string;
-}
 
 const version = ref('');
 
@@ -78,9 +72,10 @@ function stopPropagation(e: MouseEvent) {
 
 onMounted(() => {
   const extraHeaders: { [key: string]: any } = {};
-  props.server.extraHeaders.forEach((h) => {
+  props.server.extraHeaders?.forEach((h) => {
     extraHeaders[h.key] = h.value;
   });
+  props.server.auth?.type === 'basic' ? (extraHeaders.Authorization = `Basic ${btoa(`${props.server.auth.username}:${props.server.auth.password}`)}`) : null;
   const controller = new Recorder(props.server.path, extraHeaders, props.server.id);
   controller.getVersion().then((v) => {
     version.value = v.fullSemVer;

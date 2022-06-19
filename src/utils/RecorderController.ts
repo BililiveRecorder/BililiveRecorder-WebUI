@@ -1,6 +1,27 @@
 import { Recorder } from './api';
 import { EMBEDDED_BUILD } from '../const';
-import { Server } from '../server';
+
+export interface BasicAuth {
+  type: 'basic';
+  username: string;
+  password: string;
+}
+export interface NoneAuth {
+  type: 'none';
+}
+
+export interface Server {
+  id: string;
+  path: string;
+  name: string;
+  extraHeaders?: kvpairs[];
+  auth?: BasicAuth | NoneAuth;
+}
+
+export interface kvpairs {
+  key: string;
+  value: string;
+}
 
 const STORAGE_KEY_SERVERS = 'brec.servers';
 
@@ -31,9 +52,10 @@ class RecorderApi extends EventTarget {
     }
 
     const headers: any = {};
-    server.extraHeaders.forEach((h) => {
+    server.extraHeaders?.forEach((h) => {
       headers[h.key] = h.value;
     });
+    server.auth?.type === 'basic' ? headers.Authorization = `Basic ${btoa(`${server.auth.username}:${server.auth.password}`)}` : null;
     this.recorder = new Recorder(
       server.path,
       headers,
@@ -66,18 +88,38 @@ class RecorderApi extends EventTarget {
             if (typeof s.name !== 'string') {
               throw new Error('name is not a string');
             }
-            if (!Array.isArray(s.extraHeaders)) {
-              throw new Error('extraHeaders is not an array');
+            if (typeof s.extraHeaders !='undefined' ) {
+              if (Array.isArray(s.extraHeaders)) {
+                s.extraHeaders.forEach((h) => {
+                  if (typeof h.key !== 'string') {
+                    throw new Error('extraHeaders.key is not a string');
+                  }
+                  if (typeof h.value !== 'string') {
+                    debugger;
+                    throw new Error('extraHeaders.value is not a string');
+                  }
+                });
+                if (s.extraHeaders.length === 0) {
+                  delete s.extraHeaders;
+                }
+              } else {
+                throw new Error('extraHeaders is not an array');
+              }
             }
-            s.extraHeaders.forEach((h) => {
-              if (typeof h.key !== 'string') {
-                throw new Error('extraHeaders.key is not a string');
+            if (typeof s.auth !== 'undefined') {
+              if (s.auth.type === 'basic') {
+                if (typeof s.auth.username !== 'string') {
+                  throw new Error('auth.username is not a string');
+                }
+                if (typeof s.auth.password !== 'string') {
+                  throw new Error('auth.password is not a string');
+                }
+              } else if (s.auth.type === 'none') {
+                // noop
+              } else {
+                throw new Error('auth.type is not basic or none');
               }
-              if (typeof h.value !== 'string') {
-                debugger;
-                throw new Error('extraHeaders.value is not a string');
-              }
-            });
+            }
             this.servers.push(s);
           } catch (error) {
             console.error(error);
@@ -98,6 +140,7 @@ class RecorderApi extends EventTarget {
     }
   }
   public addServer(server: Server) {
+    server = JSON.parse(JSON.stringify(server));
     if (typeof server.id === 'undefined') {
       server.id = generateRandomId();
     }
@@ -110,23 +153,27 @@ class RecorderApi extends EventTarget {
     if (typeof server.name !== 'string') {
       throw new Error('name is not a string');
     }
-    if (!Array.isArray(server.extraHeaders)) {
+    if (Array.isArray(server.extraHeaders)) {
+      server.extraHeaders.forEach((h) => {
+        if (typeof h.key =='number') {
+          h.key = h.key + '';
+        }
+        if (typeof h.key !== 'string') {
+          throw new Error('extraHeaders.name is not a string');
+        }
+        if (typeof h.value =='number') {
+          h.value = h.value + '';
+        }
+        if (typeof h.value !== 'string') {
+          throw new Error('extraHeaders.value is not a string');
+        }
+      });
+      if (server.extraHeaders.length === 0) {
+        server.extraHeaders;
+      }
+    } else if (typeof server.extraHeaders !== 'undefined') {
       throw new Error('extraHeaders is not an array');
     }
-    server.extraHeaders.forEach((h) => {
-      if (typeof h.key =='number') {
-        h.key = h.key + '';
-      }
-      if (typeof h.key !== 'string') {
-        throw new Error('extraHeaders.name is not a string');
-      }
-      if (typeof h.value =='number') {
-        h.value = h.value + '';
-      }
-      if (typeof h.value !== 'string') {
-        throw new Error('extraHeaders.value is not a string');
-      }
-    });
     this.servers.push(server);
     this.dispatchEvent(new CustomEvent('recorders-list-update' ));
     this.saveServers();

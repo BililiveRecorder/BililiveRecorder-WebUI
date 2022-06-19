@@ -24,6 +24,19 @@
         <n-form-item label="服务器地址">
           <n-input v-model:value="serverField.path" :disabled="verifying" placeholder="http://localhost:8000"></n-input>
         </n-form-item>
+        <n-form-item label="验证方式" label-placement="left">
+          <n-radio-group v-model:value="serverField.authType" :disabled="verifying">
+            <n-radio :value="'none'">无</n-radio>
+            <n-radio :value="'basic'">Basic</n-radio>
+          </n-radio-group>
+        </n-form-item>
+        <n-form-item v-if="serverField.authType === 'basic'" label="用户名">
+          <n-input v-model:value="serverField.auth.username" :disabled="verifying" placeholder="用户名"></n-input>
+        </n-form-item>
+        <n-form-item v-if="serverField.authType === 'basic'" label="密码">
+          <n-input v-model:value="serverField.auth.password" type="password" :disabled="verifying" placeholder="密码">
+          </n-input>
+        </n-form-item>
         <n-form-item label="额外请求头">
           <n-dynamic-input :disabled="verifying" v-model:value="serverField.extraHeaders" preset="pair"
             key-placeholder="Name" value-placeholder="Value"></n-dynamic-input>
@@ -39,12 +52,11 @@
 </template>
 <script setup lang="ts">
 import { VERSION } from '../const';
-import { useMessage, NH1, NEmpty, NButton, NScrollbar, NList, NModal, NForm, NFormItem, NInput, NDynamicInput } from 'naive-ui';
+import { useMessage, NH1, NEmpty, NButton, NScrollbar, NList, NModal, NForm, NFormItem, NInput, NDynamicInput, NRadio, NRadioGroup } from 'naive-ui';
 import { onMounted, onUnmounted, reactive, ref } from 'vue';
 import { Recorder } from '../utils/api';
 import ServerOption from '../components/ServerOption.vue';
-import { Server } from '../server';
-import { recorderController } from '../utils/RecorderController';
+import { recorderController, Server } from '../utils/RecorderController';
 import { useRouter } from 'vue-router';
 
 const selfversion = VERSION;
@@ -94,6 +106,11 @@ const serverField = reactive({
   path: '',
   name: '',
   extraHeaders: [] as { key: string; value: string }[],
+  authType: 'none' as 'none' | 'basic',
+  auth: {
+    username: '',
+    password: '',
+  },
 });
 
 function toggleNewServerModal() {
@@ -118,15 +135,30 @@ async function saveAndVerify() {
     serverField.extraHeaders.forEach((h) => {
       extraHeaders[h.key] = h.value;
     });
+    serverField.authType === 'basic' && (extraHeaders.Authorization = `Basic ${btoa(`${serverField.auth.username}:${serverField.auth.password}`)}`);
     const res = await (new Recorder(serverField.path, extraHeaders, serverField.id)).getVersion();
     verifying.value = false;
     const newServer: any = {};
     newServer.id = serverField.id;
     newServer.path = serverField.path;
     newServer.name = serverField.name;
-    newServer.extraHeaders = serverField.extraHeaders.slice();
+    if (serverField.extraHeaders.length > 0) {
+      newServer.extraHeaders = serverField.extraHeaders.map((h) => {
+        return {
+          key: h.key,
+          value: h.value,
+        };
+      });
+    }
+    newServer.auth = serverField.authType === 'basic' ? {
+      type: 'basic',
+      username: serverField.auth.username,
+      password: serverField.auth.password,
+    } : {
+      type: 'none',
+    };
     if (serverField.id) {
-      controller.updateServer(serverField.id, newServer);
+      controller.updateServer(serverField.id, newServer as Server);
     } else {
       newServer.id = generateRandomId();
       controller.addServer(newServer);
@@ -146,6 +178,9 @@ function resetServer() {
   serverField.path = '';
   serverField.name = '';
   serverField.extraHeaders = [];
+  serverField.authType = 'none';
+  serverField.auth.username = '';
+  serverField.auth.password = '';
 }
 
 function removeServer(id: string) {
@@ -159,7 +194,12 @@ function modifyServer(target: Server) {
   serverField.id = target.id;
   serverField.path = target.path;
   serverField.name = target.name;
-  serverField.extraHeaders = target.extraHeaders.slice();
+  serverField.extraHeaders = target.extraHeaders?.slice() || [];
+  serverField.authType = target.auth?.type || 'none';
+  serverField.auth = {
+    username: target.auth?.type === 'basic' ? target.auth?.username : '',
+    password: target.auth?.type === 'basic' ? target.auth?.password : '',
+  };
   toggleNewServerModal();
 }
 </script>

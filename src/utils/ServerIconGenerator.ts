@@ -1,7 +1,7 @@
 // generate server icon in svg format
 
 import { createElementBlock, defineComponent, openBlock } from 'vue';
-import { Server } from '../server';
+import { Server } from './RecorderController';
 
 export function generateServerIcon(server: Server) {
   const bgcolor=parseInt(server.id, 36).toString(16).slice(0, 6);
