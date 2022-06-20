@@ -25,5 +25,10 @@ module.exports = {
     'vue/no-v-model-argument': 'off',
     'require-jsdoc': 'off',
     'indent': ['error', 2, { 'SwitchCase': 1 }],
+    'space-before-function-paren': ['error', {
+      'anonymous': 'always',
+      'named': 'never',
+      'asyncArrow': 'always',
+    }],
   },
 };
