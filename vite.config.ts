@@ -20,7 +20,7 @@ export default defineConfig(({ command }) => {
       },
     },
     build: {
-      minify: 'terser',
+      minify: 'esbuild',
     },
     define: {
       '__VERSION__': command == 'build' ? '"' + require('child_process').execSync('git describe --always --tags --abbrev=8').toString().trim() + '"' : '"dev"',
