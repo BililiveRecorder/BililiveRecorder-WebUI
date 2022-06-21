@@ -1,46 +1,76 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import * as monaco from 'monaco-editor';
-const container = ref<HTMLDivElement | null>(null); let editor: monaco.editor.IStandaloneCodeEditor | null = null;
+import { editor as MonacoEditor } from 'monaco-editor';
+import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
+import TsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
+import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
+import { onMounted, ref, onBeforeUnmount } from 'vue';
 
-defineExpose({
-  editor,
-});
+
+window.MonacoEnvironment = {
+  getWorker(_workerId: any, label: any) {
+    switch (label) {
+      case 'json':
+        return new JsonWorker();
+      case 'typescript':
+      case 'javascript':
+        return new TsWorker();
+      default:
+        return new EditorWorker();
+    }
+  },
+};
 
 const props = defineProps({
   value: {
     type: String,
-    default: '',
+    required: true,
+  },
+  language: {
+    type: String,
+    required: true,
   },
 });
-
 const emits = defineEmits(['update:value']);
 
-onMounted(function () {
-  if (!container.value) return;
-  editor = monaco.editor.create(container.value, {
-    value: props.value,
-    language: 'javascript',
-    theme: 'vs-dark',
-    minimap: {
-      enabled: false,
-    },
-  });
-  editor.onDidChangeModelContent((e) => {
-    emits('update:value', editor!.getValue());
-  });
+const containerRef = ref<HTMLDivElement | null>(null);
+let editor: MonacoEditor.IStandaloneCodeEditor | null = null;
+const onResize = () => {
+  if (editor) {
+    editor.layout();
+  }
+};
+
+
+onMounted(() => {
+  const container = containerRef.value;
+  if (container) {
+    editor = MonacoEditor.create(container, {
+      language: 'typescript',
+      theme: 'vs-dark',
+      value: props.value,
+      minimap: {
+        enabled: false,
+      },
+    });
+    window.addEventListener('resize', onResize);
+    editor.onDidChangeModelContent(() => {
+      emits('update:value', editor!.getValue());
+    });
+  }
+});
+onBeforeUnmount(() => {
+  if (editor) {
+    editor.dispose();
+  }
+  window.removeEventListener('resize', onResize);
 });
 
-
 </script>
-
 <template>
-  <div class="advanced-editor" ref="container">
-  </div>
+  <div ref="containerRef" class="container"></div>
 </template>
-
 <style scoped lang="scss">
-.advanced-editor {
-  height: 200px;
+.container {
+  height: 100%;
 }
 </style>

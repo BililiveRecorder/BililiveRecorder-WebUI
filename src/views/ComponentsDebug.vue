@@ -11,6 +11,6 @@ const code = reactive({ value: '123' });
 </script>
 <style scoped lang="scss">
 .debug-container {
-  height: 100%;
+  height: 80vh;
 }
 </style>
