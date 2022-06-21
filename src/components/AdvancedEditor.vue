@@ -1,19 +1,11 @@
 <script setup lang="ts">
 import { editor as MonacoEditor } from 'monaco-editor';
-import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
-import TsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import { onMounted, ref, onBeforeUnmount } from 'vue';
-
 
 window.MonacoEnvironment = {
   getWorker(_workerId: any, label: any) {
     switch (label) {
-      case 'json':
-        return new JsonWorker();
-      case 'typescript':
-      case 'javascript':
-        return new TsWorker();
       default:
         return new EditorWorker();
     }
