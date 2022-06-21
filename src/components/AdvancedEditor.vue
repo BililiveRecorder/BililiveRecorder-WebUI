@@ -45,7 +45,7 @@ onMounted(() => {
   const container = containerRef.value;
   if (container) {
     editor = MonacoEditor.create(container, {
-      language: 'typescript',
+      language: props.language,
       theme: 'vs-dark',
       value: props.value,
       minimap: {
