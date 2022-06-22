@@ -1,5 +1,4 @@
-<script setup lang="ts">
-import { editor as MonacoEditor } from 'monaco-editor';
+<script lang="ts">
 // @ts-ignore
 import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 // @ts-ignore
@@ -8,9 +7,12 @@ import TsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker'
 import HtmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker';
 // @ts-ignore
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
-import { onMounted, ref, onBeforeUnmount } from 'vue';
-import { NButton } from 'naive-ui';
-
+declare global {
+  // eslint-disable-next-line no-unused-vars
+  interface Window {
+    MonacoEnvironment: any;
+  }
+}
 window.MonacoEnvironment = {
   getWorker(_workerId: any, label: any) {
     switch (label) {
@@ -26,6 +28,11 @@ window.MonacoEnvironment = {
     }
   },
 };
+</script>
+<script setup lang="ts">
+import { editor as MonacoEditor } from 'monaco-editor';
+import { onMounted, ref, onBeforeUnmount } from 'vue';
+import { NButton } from 'naive-ui';
 
 const props = defineProps({
   value: {
