@@ -1,14 +1,21 @@
 <script setup lang="ts">
 import { editor as MonacoEditor } from 'monaco-editor';
+// @ts-ignore
 import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
+// @ts-ignore
 import TsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
+// @ts-ignore
+import HtmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker';
+// @ts-ignore
 import EditorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 import { onMounted, ref, onBeforeUnmount } from 'vue';
 
-
-window.MonacoEnvironment = {
+// TODO: 这declare不行，等待解决
+(window as any).MonacoEnvironment = {
   getWorker(_workerId: any, label: any) {
     switch (label) {
+      case 'html':
+        return new HtmlWorker();
       case 'json':
         return new JsonWorker();
       case 'typescript':
@@ -28,6 +35,12 @@ const props = defineProps({
   language: {
     type: String,
     required: true,
+  },
+  options: {
+    type: Object as () => Map<String, any>,
+    default: () => {
+      return {};
+    },
   },
 });
 const emits = defineEmits(['update:value']);
@@ -51,6 +64,7 @@ onMounted(() => {
       minimap: {
         enabled: false,
       },
+      ...props.options,
     });
     window.addEventListener('resize', onResize);
     editor.onDidChangeModelContent(() => {
