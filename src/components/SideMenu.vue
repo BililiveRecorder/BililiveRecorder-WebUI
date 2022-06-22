@@ -10,7 +10,7 @@ import { Component, h, onMounted, onUnmounted, ref } from 'vue';
 import { NLayoutSider, NIcon, NMenu, MenuOption, MenuGroupOption } from 'naive-ui';
 import { HomeOutline, CaretDownOutline, ListOutline, SpeedometerOutline, FolderOpenOutline, SettingsOutline, DocumentTextOutline, InformationOutline } from '@vicons/ionicons5';
 import { RouterLink, useRouter } from 'vue-router';
-import { EMBEDDED_BUILD } from '../const';
+import { EMBEDDED_BUILD, DEV } from '../const';
 import { recorderController } from '../utils/RecorderController';
 import { generateServerIcon } from '../utils/ServerIconGenerator';
 
@@ -21,13 +21,12 @@ function renderIcon(icon: Component) {
   return () => h(NIcon, null, { default: () => h(icon) });
 }
 
-function disconnectedMenu(): Array<MenuOption | MenuGroupOption> {
+function connectedMenu(): Array<MenuOption | MenuGroupOption> {
   const result: Array<MenuOption | MenuGroupOption> = [
     {
       label: '首页',
       key: 'index',
       path: '/',
-      disabled: EMBEDDED_BUILD,
       icon: renderIcon(HomeOutline),
     },
     {
@@ -35,53 +34,27 @@ function disconnectedMenu(): Array<MenuOption | MenuGroupOption> {
       key: 'about',
       path: '/about',
       icon: renderIcon(InformationOutline),
-      disabled: false,
     },
   ];
+  if (DEV) {
+    result.push({
+      label: '调试',
+      key: 'debug',
+      path: '/componentsdebug',
+      icon: renderIcon(SettingsOutline),
+      disabled: false,
+    });
+  }
   const recorders = recorderController.listServers();
   if (recorders.length > 0) {
     result.push({
       key: 'divider',
       type: 'divider',
     });
-    recorders.forEach((r) => {
-      result.push({
-        label: r.name,
-        key: r.id,
-        path: `/recorder/${r.id}`,
-        icon: renderIcon(generateServerIcon(r)),
-        disabled: false,
-      });
-    });
   }
-  return result;
-}
-
-function connectedMenu(id: string): Array<MenuOption | MenuGroupOption> {
-  const result: Array<MenuOption | MenuGroupOption> = [
-    {
-      label: '首页',
-      key: 'index',
-      path: '/',
-      icon: renderIcon(HomeOutline),
-    },
-    {
-      label: '关于',
-      key: 'about',
-      path: '/about',
-      icon: renderIcon(InformationOutline),
-    },
-    {
-      key: 'divider',
-      type: 'divider',
-    },
-
-  ];
-
-  const recorders = recorderController.listServers();
-
+  const currentId = recorderController.recorder?.meta.id;
   recorders.forEach((r, i) => {
-    if (r.id === id) {
+    if (r.id === currentId) {
       if (i > 0) {
         result.push({
           key: 'divider-1',
@@ -99,31 +72,31 @@ function connectedMenu(id: string): Array<MenuOption | MenuGroupOption> {
       [{
         label: '面板',
         key: 'dashboard',
-        path: `/recorder/${id}`,
+        path: `/recorder/${r.id}`,
         icon: renderIcon(SpeedometerOutline),
       },
       {
         label: '房间列表',
         key: 'rooms',
-        path: `/recorder/${id}/rooms`,
+        path: `/recorder/${r.id}/rooms`,
         icon: renderIcon(ListOutline),
       },
       {
         label: '文件管理器',
         key: 'files',
-        path: `/recorder/${id}/files`,
+        path: `/recorder/${r.id}/files`,
         icon: renderIcon(FolderOpenOutline),
       },
       {
         label: '设置',
         key: 'settings',
-        path: `/recorder/${id}/settings`,
+        path: `/recorder/${r.id}/settings`,
         icon: renderIcon(SettingsOutline),
       },
       {
         label: '日志',
         key: 'logs',
-        path: `/recorder/${id}/logs`,
+        path: `/recorder/${r.id}/logs`,
         icon: renderIcon(DocumentTextOutline),
         disabled: true,
       }].forEach((item) => {
@@ -189,15 +162,11 @@ function embeddedMenu(): Array<MenuOption | MenuGroupOption> {
   }];
 }
 
-const menuOptions = ref<Array<MenuOption | MenuGroupOption>>(EMBEDDED_BUILD ? embeddedMenu() : disconnectedMenu());
+const menuOptions = ref<Array<MenuOption | MenuGroupOption>>(EMBEDDED_BUILD ? embeddedMenu() : connectedMenu());
 
 const onRecorderChange = () => {
-  if (recorderController.recorder != null) {
-    // @ts-expect-error ts(2589)
-    menuOptions.value = connectedMenu(recorderController.recorder.meta.id);
-  } else {
-    menuOptions.value = disconnectedMenu();
-  }
+  // @ts-ignore
+  menuOptions.value = connectedMenu();
 };
 
 const current = ref('');
