@@ -114,7 +114,7 @@
           <optional-input v-if="!useAdvancedEditor" type="textarea" :max-input-width="'700px'"
             v-model:value="newConfig['optionalUserScript']" :same-as-default="true" />
           <advanced-editor v-else v-model:value="newConfig['optionalUserScript'].value" :language="'javascript'"
-            style="height: 300px;" />
+            :fullscreen="true" />
         </div>
       </n-collapse-transition>
     </div>

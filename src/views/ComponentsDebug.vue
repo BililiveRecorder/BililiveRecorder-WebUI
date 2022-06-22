@@ -1,6 +1,6 @@
 <template>
   <div class="debug-container">
-    <advanced-editor :value="code.value" :language="'javascript'"></advanced-editor>
+    <advanced-editor :value="code.value" :language="'javascript'" :fullscreen="true"></advanced-editor>
   </div>
 </template>
 <script setup lang="ts">

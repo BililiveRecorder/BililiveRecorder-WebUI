@@ -10,4 +10,7 @@ declare const __VERSION__: string;
 declare const __BASE_URL__: string;
 declare const __EMBEDDED_BUILD__: boolean;
 declare const __DEV__: boolean;
+interface Window {
+  MonacoEnvironment: any;
+}
 /* eslint-enable no-unused-vars */
