@@ -64,7 +64,9 @@ const toggleFullscreen = () => {
   if (editor) {
     isFullscreen.value = !isFullscreen.value;
     setTimeout(() => {
-      editor.layout();
+      if (editor) {
+        editor.layout();
+      }
     }, 0);
   }
 };
