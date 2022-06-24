@@ -36,7 +36,7 @@ jobs:
       - name: Build for Embedded
         run: npx vite build
         env:
-          EMBEDDED_BUILD: true
+          VITE_EMBEDDED_BUILD: true
           BASE_URL: "/ui/"
       - name: Upload a Build Artifact for Embedded
         uses: actions/upload-artifact@v3.0.0
