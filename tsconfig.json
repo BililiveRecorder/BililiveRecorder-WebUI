@@ -13,7 +13,10 @@
     "skipLibCheck": true,
     "lib": [
       "esnext",
-      "dom"
+      "dom",
+    ],
+    "types": [
+      "vite/client"
     ]
   },
   "include": [
