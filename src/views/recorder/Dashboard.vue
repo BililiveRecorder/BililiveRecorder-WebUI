@@ -175,6 +175,11 @@ onBeforeRouteUpdate((to, from, next) => {
         display: flex;
         justify-content: center;
         align-items: center;
+
+        svg {
+          height: 100%;
+          width: 100%;
+        }
       }
 
       .description {
