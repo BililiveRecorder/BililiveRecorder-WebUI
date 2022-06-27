@@ -42,13 +42,14 @@ import { onMounted, ref } from 'vue';
 import {
   NSpace, NGrid, NGridItem, NModal,
   NH2, NButton, NIcon, NForm, NFormItem, NSelect, NInput, NSwitch,
-  useLoadingBar,
+  useLoadingBar, useMessage,
 } from 'naive-ui';
 import RoomCard from '../../components/RoomCard.vue';
 import { Sync } from '@vicons/ionicons5';
 import { FormInst, FormRules } from 'naive-ui/lib/form/src/interface';
 import { recorderController } from '../../utils/RecorderController';
 
+const message = useMessage();
 const loadingBar = useLoadingBar();
 const order = ref('none');
 
@@ -116,6 +117,7 @@ async function startRecord(room: RoomDto) {
   loadingBar.start();
   if (recorderController.recorder == null) {
     loadingBar.error();
+    message.error('recorder is null');
     return;
   }
   try {
@@ -125,6 +127,7 @@ async function startRecord(room: RoomDto) {
   } catch (error) {
     loadingBar.error();
     console.error(error);
+    message.error('开始录制失败');
   }
 }
 
@@ -132,6 +135,7 @@ async function stopRecord(room: RoomDto) {
   loadingBar.start();
   if (recorderController.recorder == null) {
     loadingBar.error();
+    message.error('recorder is null');
     return;
   }
   try {
@@ -141,6 +145,7 @@ async function stopRecord(room: RoomDto) {
   } catch (error) {
     loadingBar.error();
     console.error(error);
+    message.error('停止录制失败');
   }
 }
 
@@ -148,6 +153,7 @@ async function startAutoRecord(room: RoomDto) {
   loadingBar.start();
   if (recorderController.recorder == null) {
     loadingBar.error();
+    message.error('recorder is null');
     return;
   }
   try {
@@ -157,6 +163,7 @@ async function startAutoRecord(room: RoomDto) {
   } catch (error) {
     loadingBar.error();
     console.error(error);
+    message.error('启用自动录制失败');
   }
 }
 
@@ -164,6 +171,7 @@ async function stopAutoRecord(room: RoomDto) {
   loadingBar.start();
   if (recorderController.recorder == null) {
     loadingBar.error();
+    message.error('recorder is null');
     return;
   }
   try {
@@ -173,6 +181,7 @@ async function stopAutoRecord(room: RoomDto) {
   } catch (error) {
     loadingBar.error();
     console.error(error);
+    message.error('禁用自动录制失败');
   }
 }
 
@@ -180,6 +189,7 @@ async function addNewRoom(roomid: number, autoRecord: boolean = true) {
   loadingBar.start();
   if (recorderController.recorder == null) {
     loadingBar.error();
+    message.error('recorder is null');
     return;
   }
   try {
@@ -189,6 +199,7 @@ async function addNewRoom(roomid: number, autoRecord: boolean = true) {
   } catch (error) {
     loadingBar.error();
     console.error(error);
+    message.error('添加房间失败');
   }
 }
 
@@ -196,6 +207,7 @@ async function deleteRoom(room: RoomDto) {
   loadingBar.start();
   if (recorderController.recorder == null) {
     loadingBar.error();
+    message.error('recorder is null');
     return;
   }
   try {
@@ -205,6 +217,7 @@ async function deleteRoom(room: RoomDto) {
   } catch (error) {
     loadingBar.error();
     console.error(error);
+    message.error('删除房间失败');
   }
 }
 
