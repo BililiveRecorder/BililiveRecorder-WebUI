@@ -167,7 +167,7 @@ async function saveAndVerify() {
     controller.saveServers();
     showNewServerModal.value = false;
   } catch (error) {
-    message.error('无法连接到 ');
+    message.error('无法连接到 ' + serverField.path);
     verifying.value = false;
     return;
   }
