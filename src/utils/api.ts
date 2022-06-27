@@ -425,6 +425,15 @@ export class Recorder {
     return await this.request<RoomDto>('POST', `api/room/${objectId}/refresh`, {});
   }
 
+  async graphql<T>(queryName:string, query:string, variables:any|null): Promise<T> {
+    const res= await this.request<any>('POST', `graphql`, { queryName, query, variables });
+    if (res.error) {
+      throw res.error;
+    } else {
+      return res.data;
+    }
+  }
+
   static getMockDefaultConfig(): DefaultConfig {
     return {
       'recordMode': 0,

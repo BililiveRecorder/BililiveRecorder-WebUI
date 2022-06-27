@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
 import { FileDto, FolderDto } from '../utils/api';
-import { byteToHuman } from '../utils/size';
+import { byteToHuman } from '../utils/unitConvert';
 import { NIcon, NTime, useThemeVars } from 'naive-ui';
 import { File, FileVideo, Folder } from '@vicons/fa';
 import { recorderController } from '../utils/RecorderController';

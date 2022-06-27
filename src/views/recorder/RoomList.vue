@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import { RoomDto } from '../../utils/api';
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import {
   NSpace, NGrid, NGridItem, NModal,
   NH2, NButton, NIcon, NForm, NFormItem, NSelect, NInput, NSwitch,
@@ -67,8 +67,6 @@ const orderOptions = [
   },
 ];
 
-let rooms: RoomDto[] = [];
-
 async function getRoomList() {
   loadingBar.start();
   try {
@@ -77,9 +75,9 @@ async function getRoomList() {
       return;
     }
     const res = await recorderController.recorder.getRoomList();
-    rooms = res;
     loadingBar.finish();
-    resort();
+    resort(res);
+    return res;
   } catch (error) {
     loadingBar.error();
     console.error(error);
@@ -90,8 +88,8 @@ onMounted(() => {
   getRoomList();
 });
 
-const orderedRoom = ref(rooms);
-function resort() {
+const orderedRoom = ref<RoomDto[]>([]);
+function resort(rooms: RoomDto[]) {
   orderedRoom.value = rooms.sort((a, b) => {
     if (order.value === 'none') {
       return 0;
@@ -209,7 +207,7 @@ async function deleteRoom(room: RoomDto) {
 }
 
 function selfUpdateRoom(room: RoomDto, i: number) {
-  orderedRoom.value = rooms.map((r) => {
+  orderedRoom.value = orderedRoom.value.map((r) => {
     if (r.objectId === room.objectId) {
       return room;
     }
@@ -261,6 +259,57 @@ async function onNewRoomFormSubmit() {
     addNewRoom(parseInt(roomId[1], 10), newRoomModel.value.autoRecord);
   });
 }
+
+interface RoomStat {
+  r: {
+    o: string;
+    r: boolean;
+    s: boolean;
+    a: {
+      a: number | 'NaN';
+    };
+    b: {
+      b: number | 'NaN';
+    }
+  }[];
+}
+
+function updateRoomStat() {
+  recorderController.recorder?.graphql<RoomStat>('q', 'query q{r:rooms{o:objectId s:streaming r:recording a:ioStats{a:networkMbps}b:recordingStats{b:durationRatio}}}', null).then((data) => {
+    let isUnSync = false;
+    orderedRoom.value.forEach((room, i) => {
+      const index = data.r.findIndex((r) => r.o === room.objectId);
+      if (index === -1) {
+        isUnSync = true;
+        return;
+      }
+      const roomStat = data.r[index];
+      data.r.splice(index, 1);
+      room.streaming = roomStat.s;
+      room.recording = roomStat.r;
+      room.ioStats.networkMbps = typeof roomStat.a.a !== 'number' ? 0 : roomStat.a.a;
+      room.recordingStats.durationRatio = typeof roomStat.b.b !== 'number' ? 0 : roomStat.b.b;
+    });
+    if (data.r.length > 0) {
+      isUnSync = true;
+    }
+    if (isUnSync) {
+      setTimeout(getRoomList, 100);
+    }
+  }).catch((e) => {
+    // TODO: 错误处理
+  });
+}
+
+let updateInterval: any;
+
+onMounted(() => {
+  // TODO: 控速处理
+  updateInterval = setInterval(updateRoomStat, 5000);
+});
+onUnmounted(() => {
+  clearInterval(updateInterval);
+});
 
 </script>
 <style lang="scss" scoped>

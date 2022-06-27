@@ -38,14 +38,10 @@
         摸鱼中
       </n-tooltip>
       <span :style="{ color: themeVars.textColor3, fontSize: themeVars.fontSizeSmall }">
-        ID {{
-            props.room.roomId
-        }}
+        ID {{ props.room.roomId }}
       </span>
       <span v-if="props.room.shortId" :style="{ color: themeVars.textColor3, fontSize: themeVars.fontSizeSmall }">
-        id {{
-            props.room.shortId
-        }}
+        id {{ props.room.shortId }}
       </span>
     </n-space>
     <div class="detail">
@@ -59,6 +55,21 @@
       <div class="recording" v-show="!props.room.recording && props.room.autoRecord">
         <n-icon size="20" :component="Analytics" :color="themeVars.warningColor" />监控中
       </div>
+      <n-popover class="network" v-if="props.room.recording" :delay="500" :duration="500" :show="isPopoverShow"
+        @update:show="handlePopoverVisibleChange">
+        <template #trigger>
+          <n-gradient-text :type="statColor(props.room.recordingStats.durationRatio)">
+            {{ props.room.ioStats.networkMbps.toFixed(2) }} Mbps
+          </n-gradient-text>
+        </template>
+        <div class="stat">
+          <p>下载速度：{{ stat.networkMbps.toFixed(2) }} Mbps</p>
+          <p>录制速度比例：{{ (stat.durationRatio * 100).toFixed(2) }} %</p>
+          <p>文件大小：{{ byteToHuman(stat.currentFileSize) }}</p>
+          <p>会话时长：{{ msToHuman(stat.sessionDuration) }}</p>
+          <p>已录制时长：{{ msToHuman(stat.sessionMaxTimestamp) }}</p>
+        </div>
+      </n-popover>
     </div>
     <n-modal :title="'房间设置 ' + props.room.roomId" v-model:show="showSettingDialog" preset="card"
       :style="{ maxWidth: '800px', maxHeight: '95vh' }">
@@ -121,10 +132,18 @@
   </n-card>
 </template>
 <script setup lang="ts">
-import { Component, h, onMounted, onUnmounted, ref } from 'vue';
-import { DropdownOption, useLoadingBar, useMessage, NCollapseTransition, NCard, NH3, NIcon, NSpace, NTooltip, NDropdown, NButton, NModal, NSkeleton, useThemeVars } from 'naive-ui';
-import { Radio, CloudDone, CloudOffline, RecordingOutline, Analytics, EllipsisVertical, PlayCircle, StopCircle, Refresh, Open, Settings, Trash } from '@vicons/ionicons5';
+import { Component, h, onMounted, onUnmounted, PropType, ref, watch } from 'vue';
+import {
+  DropdownOption, useLoadingBar, useMessage, NCollapseTransition, NCard, NH3, NIcon,
+  NSpace, NTooltip, NDropdown, NButton, NModal, NSkeleton, NPopover, useThemeVars,
+  NGradientText,
+} from 'naive-ui';
+import {
+  Radio, CloudDone, CloudOffline, RecordingOutline, Analytics, EllipsisVertical,
+  PlayCircle, StopCircle, Refresh, Open, Settings, Trash,
+} from '@vicons/ionicons5';
 import { Recorder, RoomDto, Optional } from '../utils/api';
+import { byteToHuman, msToHuman } from '../utils/unitConvert';
 import OptionalInput from '../components/OptionalInput.vue';
 import { recorderController } from '../utils/RecorderController';
 
@@ -159,7 +178,7 @@ const newRoomConfig = ref<{ [key: string]: ConfigItem }>({});
 
 const props = defineProps({
   room: {
-    type: Object,
+    type: Object as PropType<RoomDto>,
     required: true,
     default: (): RoomDto => ({
       'objectId': '00000000-0000-0000-0000-000000000000',
@@ -210,6 +229,10 @@ const props = defineProps({
     }),
   },
   new: {
+    type: Boolean,
+    default: false,
+  },
+  globalUpdating: {
     type: Boolean,
     default: false,
   },
@@ -295,7 +318,8 @@ const actions: DropdownOption[] = [
   },
 ];
 
-const emit = defineEmits(['start-record', 'stop-record', 'refresh-room-info', 'start-auto-record', 'stop-auto-record', 'delete', 'self-update']);
+const emit = defineEmits(['start-record', 'stop-record', 'refresh-room-info', 'start-auto-record',
+  'stop-auto-record', 'delete', 'self-update']);
 const showSettingDialog = ref(false);
 const loading = ref(true);
 
@@ -379,7 +403,7 @@ async function saveConfig() {
   const toSave: any = Object.assign({}, newRoomConfig.value);
   toSave.autoRecord = toSave.autoRecord.value;
   try {
-    await recorderController.recorder.setRoomConfig(props.room.objectId, toSave);
+    await recorderController.recorder.setRoomConfigByObjectId(props.room.objectId, toSave);
     msg.destroy();
     message.success('保存成功');
     loadingbar.finish();
@@ -410,19 +434,26 @@ function handleSelect(option: any) {
 
 let recheckTimeout: any;
 
+function requireRecheck() {
+  if (recheckTimeout) {
+    clearTimeout(recheckTimeout);
+  }
+  recheckTimeout = setTimeout(() => {
+    if (recorderController.recorder == null) {
+      return;
+    }
+    recorderController.recorder.getRoomByObjectId(props.room.objectId).then((room) => {
+      emit('self-update', room);
+    }).catch((error) => {
+      console.error(error);
+    });
+    recheckTimeout = void 0;
+  }, 1000);
+}
+
 onMounted(() => {
   if (!props.room.danmakuConnected) {
-    recheckTimeout = setTimeout(() => {
-      if (recorderController.recorder == null) {
-        return;
-      }
-      recorderController.recorder.getRoomByObjectId(props.room.objectId).then((room) => {
-        emit('self-update', room);
-      }).catch((error) => {
-        console.error(error);
-      });
-      recheckTimeout = void 0;
-    }, 5000);
+    requireRecheck();
   }
 });
 
@@ -432,17 +463,117 @@ onUnmounted(() => {
   }
 });
 
+function statColor(ratio: number) {
+  if (ratio > 0.95) {
+    return 'success';
+  }
+  if (ratio > 0.8) {
+    return 'warning';
+  }
+  return 'error';
+}
+
+const stat = ref({
+  networkMbps: 0,
+  durationRatio: 0,
+  currentFileSize: 0,
+  sessionDuration: 0,
+  sessionMaxTimestamp: 0,
+});
+
+// these two will be update by outside, so we need to watch them
+watch(props.room.ioStats, (newVal) => {
+  stat.value.networkMbps = newVal.networkMbps;
+});
+watch(props.room.recordingStats, (newVal) => {
+  stat.value.durationRatio = newVal.durationRatio;
+});
+
+
+interface QueryResult {
+  r: {
+    i: {
+      n: number;
+    },
+    r: {
+      r: number;
+      s: number;
+      d: number;
+      t: number;
+    }
+  }
+}
+
+function pullStat() {
+  if (recorderController.recorder == null) {
+    return;
+  }
+  recorderController.recorder.graphql<QueryResult>('q',
+    'query q($o:ID){r:room(objectId:$o){i:ioStats{n:networkMbps}r:recordingStats{r:durationRatio s:currentFileSize d:sessionDuration t:sessionMaxTimestamp}}}',
+    { o: props.room.objectId })
+    .then((data) => {
+      stat.value.networkMbps = data.r.i.n;
+      stat.value.durationRatio = data.r.r.r;
+      stat.value.currentFileSize = data.r.r.s;
+      stat.value.sessionDuration = data.r.r.d;
+      stat.value.sessionMaxTimestamp = data.r.r.t;
+    })
+    .catch((error) => {
+      // TODO: 错误处理
+      console.error(error);
+    });
+}
+
+const isPopoverShow = ref(false);
+let pullStatInterval: number | null = null;
+function handlePopoverVisibleChange(visible: boolean) {
+  isPopoverShow.value = visible;
+  if (visible) {
+    pullStat();
+    if (pullStatInterval) {
+      clearInterval(pullStatInterval);
+    }
+    pullStatInterval = setInterval(() => {
+      // TODO: 控速
+      pullStat();
+    }, 1000);
+  } else {
+    if (pullStatInterval) {
+      clearInterval(pullStatInterval);
+    }
+    pullStatInterval = null;
+  }
+}
+onUnmounted(() => {
+  if (pullStatInterval) {
+    clearInterval(pullStatInterval);
+  }
+});
 </script>
 
-<style scoped lang="sass">
+<style scoped lang="scss">
+.detail {
+  >p {
+    margin: 0;
+  }
+}
 
-.detail
-  > p
-    margin: 0
-.record-status
-  display: flex
-  > div
-    display: flex
-.setting-box
-  margin-bottom: 24px
+.record-status {
+  display: flex;
+  justify-content: space-between;
+
+  >div {
+    display: flex;
+  }
+}
+
+.setting-box {
+  margin-bottom: 24px;
+}
+
+.stat {
+  >p {
+    margin: 0;
+  }
+}
 </style>
