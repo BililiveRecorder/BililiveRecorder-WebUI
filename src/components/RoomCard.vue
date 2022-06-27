@@ -534,7 +534,9 @@ function handlePopoverVisibleChange(visible: boolean) {
       clearInterval(pullStatInterval);
     }
     pullStatInterval = setInterval(() => {
-      // TODO: 控速
+      if (document.hidden) {
+        return;
+      }
       pullStat();
     }, 1000);
   } else {

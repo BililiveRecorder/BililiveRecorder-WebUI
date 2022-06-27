@@ -38,11 +38,11 @@
 
 <script setup lang="ts">
 import { RoomDto } from '../../utils/api';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { h, onMounted, onUnmounted, ref } from 'vue';
 import {
   NSpace, NGrid, NGridItem, NModal,
   NH2, NButton, NIcon, NForm, NFormItem, NSelect, NInput, NSwitch,
-  useLoadingBar,
+  useLoadingBar, useNotification, NotificationReactive,
 } from 'naive-ui';
 import RoomCard from '../../components/RoomCard.vue';
 import { Sync } from '@vicons/ionicons5';
@@ -50,7 +50,10 @@ import { FormInst, FormRules } from 'naive-ui/lib/form/src/interface';
 import { recorderController } from '../../utils/RecorderController';
 
 const loadingBar = useLoadingBar();
+const notification = useNotification();
 const order = ref('none');
+
+let pullStatFailCount = 0;
 
 const orderOptions = [
   {
@@ -76,6 +79,7 @@ async function getRoomList() {
     }
     const res = await recorderController.recorder.getRoomList();
     loadingBar.finish();
+    pullStatFailCount = 0;
     resort(res);
     return res;
   } catch (error) {
@@ -273,42 +277,83 @@ interface RoomStat {
     }
   }[];
 }
-
+let failNotification: NotificationReactive | null;
 function updateRoomStat() {
-  recorderController.recorder?.graphql<RoomStat>('q', 'query q{r:rooms{o:objectId s:streaming r:recording a:ioStats{a:networkMbps}b:recordingStats{b:durationRatio}}}', null).then((data) => {
-    let isUnSync = false;
-    orderedRoom.value.forEach((room, i) => {
-      const index = data.r.findIndex((r) => r.o === room.objectId);
-      if (index === -1) {
+  recorderController.recorder?.graphql<RoomStat>('q', 'query q{r:rooms{o:objectId s:streaming r:recording a:ioStats{a:networkMbps}b:recordingStats{b:durationRatio}}}', null)
+    .then((data) => {
+      let isUnSync = false;
+      orderedRoom.value.forEach((room, i) => {
+        const index = data.r.findIndex((r) => r.o === room.objectId);
+        if (index === -1) {
+          isUnSync = true;
+          return;
+        }
+        const roomStat = data.r[index];
+        data.r.splice(index, 1);
+        room.streaming = roomStat.s;
+        room.recording = roomStat.r;
+        room.ioStats.networkMbps = typeof roomStat.a.a !== 'number' ? 0 : roomStat.a.a;
+        room.recordingStats.durationRatio = typeof roomStat.b.b !== 'number' ? 0 : roomStat.b.b;
+      });
+      if (data.r.length > 0) {
         isUnSync = true;
-        return;
       }
-      const roomStat = data.r[index];
-      data.r.splice(index, 1);
-      room.streaming = roomStat.s;
-      room.recording = roomStat.r;
-      room.ioStats.networkMbps = typeof roomStat.a.a !== 'number' ? 0 : roomStat.a.a;
-      room.recordingStats.durationRatio = typeof roomStat.b.b !== 'number' ? 0 : roomStat.b.b;
+      if (isUnSync) {
+        setTimeout(getRoomList, 100);
+      }
+    }).catch((e) => {
+      pullStatFailCount++;
+      if (pullStatFailCount >= 5) {
+        if (failNotification) {
+          failNotification.destroy();
+        }
+        failNotification = notification.error({
+          title: '拉取统计失败!',
+          description: `已连续${pullStatFailCount}次拉取统计失败，请检查录播姬运行状态或网络连接`,
+          action: () => h(NButton, {
+            text: true,
+            type: 'primary',
+            onClick: () => {
+              if (failNotification) {
+                failNotification.destroy();
+              }
+              failNotification = null;
+              updateRoomStat();
+            },
+          }, { default: () => '再试试' }),
+        });
+      }
     });
-    if (data.r.length > 0) {
-      isUnSync = true;
-    }
-    if (isUnSync) {
-      setTimeout(getRoomList, 100);
-    }
-  }).catch((e) => {
-    // TODO: 错误处理
-  });
 }
 
 let updateInterval: any;
-
+let hiddenCount = 0;
+function onVisibilityChange() {
+  if (document.visibilityState === 'visible') {
+    if (hiddenCount > 100) {
+      hiddenCount = 0;
+      updateRoomStat();
+    }
+  }
+}
 onMounted(() => {
-  // TODO: 控速处理
-  updateInterval = setInterval(updateRoomStat, 5000);
+  updateInterval = setInterval(() => {
+    if (document.visibilityState === 'hidden') {
+      hiddenCount++;
+      return;
+    } else {
+      hiddenCount = 0;
+    }
+    if (pullStatFailCount >= 5) {
+      return;
+    }
+    updateRoomStat();
+  }, 5000);
+  document.addEventListener('visibilitychange', onVisibilityChange);
 });
 onUnmounted(() => {
   clearInterval(updateInterval);
+  document.removeEventListener('visibilitychange', onVisibilityChange);
 });
 
 </script>
