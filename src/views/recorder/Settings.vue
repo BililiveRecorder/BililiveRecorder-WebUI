@@ -348,7 +348,6 @@ function toggleFileNamePreviewModal() {
   showFileNamePreviewModal.value = !showFileNamePreviewModal.value;
 }
 function handleFileNamePreviewModalClose(newTemplate: string) {
-  console.log(newTemplate);
   newConfig.value['optionalFileNameRecordTemplate'].value = newTemplate;
   newConfig.value['optionalFileNameRecordTemplate'].hasValue = true;
 }

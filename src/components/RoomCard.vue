@@ -413,7 +413,6 @@ function handleSelect(option: any) {
     case 'open-room':
       break;
     case 'room-setting':
-
       initSetting();
       showSettingDialog.value = true;
       break;

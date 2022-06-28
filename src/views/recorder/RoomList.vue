@@ -438,7 +438,6 @@ const updateRoomInfo = (objectId: string) => {
 };
 
 const handleShowStat = (room: RoomDto) => {
-  console.log('show stat', room);
   statTargetRoomObjectId.value = room.objectId;
   statRoom.value = room;
   if (updateRoomInfoInterval) {
