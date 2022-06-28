@@ -1,9 +1,7 @@
 <template>
   <n-card size="small" :style="{ height: '100%' }">
-    <template #header>
+    <n-space justify="space-between" :align="'center'">
       <n-h3 style="margin: 0;">{{ props.room.name }}</n-h3>
-    </template>
-    <template #header-extra>
       <n-dropdown trigger="hover" :options="actions" @select="handleSelect">
         <n-button quaternary round>
           <template #icon>
@@ -11,7 +9,7 @@
           </template>
         </n-button>
       </n-dropdown>
-    </template>
+    </n-space>
     <n-space>
       <n-tooltip v-if="props.room.danmakuConnected" trigger="hover">
         <template #trigger>
@@ -56,10 +54,23 @@
       <div class="recording" v-show="!props.room.recording && props.room.autoRecord">
         <n-icon size="20" :component="Analytics" :color="themeVars.warningColor" />监控中
       </div>
-      <n-gradient-text v-if="props.room.recording" :type="statColor(props.room.recordingStats.durationRatio)"
-        @click="emit('show-stats')">
-        {{ props.room.ioStats.networkMbps.toFixed(2) }} Mbps
-      </n-gradient-text>
+      <n-popover v-if="props.room.recording" class="network" :delay="500" :duration="500" :show="isPopoverShow"
+        @update:show="handlePopoverVisibleChange">
+        <template #trigger>
+          <n-button quaternary size="small" :style="{ margin: '0 -0.5em' }">
+            <n-gradient-text :type="statColor(props.room.recordingStats.durationRatio)" @click="emit('show-stats')">
+              {{ props.room.ioStats.networkMbps.toFixed(2) }} Mbps
+            </n-gradient-text>
+          </n-button>
+        </template>
+        <div class="stat">
+          <p>下载速度：{{ stat.networkMbps.toFixed(2) }} Mbps</p>
+          <p>录制速度比例：{{ (stat.durationRatio * 100).toFixed(2) }} %</p>
+          <p>文件大小：{{ byteToHuman(stat.currentFileSize) }}</p>
+          <p>会话时长：{{ msToHuman(stat.sessionDuration) }}</p>
+          <p>已录制时长：{{ msToHuman(stat.sessionMaxTimestamp) }}</p>
+        </div>
+      </n-popover>
     </div>
     <n-modal :title="'房间设置 ' + props.room.roomId" v-model:show="showSettingDialog" preset="card"
       :style="{ maxWidth: '800px', maxHeight: '95vh' }">
@@ -122,10 +133,10 @@
   </n-card>
 </template>
 <script setup lang="ts">
-import { Component, h, onMounted, onUnmounted, PropType, ref } from 'vue';
+import { Component, h, onMounted, onUnmounted, PropType, ref, watch } from 'vue';
 import {
   DropdownOption, useLoadingBar, useMessage, NCollapseTransition, NCard, NH3, NIcon,
-  NSpace, NTooltip, NDropdown, NButton, NModal, NSkeleton, useThemeVars,
+  NSpace, NTooltip, NDropdown, NButton, NModal, NSkeleton, useThemeVars, NPopover,
   NGradientText,
 } from 'naive-ui';
 import {
@@ -133,7 +144,7 @@ import {
   PlayCircle, StopCircle, Refresh, Open, Settings, Trash,
 } from '@vicons/ionicons5';
 import { Recorder, RoomDto, Optional } from '../utils/api';
-import { msToHuman } from '../utils/unitConvert';
+import { byteToHuman, msToHuman } from '../utils/unitConvert';
 import OptionalInput from '../components/OptionalInput.vue';
 import { recorderController } from '../utils/RecorderController';
 
@@ -452,6 +463,82 @@ onUnmounted(() => {
   }
 });
 
+
+const stat = ref({
+  networkMbps: 0,
+  durationRatio: 0,
+  currentFileSize: 0,
+  sessionDuration: 0,
+  sessionMaxTimestamp: 0,
+});
+// these two will be update by outside, so we need to watch them
+watch(props.room.ioStats, (newVal) => {
+  stat.value.networkMbps = newVal.networkMbps;
+});
+watch(props.room.recordingStats, (newVal) => {
+  stat.value.durationRatio = newVal.durationRatio;
+});
+interface QueryResult {
+  r: {
+    i: {
+      n: number;
+    },
+    r: {
+      r: number;
+      s: number;
+      d: number;
+      t: number;
+    }
+  }
+}
+function pullStat() {
+  if (recorderController.recorder == null) {
+    return;
+  }
+  recorderController.recorder.graphql<QueryResult>('q',
+    'query q($o:ID){r:room(objectId:$o){i:ioStats{n:networkMbps}r:recordingStats{r:durationRatio s:currentFileSize d:sessionDuration t:sessionMaxTimestamp}}}',
+    { o: props.room.objectId })
+    .then((data) => {
+      stat.value.networkMbps = data.r.i.n;
+      stat.value.durationRatio = data.r.r.r;
+      stat.value.currentFileSize = data.r.r.s;
+      stat.value.sessionDuration = data.r.r.d;
+      stat.value.sessionMaxTimestamp = data.r.r.t;
+    })
+    .catch((error) => {
+      message.error('拉取录制统计数据失败：' + error?.message || error.toString());
+      console.error(error);
+    });
+}
+const isPopoverShow = ref(false);
+let pullStatInterval: number | null = null;
+function handlePopoverVisibleChange(visible: boolean) {
+  isPopoverShow.value = visible;
+  if (visible) {
+    pullStat();
+    if (pullStatInterval) {
+      clearInterval(pullStatInterval);
+    }
+    pullStatInterval = setInterval(() => {
+      if (document.hidden) {
+        return;
+      }
+      pullStat();
+    }, 1000);
+  } else {
+    if (pullStatInterval) {
+      clearInterval(pullStatInterval);
+    }
+    pullStatInterval = null;
+  }
+}
+onUnmounted(() => {
+  if (pullStatInterval) {
+    clearInterval(pullStatInterval);
+  }
+});
+
+
 function statColor(ratio: number) {
   if (ratio > 0.95) {
     return 'success';
@@ -468,12 +555,17 @@ function statColor(ratio: number) {
 .detail {
   >p {
     margin: 0;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
 .record-status {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   >div {
     display: flex;
@@ -482,6 +574,12 @@ function statColor(ratio: number) {
 
 .setting-box {
   margin-bottom: 24px;
+}
+
+.stat {
+  >p {
+    margin: 0;
+  }
 }
 
 .n-gradient-text {

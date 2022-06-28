@@ -433,7 +433,7 @@ const updateRoomInfo = (objectId: string) => {
     statRoom.value = room;
   }).catch((e) => {
     console.error(e);
-    message.error('get room failed');
+    message.error('拉取房间统计信息失败：' + e.message || e.toString());
   });
 };
 
