@@ -46,16 +46,16 @@
           <p>录制速度比例：{{ ((statRoom?.recordingStats.durationRatio || 0) * 100).toFixed(2) }} %</p>
           <p>统计区间的直播数据时长：{{ statRoom?.recordingStats.addedDuration || 0 }} 毫秒</p>
           <p>统计区间所经过的时长：{{ statRoom?.recordingStats.passedTime || 0 }} 毫秒</p>
-          <p>统计区间收到视频数据： {{ byteToHuman(statRoom?.recordingStats.inputVideoBytes || 0) }}</p>
-          <p>统计区间收到音频数据： {{ byteToHuman(statRoom?.recordingStats.inputAudioBytes || 0) }}</p>
-          <p>统计区间新写入视频帧：{{ statRoom?.recordingStats.outputVideoFrames }}</p>
-          <p>统计区间新写入音频帧：{{ statRoom?.recordingStats.outputAudioFrames }}</p>
-          <p>统计区间新写入视频：{{ byteToHuman(statRoom?.recordingStats.outputVideoBytes || 0) }}</p>
-          <p>统计区间新写入音频：{{ byteToHuman(statRoom?.recordingStats.outputAudioBytes || 0) }}</p>
+          <p>统计区间内收到视频数据： {{ byteToHuman(statRoom?.recordingStats.inputVideoBytes || 0) }}</p>
+          <p>统计区间内收到音频数据： {{ byteToHuman(statRoom?.recordingStats.inputAudioBytes || 0) }}</p>
+          <p>统计区间内新写入视频帧：{{ statRoom?.recordingStats.outputVideoFrames }}</p>
+          <p>统计区间内新写入音频帧：{{ statRoom?.recordingStats.outputAudioFrames }}</p>
+          <p>统计区间内新写入视频：{{ byteToHuman(statRoom?.recordingStats.outputVideoBytes || 0) }}</p>
+          <p>统计区间内新写入音频：{{ byteToHuman(statRoom?.recordingStats.outputAudioBytes || 0) }}</p>
           <p>总共收到的视频数据：{{ byteToHuman(statRoom?.recordingStats.totalInputVideoBytes || 0) }}</p>
           <p>总共收到的音频数据：{{ byteToHuman(statRoom?.recordingStats.totalInputAudioBytes || 0) }}</p>
-          <p>总共写入的视频帧数量：{{ statRoom?.recordingStats.totalOutputVideoFrames || 0 }}</p>
-          <p>总共写入的音频帧数量：{{ statRoom?.recordingStats.totalOutputAudioFrames || 0 }}</p>
+          <p>总共写入的视频帧：{{ statRoom?.recordingStats.totalOutputVideoFrames || 0 }}</p>
+          <p>总共写入的音频帧：{{ statRoom?.recordingStats.totalOutputAudioFrames || 0 }}</p>
           <p>总共写入的视频数据：{{ byteToHuman(statRoom?.recordingStats.totalOutputVideoBytes || 0) }}</p>
           <p>总共写入的音频数据：{{ byteToHuman(statRoom?.recordingStats.totalOutputAudioBytes || 0) }}</p>
         </div>
@@ -63,8 +63,8 @@
           <h3>IO 统计数据</h3>
           <p>统计区间的开始时间：{{ dateToTimeWithMs(new Date(statRoom?.ioStats.startTime || 0)) }}</p>
           <p>统计区间的结束时间：{{ dateToTimeWithMs(new Date(statRoom?.ioStats.endTime || 0)) }}</p>
-          <p>当前统计区间的时长：{{ statRoom?.ioStats.duration || 0 }} 毫秒</p>
-          <p>下载了的数据量：{{ byteToHuman(statRoom?.ioStats.networkBytesDownloaded || 0) }}</p>
+          <p>统计区间的时长：{{ statRoom?.ioStats.duration || 0 }} 毫秒</p>
+          <p>统计区间内下载数据：{{ byteToHuman(statRoom?.ioStats.networkBytesDownloaded || 0) }}</p>
           <p>平均下载速度：{{ statRoom?.ioStats.networkMbps.toFixed(2) }} Mbps</p>
           <p>统计区间磁盘写入耗时：{{ statRoom?.ioStats.diskWriteDuration || 0 }} 毫秒</p>
           <p>统计区间磁盘写入数据：{{ byteToHuman(statRoom?.ioStats.diskBytesWritten || 0) }}</p>
