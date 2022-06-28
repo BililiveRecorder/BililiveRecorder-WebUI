@@ -204,24 +204,29 @@ function modifyServer(target: Server) {
 }
 </script>
 
-<style lang="sass" scoped>
+<style lang="scss" scoped>
+.home-container {
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 
-.home-container
-  padding: 24px
-  display: flex
-  align-items: center
-  justify-content: center
-  flex-direction: column
-  .server-container
-    display: flex
-    width: min(400px,100%)
-    align-items: center
-    justify-content: center
-    flex-direction: column
-    margin: 1vh 0
-    --max-vh: 45vh
+  .server-container {
+    display: flex;
+    width: min(400px, 100%);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin: 1vh 0;
+    --max-vh: 45vh;
+  }
+}
 
-@media (min-width: 768px) and (min-height: 768px)
-  .home-container
-    margin-top: 10vh
+
+@media (min-width: 768px) and (min-height: 768px) {
+  .home-container {
+    margin-top: 10vh;
+  }
+}
 </style>

@@ -82,7 +82,7 @@
 import { RoomDto } from '../../utils/api';
 import { h, onMounted, onUnmounted, ref } from 'vue';
 import {
-  NSpace, NGrid, NGridItem, NModal, NDrawer, NDrawerContent, NTime,
+  NSpace, NGrid, NGridItem, NModal, NDrawer, NDrawerContent,
   NH2, NButton, NIcon, NForm, NFormItem, NSelect, NInput, NSwitch,
   useLoadingBar, useMessage, useNotification, NotificationReactive,
 } from 'naive-ui';
