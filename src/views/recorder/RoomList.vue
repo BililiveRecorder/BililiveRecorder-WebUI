@@ -356,6 +356,8 @@ function updateRoomStat() {
       if (isUnSync) {
         setTimeout(getRoomList, 100);
       }
+      failNotification?.destroy();
+      failNotification = null;
     }).catch((e) => {
       console.error(e);
       pullStatFailCount++;
@@ -366,6 +368,7 @@ function updateRoomStat() {
         failNotification = notification.error({
           title: '拉取统计失败!',
           description: `已连续${pullStatFailCount}次拉取统计失败，请检查录播姬运行状态或网络连接`,
+          closable: false,
           action: () => h(NButton, {
             text: true,
             type: 'primary',
@@ -385,6 +388,7 @@ function updateRoomStat() {
 let updateInterval: any;
 let hiddenCount = 0;
 function onVisibilityChange() {
+  console.log(123);
   if (document.visibilityState === 'visible') {
     if (hiddenCount > 100) {
       hiddenCount = 0;
@@ -408,6 +412,7 @@ onMounted(() => {
   document.addEventListener('visibilitychange', onVisibilityChange);
 });
 onUnmounted(() => {
+  failNotification?.destroy();
   clearInterval(updateInterval);
   document.removeEventListener('visibilitychange', onVisibilityChange);
 });
@@ -417,6 +422,7 @@ onUnmounted(() => {
 const showStatDrawer = ref(false);
 const statTargetRoomObjectId = ref<string | null>(null);
 const statRoom = ref<RoomDto | null>(null);
+let updateRoomInfoFailCount = 0;
 
 let updateRoomInfoInterval: number | null = null;
 const updateRoomInfo = (objectId: string) => {
@@ -432,6 +438,7 @@ const updateRoomInfo = (objectId: string) => {
     });
     statRoom.value = room;
   }).catch((e) => {
+    updateRoomInfoFailCount++;
     console.error(e);
     message.error('拉取房间统计信息失败：' + e.message || e.toString());
   });
@@ -445,6 +452,9 @@ const handleShowStat = (room: RoomDto) => {
   }
   updateRoomInfo(room.objectId);
   updateRoomInfoInterval = setInterval(() => {
+    if (updateRoomInfoFailCount >= 5) {
+      return;
+    }
     if (statTargetRoomObjectId.value) {
       updateRoomInfo(statTargetRoomObjectId.value);
     } else if (updateRoomInfoInterval) {
