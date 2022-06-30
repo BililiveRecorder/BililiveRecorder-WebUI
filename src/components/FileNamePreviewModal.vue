@@ -43,7 +43,6 @@ function saveAndClose() {
 
 function test() {
   recorderController.recorder?.generateFileName(template.value, context.value).then((e) => {
-    console.log(e);
     result.value = e.relativePath;
     errorMessage.value = e.errorMessage;
   }).catch((e) => {
