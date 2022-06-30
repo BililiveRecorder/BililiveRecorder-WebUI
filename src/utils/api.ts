@@ -217,6 +217,7 @@ export interface GenerateFileNameInput {
 }
 
 export interface RoomIOStatsDto{
+  streamHost: string;
   startTime: string;
   endTime: string;
   duration: number; // 当前统计区间的时长，毫秒
@@ -423,6 +424,15 @@ export class Recorder {
 
   async refreshRoomInfoByObjectId(objectId: string): Promise<RoomDto> {
     return await this.request<RoomDto>('POST', `api/room/${objectId}/refresh`, {});
+  }
+
+  async graphql<T>(queryName:string, query:string, variables:any|null): Promise<T> {
+    const res= await this.request<any>('POST', `graphql`, { queryName, query, variables });
+    if (res.error) {
+      throw res.error;
+    } else {
+      return res.data;
+    }
   }
 
   static getMockDefaultConfig(): DefaultConfig {

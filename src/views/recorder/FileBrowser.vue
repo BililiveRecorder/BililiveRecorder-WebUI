@@ -64,7 +64,6 @@ onBeforeRouteUpdate((to, from) => {
       return;
     }
     if (e.exist) {
-      console.log(e);
       files.value = e.files;
     } else {
       router.push({ hash: '#/' });

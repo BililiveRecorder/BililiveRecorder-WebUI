@@ -333,7 +333,6 @@ onMounted(() => {
 
 // 编辑器
 const showAdvanced = ref(false);
-
 const useAdvancedEditor = ref(false);
 
 function UseAdvancedEditor() {
@@ -349,7 +348,6 @@ function toggleFileNamePreviewModal() {
   showFileNamePreviewModal.value = !showFileNamePreviewModal.value;
 }
 function handleFileNamePreviewModalClose(newTemplate: string) {
-  console.log(newTemplate);
   newConfig.value['optionalFileNameRecordTemplate'].value = newTemplate;
   newConfig.value['optionalFileNameRecordTemplate'].hasValue = true;
 }

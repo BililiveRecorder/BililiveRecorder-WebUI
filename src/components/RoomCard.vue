@@ -1,9 +1,7 @@
 <template>
   <n-card size="small" :style="{ height: '100%' }">
-    <template #header>
+    <n-space justify="space-between" :align="'center'">
       <n-h3 style="margin: 0;">{{ props.room.name }}</n-h3>
-    </template>
-    <template #header-extra>
       <n-dropdown trigger="hover" :options="actions" @select="handleSelect">
         <n-button quaternary round>
           <template #icon>
@@ -11,7 +9,7 @@
           </template>
         </n-button>
       </n-dropdown>
-    </template>
+    </n-space>
     <n-space>
       <n-tooltip v-if="props.room.danmakuConnected" trigger="hover">
         <template #trigger>
@@ -38,14 +36,10 @@
         摸鱼中
       </n-tooltip>
       <span :style="{ color: themeVars.textColor3, fontSize: themeVars.fontSizeSmall }">
-        ID {{
-            props.room.roomId
-        }}
+        ID {{ props.room.roomId }}
       </span>
       <span v-if="props.room.shortId" :style="{ color: themeVars.textColor3, fontSize: themeVars.fontSizeSmall }">
-        id {{
-            props.room.shortId
-        }}
+        id {{ props.room.shortId }}
       </span>
     </n-space>
     <div class="detail">
@@ -54,11 +48,31 @@
     </div>
     <div class="record-status">
       <div class="recording" v-if="props.room.recording">
-        <n-icon size="20" :component="RecordingOutline" color="#a00" />录制中
+        <n-icon size="20" :component="RecordingOutline" color="#a00" />
+        录制中({{ msToHuman(props.room.recordingStats.sessionMaxTimestamp) }})
       </div>
       <div class="recording" v-show="!props.room.recording && props.room.autoRecord">
         <n-icon size="20" :component="Analytics" :color="themeVars.warningColor" />监控中
       </div>
+      <n-popover v-if="props.room.recording" class="network" :delay="500" :duration="500" :show="isPopoverShow"
+        @update:show="handlePopoverVisibleChange">
+        <template #trigger>
+          <n-button quaternary size="small" :style="{ margin: '0 -0.5em' }">
+            <n-gradient-text :type="statColor(props.room.recordingStats.durationRatio)" @click="emit('show-stats')">
+              {{ props.room.ioStats.networkMbps.toFixed(2) }} Mbps
+            </n-gradient-text>
+          </n-button>
+        </template>
+        <div class="stat">
+          <p v-if="isDataLoaded">服务器：{{ stat.streamHost }}</p>
+          <p v-if="isDataLoaded">下载速度：{{ stat.networkMbps.toFixed(2) }} Mbps</p>
+          <p v-if="isDataLoaded">录制速度比例：{{ (stat.durationRatio * 100).toFixed(2) }} %</p>
+          <p v-if="isDataLoaded">文件大小：{{ byteToHuman(stat.currentFileSize) }}</p>
+          <p v-if="isDataLoaded">会话时长：{{ msToHuman(stat.sessionDuration) }}</p>
+          <p v-if="isDataLoaded">已录制时长：{{ msToHuman(stat.sessionMaxTimestamp) }}</p>
+          <n-skeleton v-if="!isDataLoaded" text :repeat="3" :style="{ minWidth: '30px' }" />
+        </div>
+      </n-popover>
     </div>
     <n-modal :title="'房间设置 ' + props.room.roomId" v-model:show="showSettingDialog" preset="card"
       :style="{ maxWidth: '800px', maxHeight: '95vh' }">
@@ -121,10 +135,18 @@
   </n-card>
 </template>
 <script setup lang="ts">
-import { Component, h, onMounted, onUnmounted, ref } from 'vue';
-import { DropdownOption, useLoadingBar, useMessage, NCollapseTransition, NCard, NH3, NIcon, NSpace, NTooltip, NDropdown, NButton, NModal, NSkeleton, useThemeVars } from 'naive-ui';
-import { Radio, CloudDone, CloudOffline, RecordingOutline, Analytics, EllipsisVertical, PlayCircle, StopCircle, Refresh, Open, Settings, Trash } from '@vicons/ionicons5';
+import { Component, h, onMounted, onUnmounted, PropType, ref, watch } from 'vue';
+import {
+  DropdownOption, useLoadingBar, useMessage, NCollapseTransition, NCard, NH3, NIcon,
+  NSpace, NTooltip, NDropdown, NButton, NModal, NSkeleton, useThemeVars, NPopover,
+  NGradientText,
+} from 'naive-ui';
+import {
+  Radio, CloudDone, CloudOffline, RecordingOutline, Analytics, EllipsisVertical,
+  PlayCircle, StopCircle, Refresh, Open, Settings, Trash,
+} from '@vicons/ionicons5';
 import { Recorder, RoomDto, Optional } from '../utils/api';
+import { byteToHuman, msToHuman } from '../utils/unitConvert';
 import OptionalInput from '../components/OptionalInput.vue';
 import { recorderController } from '../utils/RecorderController';
 
@@ -159,7 +181,7 @@ const newRoomConfig = ref<{ [key: string]: ConfigItem }>({});
 
 const props = defineProps({
   room: {
-    type: Object,
+    type: Object as PropType<RoomDto>,
     required: true,
     default: (): RoomDto => ({
       'objectId': '00000000-0000-0000-0000-000000000000',
@@ -198,6 +220,7 @@ const props = defineProps({
         'totalOutputAudioBytes': 0,
       },
       'ioStats': {
+        'streamHost': '',
         'startTime': '',
         'endTime': '',
         'duration': 0,
@@ -210,6 +233,10 @@ const props = defineProps({
     }),
   },
   new: {
+    type: Boolean,
+    default: false,
+  },
+  globalUpdating: {
     type: Boolean,
     default: false,
   },
@@ -295,7 +322,8 @@ const actions: DropdownOption[] = [
   },
 ];
 
-const emit = defineEmits(['start-record', 'stop-record', 'refresh-room-info', 'start-auto-record', 'stop-auto-record', 'delete', 'self-update']);
+const emit = defineEmits(['start-record', 'stop-record', 'refresh-room-info', 'start-auto-record',
+  'stop-auto-record', 'delete', 'self-update', 'show-stats']);
 const showSettingDialog = ref(false);
 const loading = ref(true);
 
@@ -379,7 +407,7 @@ async function saveConfig() {
   const toSave: any = Object.assign({}, newRoomConfig.value);
   toSave.autoRecord = toSave.autoRecord.value;
   try {
-    await recorderController.recorder.setRoomConfig(props.room.objectId, toSave);
+    await recorderController.recorder.setRoomConfigByObjectId(props.room.objectId, toSave);
     msg.destroy();
     message.success('保存成功');
     loadingbar.finish();
@@ -399,7 +427,6 @@ function handleSelect(option: any) {
     case 'open-room':
       break;
     case 'room-setting':
-
       initSetting();
       showSettingDialog.value = true;
       break;
@@ -410,19 +437,26 @@ function handleSelect(option: any) {
 
 let recheckTimeout: any;
 
+function requireRecheck() {
+  if (recheckTimeout) {
+    clearTimeout(recheckTimeout);
+  }
+  recheckTimeout = setTimeout(() => {
+    if (recorderController.recorder == null) {
+      return;
+    }
+    recorderController.recorder.getRoomByObjectId(props.room.objectId).then((room) => {
+      emit('self-update', room);
+    }).catch((error) => {
+      console.error(error);
+    });
+    recheckTimeout = void 0;
+  }, 1000);
+}
+
 onMounted(() => {
   if (!props.room.danmakuConnected) {
-    recheckTimeout = setTimeout(() => {
-      if (recorderController.recorder == null) {
-        return;
-      }
-      recorderController.recorder.getRoomByObjectId(props.room.objectId).then((room) => {
-        emit('self-update', room);
-      }).catch((error) => {
-        console.error(error);
-      });
-      recheckTimeout = void 0;
-    }, 5000);
+    requireRecheck();
   }
 });
 
@@ -432,17 +466,147 @@ onUnmounted(() => {
   }
 });
 
+const failCount = ref(0);
+const stat = ref({
+  streamHost: '',
+  networkMbps: 0,
+  durationRatio: 0,
+  currentFileSize: 0,
+  sessionDuration: 0,
+  sessionMaxTimestamp: 0,
+});
+// these two will be update by outside, so we need to watch them
+watch(props.room.ioStats, (newVal) => {
+  stat.value.networkMbps = newVal.networkMbps;
+});
+watch(props.room.recordingStats, (newVal) => {
+  stat.value.durationRatio = newVal.durationRatio;
+});
+interface QueryResult {
+  r: {
+    i: {
+      n: number;
+      h: string;
+    },
+    r: {
+      r: number;
+      s: number;
+      d: number;
+      t: number;
+    }
+  }
+}
+function pullStat() {
+  if (recorderController.recorder == null) {
+    return;
+  }
+  recorderController.recorder.graphql<QueryResult>('q',
+    'query q($o:ID){r:room(objectId:$o){i:ioStats{n:networkMbps h:streamHost}r:recordingStats{r:durationRatio s:currentFileSize d:sessionDuration t:sessionMaxTimestamp}}}',
+    { o: props.room.objectId })
+    .then((data) => {
+      stat.value.streamHost = data.r.i.h;
+      stat.value.networkMbps = data.r.i.n;
+      stat.value.durationRatio = data.r.r.r;
+      stat.value.currentFileSize = data.r.r.s;
+      stat.value.sessionDuration = data.r.r.d;
+      stat.value.sessionMaxTimestamp = data.r.r.t;
+      isDataLoaded.value = true;
+    })
+    .catch((error) => {
+      failCount.value++;
+      if (failCount.value >= 5) {
+        isDataLoaded.value = false;
+      }
+      message.error('拉取录制统计数据失败：' + error?.message || error.toString());
+      console.error(error);
+    });
+}
+const isPopoverShow = ref(false);
+const isDataLoaded = ref(false);
+let pullStatInterval: number | null = null;
+function handlePopoverVisibleChange(visible: boolean) {
+  isPopoverShow.value = visible;
+  if (visible) {
+    isDataLoaded.value = false;
+    failCount.value = 0;
+    pullStat();
+    if (pullStatInterval) {
+      clearInterval(pullStatInterval);
+    }
+    pullStatInterval = setInterval(() => {
+      if (document.hidden) {
+        return;
+      }
+      pullStat();
+    }, 1000);
+  } else {
+    if (pullStatInterval) {
+      clearInterval(pullStatInterval);
+    }
+    pullStatInterval = null;
+  }
+}
+onUnmounted(() => {
+  if (pullStatInterval) {
+    clearInterval(pullStatInterval);
+  }
+});
+
+
+function statColor(ratio: number) {
+  if (ratio > 0.95) {
+    return 'success';
+  }
+  if (ratio > 0.8) {
+    return 'warning';
+  }
+  return 'error';
+}
+
 </script>
 
-<style scoped lang="sass">
+<style scoped lang="scss">
+.detail {
+  >p {
+    margin: 0;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
 
-.detail
-  > p
-    margin: 0
-.record-status
-  display: flex
-  > div
-    display: flex
-.setting-box
-  margin-bottom: 24px
+.record-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  >div {
+    display: flex;
+  }
+}
+
+.setting-box {
+  margin-bottom: 24px;
+}
+
+.stat {
+  >p {
+    margin: 0;
+  }
+}
+
+.n-gradient-text {
+  font-weight: bold;
+  // no, it works, but bad cpu usage
+  // background-size: 200% auto;
+  // background-image: linear-gradient(252deg, var(--n-color-start) 0%, var(--n-color-end) 50%, var(--n-color-start) 100%);
+  // animation: 1s roll linear infinite forwards;
+}
+
+// @keyframes roll {
+//   to {
+//     background-position: 200% center;
+//   }
+// }
 </style>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { onBeforeRouteUpdate, useRoute, useRouter, RouterLink } from 'vue-router';
-import { NCard, NA, NIcon, NTag } from 'naive-ui';
+import { NCard, NA, NTag } from 'naive-ui';
 import { ListOutline, FolderOpenOutline, SettingsOutline } from '@vicons/ionicons5';
 import { recorderController } from '../../utils/RecorderController';
 import { EMBEDDED_BUILD } from '../../const';
