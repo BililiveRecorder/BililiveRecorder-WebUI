@@ -397,7 +397,6 @@ function updateRoomStat() {
 let updateInterval: any;
 let hiddenCount = 0;
 function onVisibilityChange() {
-  console.log(123);
   if (document.visibilityState === 'visible') {
     if (hiddenCount > 100) {
       hiddenCount = 0;
