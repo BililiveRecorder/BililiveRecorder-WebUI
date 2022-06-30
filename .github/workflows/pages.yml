@@ -27,13 +27,6 @@ jobs:
           fetch-depth: 0
       - name: NPM install
         run: npm install
-      - name: Build
-        run: npx vite build
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v3.0.0
-        with:
-          name: dist
-          path: dist
       - name: Build for Github Pages
         env:
           BASE_URL: "/BililiveRecorder-WebUI/"
