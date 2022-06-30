@@ -36,6 +36,12 @@
     </n-modal>
     <n-drawer :show="showStatDrawer" :placement="'right'" @update:show="onStatDrawerUpdate" :width="400">
       <n-drawer-content :title="statRoom?.name" :native-scrollbar="false">
+        <n-alert v-if="updateRoomInfoFailCount >= 5" title="拉取数据失败" type="error">
+          已经连续 {{ updateRoomInfoFailCount }} 次拉取数据失败，请检查网络连接。
+          <n-space justify="end">
+            <n-button quaternary @click="updateRoomInfo(statTargetRoomObjectId as string)">重试</n-button>
+          </n-space>
+        </n-alert>
         <div class="recording-stats">
           <h3>录制统计数据</h3>
           <p>会话时长：{{ msToHuman(statRoom?.recordingStats.sessionDuration || 0) }}</p>
@@ -61,6 +67,7 @@
         </div>
         <div class="io-stats">
           <h3>IO 统计数据</h3>
+          <p>直播服务器域名：{{ statRoom?.ioStats.streamHost }}</p>
           <p>统计区间的开始时间：{{ dateToTimeWithMs(new Date(statRoom?.ioStats.startTime || 0)) }}</p>
           <p>统计区间的结束时间：{{ dateToTimeWithMs(new Date(statRoom?.ioStats.endTime || 0)) }}</p>
           <p>统计区间的时长：{{ statRoom?.ioStats.duration || 0 }} 毫秒</p>
@@ -68,7 +75,9 @@
           <p>平均下载速度：{{ statRoom?.ioStats.networkMbps.toFixed(2) }} Mbps</p>
           <p>统计区间磁盘写入耗时：{{ statRoom?.ioStats.diskWriteDuration || 0 }} 毫秒</p>
           <p>统计区间磁盘写入数据：{{ byteToHuman(statRoom?.ioStats.diskBytesWritten || 0) }}</p>
-          <p>平均写入速度：{{ statRoom?.ioStats.diskMBps.toFixed(2) || 0 }} MBps</p>
+          <p>平均写入速度：{{ typeof statRoom?.ioStats.diskMBps !== 'number' ? 0 : statRoom?.ioStats.diskMBps.toFixed(2) }}
+            MBps
+          </p>
         </div>
         <template #footer>
           <n-button @click="showStatDrawer = false">关闭</n-button>
@@ -82,7 +91,7 @@
 import { RoomDto } from '../../utils/api';
 import { h, onMounted, onUnmounted, ref } from 'vue';
 import {
-  NSpace, NGrid, NGridItem, NModal, NDrawer, NDrawerContent,
+  NSpace, NGrid, NGridItem, NModal, NDrawer, NDrawerContent, NAlert,
   NH2, NButton, NIcon, NForm, NFormItem, NSelect, NInput, NSwitch,
   useLoadingBar, useMessage, useNotification, NotificationReactive,
 } from 'naive-ui';
@@ -422,7 +431,7 @@ onUnmounted(() => {
 const showStatDrawer = ref(false);
 const statTargetRoomObjectId = ref<string | null>(null);
 const statRoom = ref<RoomDto | null>(null);
-let updateRoomInfoFailCount = 0;
+const updateRoomInfoFailCount = ref(0);
 
 let updateRoomInfoInterval: number | null = null;
 const updateRoomInfo = (objectId: string) => {
@@ -437,8 +446,9 @@ const updateRoomInfo = (objectId: string) => {
       }
     });
     statRoom.value = room;
+    updateRoomInfoFailCount.value = 0;
   }).catch((e) => {
-    updateRoomInfoFailCount++;
+    updateRoomInfoFailCount.value++;
     console.error(e);
     message.error('拉取房间统计信息失败：' + e.message || e.toString());
   });
@@ -450,9 +460,10 @@ const handleShowStat = (room: RoomDto) => {
   if (updateRoomInfoInterval) {
     clearInterval(updateRoomInfoInterval);
   }
+  updateRoomInfoFailCount.value = 0;
   updateRoomInfo(room.objectId);
   updateRoomInfoInterval = setInterval(() => {
-    if (updateRoomInfoFailCount >= 5) {
+    if (updateRoomInfoFailCount.value >= 5) {
       return;
     }
     if (statTargetRoomObjectId.value) {

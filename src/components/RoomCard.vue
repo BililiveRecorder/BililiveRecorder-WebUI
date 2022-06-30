@@ -64,11 +64,13 @@
           </n-button>
         </template>
         <div class="stat">
-          <p>下载速度：{{ stat.networkMbps.toFixed(2) }} Mbps</p>
-          <p>录制速度比例：{{ (stat.durationRatio * 100).toFixed(2) }} %</p>
-          <p>文件大小：{{ byteToHuman(stat.currentFileSize) }}</p>
-          <p>会话时长：{{ msToHuman(stat.sessionDuration) }}</p>
-          <p>已录制时长：{{ msToHuman(stat.sessionMaxTimestamp) }}</p>
+          <p v-if="isDataLoaded">服务器：{{ stat.streamHost }}</p>
+          <p v-if="isDataLoaded">下载速度：{{ stat.networkMbps.toFixed(2) }} Mbps</p>
+          <p v-if="isDataLoaded">录制速度比例：{{ (stat.durationRatio * 100).toFixed(2) }} %</p>
+          <p v-if="isDataLoaded">文件大小：{{ byteToHuman(stat.currentFileSize) }}</p>
+          <p v-if="isDataLoaded">会话时长：{{ msToHuman(stat.sessionDuration) }}</p>
+          <p v-if="isDataLoaded">已录制时长：{{ msToHuman(stat.sessionMaxTimestamp) }}</p>
+          <n-skeleton v-if="!isDataLoaded" text :repeat="3" :style="{ minWidth: '30px' }" />
         </div>
       </n-popover>
     </div>
@@ -218,6 +220,7 @@ const props = defineProps({
         'totalOutputAudioBytes': 0,
       },
       'ioStats': {
+        'streamHost': '',
         'startTime': '',
         'endTime': '',
         'duration': 0,
@@ -463,8 +466,9 @@ onUnmounted(() => {
   }
 });
 
-
+const failCount = ref(0);
 const stat = ref({
+  streamHost: '',
   networkMbps: 0,
   durationRatio: 0,
   currentFileSize: 0,
@@ -482,6 +486,7 @@ interface QueryResult {
   r: {
     i: {
       n: number;
+      h: string;
     },
     r: {
       r: number;
@@ -496,25 +501,34 @@ function pullStat() {
     return;
   }
   recorderController.recorder.graphql<QueryResult>('q',
-    'query q($o:ID){r:room(objectId:$o){i:ioStats{n:networkMbps}r:recordingStats{r:durationRatio s:currentFileSize d:sessionDuration t:sessionMaxTimestamp}}}',
+    'query q($o:ID){r:room(objectId:$o){i:ioStats{n:networkMbps h:streamHost}r:recordingStats{r:durationRatio s:currentFileSize d:sessionDuration t:sessionMaxTimestamp}}}',
     { o: props.room.objectId })
     .then((data) => {
+      stat.value.streamHost = data.r.i.h;
       stat.value.networkMbps = data.r.i.n;
       stat.value.durationRatio = data.r.r.r;
       stat.value.currentFileSize = data.r.r.s;
       stat.value.sessionDuration = data.r.r.d;
       stat.value.sessionMaxTimestamp = data.r.r.t;
+      isDataLoaded.value = true;
     })
     .catch((error) => {
+      failCount.value++;
+      if (failCount.value >= 5) {
+        isDataLoaded.value = false;
+      }
       message.error('拉取录制统计数据失败：' + error?.message || error.toString());
       console.error(error);
     });
 }
 const isPopoverShow = ref(false);
+const isDataLoaded = ref(false);
 let pullStatInterval: number | null = null;
 function handlePopoverVisibleChange(visible: boolean) {
   isPopoverShow.value = visible;
   if (visible) {
+    isDataLoaded.value = false;
+    failCount.value = 0;
     pullStat();
     if (pullStatInterval) {
       clearInterval(pullStatInterval);

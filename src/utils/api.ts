@@ -217,6 +217,7 @@ export interface GenerateFileNameInput {
 }
 
 export interface RoomIOStatsDto{
+  streamHost: string;
   startTime: string;
   endTime: string;
   duration: number; // 当前统计区间的时长，毫秒
