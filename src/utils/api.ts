@@ -205,6 +205,20 @@ export interface FileNameTemplateContextDto{
   json: string;
 }
 
+export interface FileNameTemplateOutput{
+  status: FileNameTemplateStatus;
+  errorMessage: string;
+  relativePath: string;
+  fullPath: string;
+}
+
+export enum FileNameTemplateStatus {
+  Success = 0,
+  TemplateError,
+  OutOfRange,
+  FileConflict,
+}
+
 export interface FolderDto {
   isFolder: true;
   name: string;
@@ -262,7 +276,7 @@ export interface SetGlobalConfig {
   optionalRecordDanmakuGift?: BooleanOptional;
   optionalRecordDanmakuGuard?: BooleanOptional;
   optionalRecordingQuality?: StringOptional;
-  optionalRecordFilenameFormat?: StringOptional;
+  optionalFileNameRecordTemplate?: StringOptional;
   optionalWebHookUrls?: StringOptional;
   optionalWebHookUrlsV2?: StringOptional;
   optionalWpfShowTitleAndArea?: BooleanOptional;
@@ -290,16 +304,16 @@ export interface SetRoomConfig {
   optionalRecordingQuality?: StringOptional;
 }
 /* eslint-enable no-unused-vars */
-export class Recorder {
+export class Recorder<T = any> {
   public readonly host: string;
   private headers: { [key: string]: string; } | undefined;
-  public meta: any;
-  constructor(host: string, headers?: { [key: string]: string }, meta?: any) {
+  public meta?: T;
+  constructor(host: string, headers?: { [key: string]: string }, meta?: T) {
     this.host = host;
     this.headers = headers || {};
     this.meta = meta;
   }
-  private async request<T>(method: string, path: string, body?: any, rawText:boolean = false): Promise<T> {
+  private async request<T>(method: string, path: string, body?: unknown, rawText:boolean = false): Promise<T> {
     const url = new URL(path, this.host);
     const response = await fetch(url.toString(), {
       method,
@@ -342,8 +356,8 @@ export class Recorder {
     return await this.request<FileApiResult>('GET', `api/file?${new URLSearchParams({ path }).toString()}`);
   }
 
-  async generateFileName(template:string, context:FileNameTemplateContextDto): Promise<string> {
-    return await this.request('POST', 'api/misc/generatefilename', { template, context } as GenerateFileNameInput, true);
+  async generateFileName(template:string, context:FileNameTemplateContextDto): Promise<FileNameTemplateOutput> {
+    return await this.request('POST', 'api/misc/generatefilename', { template, context } as GenerateFileNameInput);
   }
 
   async getRoomList(): Promise<RoomDto[]> {
