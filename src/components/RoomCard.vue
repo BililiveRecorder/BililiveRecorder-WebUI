@@ -99,7 +99,8 @@
           <n-h3>录制模式</n-h3>
           <optional-input type="enum" v-model:value="newRoomConfig['optionalRecordMode']" :enums="RecordModes" />
           <n-collapse-transition :show="newRoomConfig['optionalRecordMode']?.value == 0">
-            <optional-input type="boolean" label="标准模式录制修复设置"
+            <n-h3>标准模式录制修复设置</n-h3>
+            <optional-input type="boolean" label="检测到可能缺少数据时分段"
               v-model:value="newRoomConfig['optionalFlvProcessorSplitOnScriptTag']" :same-as-default="true" />
           </n-collapse-transition>
         </div>
