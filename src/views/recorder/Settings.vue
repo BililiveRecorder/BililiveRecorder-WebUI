@@ -34,6 +34,10 @@
         <n-h3>录制模式</n-h3>
         <optional-input type="enum" v-model:value="newConfig['optionalRecordMode']" :enums="RecordModes"
           :same-as-default="true" />
+        <n-collapse-transition :show="newConfig['optionalRecordMode']?.value == 0">
+          <optional-input type="boolean" label="标准模式录制修复设置"
+            v-model:value="newConfig['optionalFlvProcessorSplitOnScriptTag']" :same-as-default="true" />
+        </n-collapse-transition>
       </div>
       <div id="auto-split" class="setting-box">
         <n-h3>自动分段</n-h3>
@@ -220,6 +224,7 @@ const newConfig = ref<{ [key: string]: ConfigItem }>({
   'optionalRecordDanmakuFlushInterval': getEmptyConfigItem(defaultConfig.value.recordDanmakuFlushInterval),
   'optionalCuttingMode': getEmptyConfigItem(defaultConfig.value.cuttingMode),
   'optionalFileNameRecordTemplate': getEmptyConfigItem(defaultConfig.value.fileNameRecordTemplate),
+  'optionalFlvProcessorSplitOnScriptTag': getEmptyConfigItem(defaultConfig.value.flvProcessorSplitOnScriptTag),
   'optionalRecordingQuality': getEmptyConfigItem(defaultConfig.value.recordingQuality),
   'optionalCuttingNumber': getEmptyConfigItem(defaultConfig.value.cuttingNumber),
   'optionalLiveApiHost': getEmptyConfigItem(defaultConfig.value.liveApiHost),

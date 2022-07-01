@@ -70,6 +70,7 @@ export interface GlobalConfigDto {
   optionalRecordDanmakuGuard: BooleanOptional;
   optionalRecordingQuality: StringOptional;
   optionalFileNameRecordTemplate: StringOptional;
+  optionalFlvProcessorSplitOnScriptTag: BooleanOptional;
   optionalWebHookUrls: StringOptional;
   optionalWebHookUrlsV2: StringOptional;
   optionalWpfShowTitleAndArea: BooleanOptional;
@@ -277,6 +278,7 @@ export interface SetGlobalConfig {
   optionalRecordDanmakuGuard?: BooleanOptional;
   optionalRecordingQuality?: StringOptional;
   optionalFileNameRecordTemplate?: StringOptional;
+  optionalFlvProcessorSplitOnScriptTag?: BooleanOptional;
   optionalWebHookUrls?: StringOptional;
   optionalWebHookUrlsV2?: StringOptional;
   optionalWpfShowTitleAndArea?: BooleanOptional;
@@ -519,6 +521,10 @@ export class Recorder<T = any> {
       'optionalFileNameRecordTemplate': {
         'hasValue': false,
         'value': null,
+      },
+      'optionalFlvProcessorSplitOnScriptTag': {
+        'hasValue': true,
+        'value': true,
       },
       'optionalWebHookUrls': {
         'hasValue': false,
