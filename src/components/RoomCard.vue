@@ -63,14 +63,18 @@
             </n-gradient-text>
           </n-button>
         </template>
-        <div class="stat">
-          <p v-if="isDataLoaded">服务器：{{ stat.streamHost }}</p>
-          <p v-if="isDataLoaded">下载速度：{{ stat.networkMbps.toFixed(2) }} Mbps</p>
-          <p v-if="isDataLoaded">录制速度比例：{{ (stat.durationRatio * 100).toFixed(2) }} %</p>
-          <p v-if="isDataLoaded">文件大小：{{ byteToHuman(stat.currentFileSize) }}</p>
-          <p v-if="isDataLoaded">会话时长：{{ msToHuman(stat.sessionDuration) }}</p>
-          <p v-if="isDataLoaded">已录制时长：{{ msToHuman(stat.sessionMaxTimestamp) }}</p>
-          <n-skeleton v-if="!isDataLoaded" text :repeat="3" :style="{ minWidth: '30px' }" />
+        <div class="stat" v-if="isDataLoaded">
+          <p>服务器：{{ stat.streamHost }}</p>
+          <p>下载速度：{{ stat.networkMbps.toFixed(2) }} Mbps</p>
+          <p>录制速度比例：{{ (stat.durationRatio * 100).toFixed(2) }} %</p>
+          <p>文件大小：{{ byteToHuman(stat.currentFileSize) }}</p>
+          <p>会话时长：{{ msToHuman(stat.sessionDuration) }}</p>
+          <p>已录制时长：{{ msToHuman(stat.sessionMaxTimestamp) }}</p>
+        </div>
+        <div class="stat" v-else>
+          <p v-for="i in 6" :key="i">
+            <n-skeleton text :style="{ width: '300px' }" />
+          </p>
         </div>
       </n-popover>
     </div>

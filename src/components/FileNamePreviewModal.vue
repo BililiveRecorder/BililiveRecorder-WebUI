@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { NModal, NSpace, NInput, NInputNumber, NForm, NFormItem, NButton, NText } from 'naive-ui';
 import type { FileNameTemplateContextDto } from '../utils/api';
 import { debounce } from 'lodash-es';
@@ -30,7 +30,7 @@ const context = ref<FileNameTemplateContextDto>({
   json: '{}',
 });
 const result = ref('');
-const hasError = ref(false);
+const errorMessage = ref('');
 
 function onClose() {
   emits('update:show', false);
@@ -43,11 +43,11 @@ function saveAndClose() {
 
 function test() {
   recorderController.recorder?.generateFileName(template.value, context.value).then((e) => {
-    result.value = e;
-    hasError.value = false;
+    result.value = e.relativePath;
+    errorMessage.value = e.errorMessage;
   }).catch((e) => {
-    result.value = e.message;
-    hasError.value = true;
+    result.value = '';
+    errorMessage.value = e.message || e.toString();
   });
 }
 
@@ -57,6 +57,18 @@ function syncTemplate() {
   template.value = props.defaultTemplate;
   debounceTest();
 }
+
+function jsonVerify(value: string) {
+  try {
+    JSON.parse(value);
+    return 'success';
+  } catch (e) {
+    return 'error';
+  }
+}
+const jsonVerifyStatus = computed(() => {
+  return jsonVerify(context.value.json);
+});
 </script>
 <template>
   <n-modal preset="card" :show="props.show" :on-update:show="(e) => emits('update:show', e)"
@@ -66,8 +78,8 @@ function syncTemplate() {
         <h3>文件名模板：</h3>
         <n-input v-model:value="template" @input="debounceTest" />
       </div>
-      <n-text tag="p" :type="hasError ? 'error' : 'info'">{{ hasError ? ("错误： " + result) : ("将会保存为：" + result) }}
-      </n-text>
+      <n-text tag="p" v-if="errorMessage" :type="'error'">错误：{{ errorMessage }}</n-text>
+      <n-text tag="p" v-if="result" :type="'info'">将会保存到：工作目录/{{ result }}</n-text>
       <div>
         <h3>模拟数据：</h3>
         <n-form label-placement="left" label-width="auto">
@@ -92,7 +104,7 @@ function syncTemplate() {
           <n-form-item label="画质">
             <n-input-number v-model:value="context.qn" @input="debounceTest" :show-button="false" />
           </n-form-item>
-          <n-form-item label="JSON">
+          <n-form-item label="JSON" :validation-status="jsonVerifyStatus">
             <n-input v-model:value="context.json" @input="debounceTest" />
           </n-form-item>
         </n-form>
