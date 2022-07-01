@@ -78,6 +78,7 @@
         </div>
       </n-popover>
     </div>
+    <!-- TODO: 独立成模块 -->
     <n-modal :title="'房间设置 ' + props.room.roomId" v-model:show="showSettingDialog" preset="card"
       :style="{ maxWidth: '800px', maxHeight: '95vh' }">
       <n-space vertical v-if="loading">
@@ -97,6 +98,10 @@
         <div id="record-mode" class="setting-box">
           <n-h3>录制模式</n-h3>
           <optional-input type="enum" v-model:value="newRoomConfig['optionalRecordMode']" :enums="RecordModes" />
+          <n-collapse-transition :show="newRoomConfig['optionalRecordMode']?.value == 0">
+            <optional-input type="boolean" label="标准模式录制修复设置"
+              v-model:value="newRoomConfig['optionalFlvProcessorSplitOnScriptTag']" :same-as-default="true" />
+          </n-collapse-transition>
         </div>
         <div id="auto-split" class="setting-box">
           <n-h3>自动分段</n-h3>
