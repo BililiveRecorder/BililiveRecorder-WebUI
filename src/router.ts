@@ -4,6 +4,7 @@ import Dashboard from './views/recorder/Dashboard.vue';
 import RoomList from './views/recorder/RoomList.vue';
 import Settings from './views/recorder/Settings.vue';
 import FileBrowser from './views/recorder/FileBrowser.vue';
+import VideoPlayer from './views/recorder/VideoPlayer.vue';
 import Home from './views/Home.vue';
 import { BASE_URL, EMBEDDED_BUILD } from './const';
 import { recorderController } from './utils/RecorderController';
@@ -18,6 +19,7 @@ const routes: RouteRecordRaw[] = [
   { path: '/recorder/:id/settings', name: 'Settings', component: Settings, meta: { requireController: true, title: '设置', key: 'settings', allowInEmbedded: true } },
   { path: '/recorder/:id/logs', name: 'Logs', component: Blank, meta: { requireController: true, title: '日志', key: 'logs', allowInEmbedded: true } },
   { path: '/recorder/:id/files', name: 'File Browser', component: FileBrowser, meta: { requireController: true, title: '文件管理器', key: 'files', allowInEmbedded: true } },
+  { path: '/recorder/:id/player', name: 'Video Player', component: VideoPlayer, meta: { requireController: true, title: '视频播放器', key: 'files', allowInEmbedded: true } },
   { path: '/componentsdebug', name: 'Components Debug', component: () => import('./views/ComponentsDebug.vue'), meta: { requireController: false, title: '组件调试', key: 'debug', allowInEmbedded: true } },
 ];
 
@@ -25,7 +27,7 @@ const router = createRouter({
   history: createWebHistory(BASE_URL),
   routes,
 });
-router.beforeEach(function(to, from, next) {
+router.beforeEach(function (to, from, next) {
   if (EMBEDDED_BUILD && !to.meta.allowInEmbedded) {
     return next('/recorder/local');
   }

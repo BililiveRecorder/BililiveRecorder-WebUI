@@ -17,6 +17,10 @@ export default defineConfig(({ command }) => {
           target: 'http://127.0.0.1:8000',
           changeOrigin: true,
         },
+        '/file': {
+          target: 'http://127.0.0.1:8000',
+          changeOrigin: true,
+        },
       },
     },
     build: {

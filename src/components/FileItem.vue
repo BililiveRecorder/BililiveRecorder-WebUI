@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { FileDto, FolderDto } from '../utils/api';
 import { byteToHuman } from '../utils/unitConvert';
-import { NIcon, NTime, useThemeVars } from 'naive-ui';
+import { NIcon, NButton, NTime, useThemeVars } from 'naive-ui';
 import { File, FileVideo, Folder } from '@vicons/fa';
 import { recorderController } from '../utils/RecorderController';
 
 const theme = useThemeVars();
+const route = useRoute();
 const router = useRouter();
 const props = defineProps({
   file: {
@@ -28,8 +29,17 @@ function onClick(e: MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
     router.push({ hash: '#' + props.currentPath + props.file.name });
+    return;
   }
 }
+
+function goVideoPreview(e: MouseEvent) {
+  e.preventDefault();
+  e.stopPropagation();
+  router.push({ path: `/recorder/${route.params.id}/player`, hash: '#' + props.currentPath + props.file.name });
+  return;
+}
+
 </script>
 <template>
   <a class="item" :href="file.isFolder ? ('#' + props.currentPath + file.name) : calcFilePath(file.url)" :style="{
@@ -40,12 +50,18 @@ function onClick(e: MouseEvent) {
     '--background-color': theme.cardColor,
   }" @click="onClick">
     <div class="item-left">
-      <n-icon size="20">
+      <n-button v-if="file.name.endsWith('.flv')" quaternary tiny style="padding:0;line-height:20px;height:unset"
+        @click="goVideoPreview">
+        <n-icon size="20">
+          <file-video />
+        </n-icon>
+      </n-button>
+      <n-icon v-else size="20">
         <folder v-if="file.isFolder" />
         <file-video v-else-if="file.name.endsWith('.flv')" />
         <file v-else />
       </n-icon>
-      {{ file.name }}
+      <span>{{ file.name }}</span>
       <span v-if="!file.isFolder">{{ byteToHuman(file.size) }}</span>
     </div>
     <n-time :time="new Date(file.lastModified)"

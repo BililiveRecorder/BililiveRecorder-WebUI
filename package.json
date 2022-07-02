@@ -8,8 +8,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "artplayer": "^4.5.2",
+    "artplayer-plugin-danmuku": "^4.4.8",
     "lodash-es": "^4.17.21",
     "monaco-editor": "^0.33.0",
+    "mpegts.js": "^1.6.10",
     "vue": "^3.2.25"
   },
   "devDependencies": {
