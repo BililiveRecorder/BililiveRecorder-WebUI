@@ -309,8 +309,8 @@ export interface SetRoomConfig {
 export class Recorder<T = any> {
   public readonly host: string;
   private headers: { [key: string]: string; } | undefined;
-  public meta?: T;
-  constructor(host: string, headers?: { [key: string]: string }, meta?: T) {
+  public meta: T;
+  constructor(host: string, headers: { [key: string]: string }, meta: T) {
     this.host = host;
     this.headers = headers || {};
     this.meta = meta;
