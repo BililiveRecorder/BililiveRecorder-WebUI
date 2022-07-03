@@ -3,7 +3,7 @@
     <n-h2>关于</n-h2>
     <div class="webui-about">
       <n-h3 prefix="bar">BililiveRecorder-WebUI <n-tag>{{ VERSION }}</n-tag>
-        <n-tag> 嵌入版本 </n-tag>
+        <n-tag v-if="EMBEDDED_BUILD"> 嵌入版本 </n-tag>
       </n-h3>
       <p>Github: <n-a href="https://github.com/BililiveRecorder/BililiveRecorder-WebUI" target="_blank">
           https://github.com/BililiveRecorder/BililiveRecorder-WebUI</n-a>
@@ -46,7 +46,7 @@
 
 <script setup lang="ts">
 import { NH2, NH3, NA, NTag, NButton, NSpace } from 'naive-ui';
-import { VERSION } from '../const';
+import { VERSION, EMBEDDED_BUILD } from '../const';
 import { onMounted, ref } from 'vue';
 import { recorderController } from '../utils/RecorderController';
 
