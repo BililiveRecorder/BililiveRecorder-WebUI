@@ -50,13 +50,13 @@ function goVideoPreview(e: MouseEvent) {
     '--background-color': theme.cardColor,
   }" @click="onClick">
     <div class="item-left">
-      <n-button v-if="file.name.endsWith('.flv')" quaternary tiny style="padding:0;line-height:20px;height:unset"
+      <n-button v-if="file.name.endsWith('.flv')" quaternary tiny style="padding:0;line-height:14px;height:unset"
         @click="goVideoPreview">
-        <n-icon size="20">
+        <n-icon size="14">
           <file-video />
         </n-icon>
       </n-button>
-      <n-icon v-else size="20">
+      <n-icon v-else size="14">
         <folder v-if="file.isFolder" />
         <file-video v-else-if="file.name.endsWith('.flv')" />
         <file v-else />
@@ -72,13 +72,14 @@ function goVideoPreview(e: MouseEvent) {
 .item {
   color: var(--text-color);
   text-decoration: none;
-  padding: 8px 16px;
+  padding: 2px 16px;
   border-radius: var(--border-radius);
   background-color: var(--background-color);
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  font-size: 13px;
 
   .item-left {
     display: flex;
