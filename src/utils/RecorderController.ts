@@ -30,14 +30,14 @@ function generateRandomId() {
 }
 
 class RecorderApi extends EventTarget {
-  public recorder:Recorder | null = null;
+  public recorder:Recorder<Server> | null = null;
   private _supportLocalStorage: boolean = !!window.localStorage;
   private servers: Server[] = [];
 
   constructor() {
     super();
     if (EMBEDDED_BUILD) {
-      this.recorder = new Recorder(new URL('/', window.location.href).toString(), {}, { id: 'local' });
+      this.recorder = new Recorder<Server>(window.origin, {}, { id: 'local', path: window.origin, name: 'Local' });
       return;
     }
     this.loadServers();
