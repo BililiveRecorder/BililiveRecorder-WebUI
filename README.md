@@ -8,23 +8,29 @@
 
 ## 常见问题：
 
-### 1、怎么手动更新内嵌的版本？
+1、怎么手动更新内嵌的版本？
 
-一般情况下会跟随 BililiveRecorder.Cli 的更新，但如果你看上某个测试版本了，你可以到[Github Actions](https://github.com/BililiveRecorder/BililiveRecorder-WebUI/actions)中选择响应的构建，然后再 Artifacts 中下载 dist-embedded，并解压到 BililiveRecorder.Cli 的 wwwroot/ui 目录下（没有就自己创建）。
+一般情况下会跟随 BililiveRecorder.Cli 的更新，但如果你看上某个测试版本了，你可以到[Github Actions](https://github.com/BililiveRecorder/BililiveRecorder-WebUI/actions)中选择相应的构建，然后再 Artifacts 中下载 dist-embedded，并解压到 BililiveRecorder.Cli 的 wwwroot/ui 目录下（没有就自己创建）。
 
-### 2、为什么我在 https://webui.rec.danmuji.org/ 连不到我的录播姬？
+2、为什么我在 https://webui.rec.danmuji.org/ 连不到我的录播姬？
 
 主要有两种原因：
 
-1、HTTPS 无法访问 HTTP 的内容，此题无解，您可以尝试自己部署一个
+(1) HTTPS 无法访问 HTTP 的内容，此题无解，您可以尝试自己部署一个
 
-### 我想自己部署一个 webui 群控版可以吗？
+(2) 请确认您是否能直接打开该网址，如果不行，请检查端口映射及开放端口。
 
-可以的
+3、我想自己部署一个 webui 群控版可以吗？
+
+可以的，我们提供预配置好的 docker 镜像，您可以自己部署。
 
 ```
 docker run -d -p 3000:80 --name="webui" ghcr.io/bililiverecorder/bililiverecorder-webui:master
 ```
+
+如果你想自己用其他部署的方式，请注意该应用是 SPA，因此需要注意路由问题。
+
+这里有一份 nginx 的配置，仅供参考 [default.conf](https://raw.githubusercontent.com/BililiveRecorder/BililiveRecorder-WebUI/master/.github/default.conf)
 
 ## 开发
 
