@@ -1,21 +1,12 @@
-# This is a basic workflow to help you get started with Actions
-
-name: Build
+name: Release
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the master branch
-  push:
-    branches:
+  release:
+    types: [published]
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -29,34 +20,43 @@ jobs:
         run: npm install
       - name: Build
         run: npx vite build
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v3.0.0
+      - name: Zip normal build
+        run: zip -r dist.zip dist
+      - name: Upload Zip as Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: dist
-          path: dist
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: dist.zip
+          asset_name: dist.zip
+          asset_content_type: application/zip
       - name: Build for Embedded
         run: npx vite build
         env:
           VITE_EMBEDDED_BUILD: true
           BASE_URL: "/ui/"
-      - name: Upload a Build Artifact for Embedded
-        uses: actions/upload-artifact@v3.0.0
+      - name: Zip embedded build
+        run: zip -r dist-embedded.zip dist
+      - name: Upload Zip as Release Asset for Embedded
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: dist-embedded
-          path: dist
-
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: dist-embedded.zip
+          asset_name: dist-embedded.zip
+          asset_content_type: application/zip
   docker:
     runs-on: ubuntu-latest
-    needs: build
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Download Artifact from latest build
-        uses: actions/download-artifact@v3
-        with:
-          name: dist
-          path: dist
+      - name: NPM install
+        run: npm install
+      - name: Build
+        run: npx vite build
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -67,17 +67,23 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Login to Docker Hub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v3
         with:
           images: |
             ghcr.io/${{ github.repository }}
+            bililive/recorder-ui
           tags: |
-            type=edge
-            type=ref,event=branch
-            type=ref,event=pr
-            type=sha,prefix={{branch}}-
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
