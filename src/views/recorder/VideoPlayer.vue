@@ -8,7 +8,7 @@
       </n-breadcrumb>
     </div>
     <div class="player">
-      <art-player v-if="loaded" :option="playerOptions" :danmuku="danmuSource" />
+      <art-player v-if="loaded" :option="playerOptions" :danmuku="danmuSource" :headers="headers" />
     </div>
     <div>
 
@@ -68,7 +68,7 @@ function calcFilePath(url: string) {
   return new URL(url, recorderController.recorder?.meta.path).toString();
 }
 
-
+const headers = recorderController.recorder!._getHeader();
 onMounted(() => {
   mounted = true;
   if (route.hash && route.hash.startsWith('#/')) {
@@ -121,7 +121,7 @@ onMounted(() => {
       lang: 'zh-cn',
     };
     danmuSource.value = async () => {
-      const xmltext = await (await fetch(calcFilePath(xmlFile.url))).text();
+      const xmltext = await (await fetch(calcFilePath(xmlFile.url), { headers })).text();
       try {
         const result: any[] = [];
         const xml = new DOMParser().parseFromString(xmltext, 'text/xml');

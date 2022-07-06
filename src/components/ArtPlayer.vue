@@ -818,6 +818,9 @@ const props = defineProps({
   danmuku: {
     default: () => ([]),
   },
+  headers: {
+    default: () => ({}),
+  },
 });
 
 const artRef = ref<HTMLElement | null>(null);
@@ -829,11 +832,14 @@ onMounted(() => {
     customType: {
       flv: function (video, url) {
         if (mpegtsjs.isSupported()) {
+          console.log(props.headers);
           const flvPlayer = mpegtsjs.createPlayer({
             type: 'flv',
             url: url,
             hasVideo: true,
             hasAudio: true,
+          }, {
+            headers: props.headers,
           });
           flvPlayer.attachMediaElement(video);
           flvPlayer.load();

@@ -451,6 +451,10 @@ export class Recorder<T = any> {
     }
   }
 
+  _getHeader() {
+    return JSON.parse(JSON.stringify(this.headers));
+  }
+
   static getMockDefaultConfig(): DefaultConfig {
     return {
       'recordMode': 0,
