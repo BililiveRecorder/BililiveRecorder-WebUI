@@ -1,5 +1,5 @@
 import { Recorder } from './api';
-import { EMBEDDED_BUILD } from '../const';
+import { EMBEDDED_BUILD, STORAGE_KEY_SERVERS } from '../const';
 
 export interface BasicAuth {
   type: 'basic';
@@ -22,8 +22,6 @@ export interface kvpairs {
   key: string;
   value: string;
 }
-
-const STORAGE_KEY_SERVERS = 'brec.servers';
 
 function generateRandomId() {
   return Math.random().toString(36).substring(2, 8);
@@ -95,7 +93,6 @@ class RecorderApi extends EventTarget {
                     throw new Error('extraHeaders.key is not a string');
                   }
                   if (typeof h.value !== 'string') {
-                    debugger;
                     throw new Error('extraHeaders.value is not a string');
                   }
                 });

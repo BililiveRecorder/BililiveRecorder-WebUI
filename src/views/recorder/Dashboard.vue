@@ -1,20 +1,18 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { onBeforeRouteUpdate, useRoute, useRouter, RouterLink } from 'vue-router';
-import { NCard, NA, NTag } from 'naive-ui';
+import { NCard, NA } from 'naive-ui';
 import { ListOutline, FolderOpenOutline, SettingsOutline } from '@vicons/ionicons5';
+import VersionTag from '../../components/VersionTag.vue';
 import { recorderController } from '../../utils/RecorderController';
 import { EMBEDDED_BUILD } from '../../const';
 
 const router = useRouter();
 const route = useRoute();
 
-// router.addRoute('Recorder',
-//   { path: '/rooms', name: 'Rooms', component: RoomList, meta: { requireController: true, title: '房间列表' } });
-
 const controller = recorderController;
 
-const version = ref(' unknown');
+const version = ref('unknown');
 
 const id = ref('');
 
@@ -86,7 +84,8 @@ onBeforeRouteUpdate((to, from, next) => {
   <div class="dashboard-container">
     <div class="title">
       <h1>
-        B站录播姬 <n-tag>v{{ version }}</n-tag>
+        B站录播姬
+        <version-tag :version="'v' + version" type="recorder" />
       </h1>
       <p>{{ recorderController.recorder?.meta.name }}
         <n-a :href="recorderController.recorder?.meta.path">

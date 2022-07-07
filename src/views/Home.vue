@@ -2,7 +2,9 @@
   <div class="home-container">
     <div style="text-align: center;">
       <n-h1 style="margin:0">B站录播姬 WebUI</n-h1>
-      <p style="margin:0">{{ selfversion }}</p>
+      <p style="margin:0">
+        <version-tag :version="selfversion" type="webui" />
+      </p>
     </div>
     <div class="server-container">
       <n-list bordered style="width:100%;">
@@ -52,12 +54,16 @@
 </template>
 <script setup lang="ts">
 import { VERSION } from '../const';
-import { useMessage, NH1, NEmpty, NButton, NScrollbar, NList, NModal, NForm, NFormItem, NInput, NDynamicInput, NRadio, NRadioGroup } from 'naive-ui';
+import {
+  useMessage, NH1, NEmpty, NButton, NScrollbar, NList, NModal, NForm, NFormItem, NInput, NDynamicInput,
+  NRadio, NRadioGroup,
+} from 'naive-ui';
 import { onMounted, onUnmounted, reactive, ref } from 'vue';
 import { Recorder } from '../utils/api';
 import ServerOption from '../components/ServerOption.vue';
 import { recorderController, Server } from '../utils/RecorderController';
 import { useRouter } from 'vue-router';
+import VersionTag from '../components/VersionTag.vue';
 
 const selfversion = VERSION;
 const message = useMessage();

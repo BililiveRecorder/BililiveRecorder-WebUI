@@ -1,7 +1,7 @@
 <template>
   <n-list-item class="server" :style="style">
     {{ server.name }}
-    <n-tag size="small">v{{ version }}</n-tag>
+    <version-tag :version="'v' + version" type="recorder" />
     <template #suffix>
       <n-dropdown :options="options" trigger="click" @select="onSelect">
         <n-button quaternary size="small" @click="stopPropagation">
@@ -14,8 +14,9 @@
 
 <script setup lang="ts">
 import { onMounted, PropType, ref, computed, StyleValue } from 'vue';
-import { useThemeVars, NTag, NButton, NListItem, NIcon, NDropdown } from 'naive-ui';
+import { useThemeVars, NButton, NListItem, NIcon, NDropdown } from 'naive-ui';
 import { EllipsisHorizontal } from '@vicons/ionicons5';
+import VersionTag from './VersionTag.vue';
 import { Recorder } from '../utils/api';
 import { rgba, hexToRgb } from '../utils/color';
 import { Server } from '../utils/RecorderController';

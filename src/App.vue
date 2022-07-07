@@ -11,6 +11,7 @@
         </n-layout>
       </n-layout>
     </n-layout>
+    <UpdateNotifier />
   </global-provider>
 </template>
 
@@ -20,6 +21,7 @@ import { onMounted, onUnmounted, ref } from 'vue';
 import GlobalProvider from './components/GlobalProvider.vue';
 import SideMenu from './components/SideMenu.vue';
 import TopBar from './components/TopBar.vue';
+import UpdateNotifier from './components/UpdateNotifier.vue';
 
 const vh100 = ref(window.innerHeight);
 function resize() {
