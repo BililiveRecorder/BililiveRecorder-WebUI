@@ -1,5 +1,5 @@
 <template>
-  <n-config-provider :theme="darkTheme" :locale="zhCN" :date-locale="dateZhCN">
+  <n-config-provider :theme="darkTheme" :locale="zhCN" :date-locale="dateZhCN" inline-theme-disabled abstract>
     <n-loading-bar-provider>
       <n-dialog-provider>
         <n-message-provider>
