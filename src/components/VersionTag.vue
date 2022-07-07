@@ -36,7 +36,7 @@ onMounted(() => {
       switch (compareVersion(props.version, latest[props.type].version)) {
         case -1:
           versionStatus.value = 'warning';
-          versionText.value = `最新版本 ${latest.recorder.version}`;
+          versionText.value = `最新版本 ${latest[props.type].version}`;
           break;
         case 0:
           versionStatus.value = 'info';
@@ -53,7 +53,7 @@ onMounted(() => {
       };
     } catch (error) {
       versionStatus.value = 'warning';
-      versionText.value = `最新版本 ${latest.recorder.version}`;
+      versionText.value = `最新版本 ${latest[props.type].version}`;
     }
   }).catch(() => {
     versionStatus.value = 'warning';
@@ -64,10 +64,10 @@ watch(props, (newVal) => {
   const newVer = newVal.version;
   getRecorderLatestVersion(!props.cache).then((latest) => {
     try {
-      switch (compareVersion(newVer, latest.recorder.version)) {
+      switch (compareVersion(newVer, latest[props.type].version)) {
         case -1:
           versionStatus.value = 'warning';
-          versionText.value = `最新版本 ${latest.recorder.version}`;
+          versionText.value = `最新版本 ${latest[props.type].version}`;
           break;
         case 0:
           versionStatus.value = 'info';
@@ -84,7 +84,7 @@ watch(props, (newVal) => {
       };
     } catch (error) {
       versionStatus.value = 'warning';
-      versionText.value = `最新版本 ${latest.recorder.version}`;
+      versionText.value = `最新版本 ${latest[props.type].version}`;
     }
   }).catch(() => {
     versionStatus.value = 'warning';
