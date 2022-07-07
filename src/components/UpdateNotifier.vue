@@ -52,7 +52,17 @@ function onRecorderChange() {
             notified[recorderMeta.id] = true;
             const n = notification.warning({
               title: '更新提醒',
-              content: `录播姬${recorderMeta.name} 版本为：${serverVersion}，当前录播姬最新版本为：${version.recorder.version}，请及时更新！`,
+              content: () => {
+                return [
+                  '录播姬 ',
+                  h('code', recorderMeta.name),
+                  ' 版本为：',
+                  h('code', serverVersion),
+                  '，当前录播姬最新版本为：',
+                  h('code', version.recorder.version),
+                  '，请及时更新！',
+                ];
+              },
               duration: 0,
               action: () =>
                 h(NButton, {
