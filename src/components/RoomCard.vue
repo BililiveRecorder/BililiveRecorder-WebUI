@@ -80,7 +80,7 @@
     </div>
     <!-- TODO: 独立成模块 -->
     <n-modal :title="'房间设置 ' + props.room.roomId" v-model:show="showSettingDialog" preset="card"
-      :style="{ maxWidth: '800px', maxHeight: '95vh' }">
+      :style="{ maxWidth: 'min(800px, 100vw)' }">
       <n-space vertical v-if="loading">
         <n-skeleton height="40px" width="33%" />
         <n-skeleton height="40px" round />
@@ -136,7 +136,7 @@
           </n-collapse-transition>
         </div>
       </div>
-      <template #footer>
+      <template #action>
         <n-space justify="end">
           <n-button :loading="saving" :disabled="loading" @click="saveConfig">保存</n-button>
         </n-space>
