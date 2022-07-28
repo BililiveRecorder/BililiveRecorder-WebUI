@@ -54,7 +54,8 @@
       <div class="recording" v-show="!props.room.recording && props.room.autoRecord">
         <n-icon size="20" :component="Analytics" :color="themeVars.warningColor" />监控中
       </div>
-      <n-popover v-if="props.room.recording" class="network" :delay="500" :duration="500" :show="isPopoverShow"
+      <div v-if="props.room.recording">
+        <n-popover class="network" :delay="500" :duration="500" :show="isPopoverShow"
         @update:show="handlePopoverVisibleChange">
         <template #trigger>
           <n-button quaternary size="small" :style="{ margin: '0 -0.5em' }">
@@ -77,6 +78,15 @@
           </p>
         </div>
       </n-popover>
+      <n-popover>
+        <template #trigger>
+          <n-button quaternary size="small" @click="splitRecord">
+            <n-icon :component="CutSharp" />
+          </n-button>
+        </template>
+        <span>手动分段</span>
+      </n-popover>
+      </div>
     </div>
     <!-- TODO: 独立成模块 -->
     <n-modal :title="'房间设置 ' + props.room.roomId" v-model:show="showSettingDialog" preset="card"
@@ -153,7 +163,7 @@ import {
 } from 'naive-ui';
 import {
   Radio, CloudDone, CloudOffline, RecordingOutline, Analytics, EllipsisVertical,
-  PlayCircle, StopCircle, Refresh, Open, Settings, Trash,
+  PlayCircle, StopCircle, Refresh, Open, Settings, Trash, CutSharp,
 } from '@vicons/ionicons5';
 import { Recorder, RoomDto, Optional } from '../utils/api';
 import { byteToHuman, msToHuman } from '../utils/unitConvert';
@@ -572,6 +582,20 @@ function statColor(ratio: number) {
   }
   return 'error';
 }
+
+async function splitRecord() {
+  if (recorderController.recorder == null) {
+    return;
+  }
+  recorderController.recorder.splitRecordByObjectId(props.room.objectId).then((e)=>{
+    emit('self-update', e);
+    message.success('手动分段成功');
+  }).catch((e)=>{
+    message.error('手动分段失败：' + e?.message || e.toString());
+    console.error(e);
+  });
+}
+
 
 </script>
 
