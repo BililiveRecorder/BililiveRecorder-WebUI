@@ -192,7 +192,7 @@ const CuttingModes = [{
   value: 2,
 }];
 
-const themeVars = useThemeVars().value;
+const themeVars = useThemeVars();
 
 const message = useMessage();
 const loadingbar = useLoadingBar();
