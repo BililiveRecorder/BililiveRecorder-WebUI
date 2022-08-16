@@ -154,7 +154,7 @@
     </n-modal>
   </n-card>
 </template>
-<script setup lang="ts">
+<script lang="ts">
 import { Component, h, onMounted, onUnmounted, PropType, ref, watch } from 'vue';
 import {
   DropdownOption, useLoadingBar, useMessage, NCollapseTransition, NCard, NH3, NIcon,
@@ -191,6 +191,9 @@ const CuttingModes = [{
   label: '根据文件大小切割',
   value: 2,
 }];
+
+</script>
+<script setup lang="ts">
 
 const themeVars = useThemeVars();
 

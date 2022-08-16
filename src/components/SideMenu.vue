@@ -5,7 +5,7 @@
       :options="(menuOptions as any)" :render-label="renderMenuLabel" :expand-icon="expandIcon" :value="current" />
   </n-layout-sider>
 </template>
-<script setup lang="ts">
+<script lang="ts">
 import { Component, h, onMounted, onUnmounted, ref } from 'vue';
 import { NLayoutSider, NIcon, NMenu, MenuOption, MenuGroupOption } from 'naive-ui';
 import { HomeOutline, CaretDownOutline, ListOutline, SpeedometerOutline, FolderOpenOutline, SettingsOutline, DocumentTextOutline, InformationOutline } from '@vicons/ionicons5';
@@ -13,6 +13,9 @@ import { RouterLink, useRouter } from 'vue-router';
 import { EMBEDDED_BUILD, DEV } from '../const';
 import { recorderController } from '../utils/RecorderController';
 import { generateServerIcon } from '../utils/ServerIconGenerator';
+
+</script>
+<script setup lang="ts">
 
 const router = useRouter();
 const collapsed = ref(true);

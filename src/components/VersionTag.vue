@@ -7,12 +7,13 @@
     {{ versionText }}
   </n-popover>
 </template>
-
-<script setup lang="ts">
+<script lang="ts">
 import { onMounted, PropType, ref, watch } from 'vue';
 import { NTag, NPopover } from 'naive-ui';
 import { getRecorderLatestVersion } from '../utils/version';
 import { compare as compareVersion } from 'semver';
+</script>
+<script setup lang="ts">
 
 const props = defineProps({
   version: {

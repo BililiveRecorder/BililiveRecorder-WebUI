@@ -43,10 +43,7 @@ declare module '@vue/runtime-dom' {
     [key: string]: any
   }
 }
-</script>
-
-<script setup lang="ts">
-import { defineProps, PropType, ref, watch } from 'vue';
+import { defineProps, PropType, watch } from 'vue';
 import { NInput, NCheckbox, NSwitch, NRadioGroup, NRadio, NInputNumber } from 'naive-ui';
 
 type InputType = 'text' | 'boolean' | 'number' | 'textarea' | 'enum';
@@ -61,6 +58,9 @@ interface EnumItem {
   value: any,
   label: string,
 }
+</script>
+
+<script setup lang="ts">
 
 const props = defineProps({
   label: {

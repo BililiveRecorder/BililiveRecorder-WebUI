@@ -11,11 +11,14 @@
     </n-loading-bar-provider>
   </n-config-provider>
 </template>
-<script setup lang="ts">
+<script lang="ts">
 import { provide, ref, onMounted } from 'vue';
 import { NConfigProvider, NLoadingBarProvider, NDialogProvider, NNotificationProvider, NMessageProvider, darkTheme, lightTheme } from 'naive-ui';
 import { zhCN, dateZhCN } from 'naive-ui';
 import { STORAGE_THEME } from '../const';
+
+</script>
+<script setup lang="ts">
 
 let currentTheme = 0;
 const themeMap = [darkTheme, lightTheme];

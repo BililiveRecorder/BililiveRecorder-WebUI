@@ -1,13 +1,14 @@
-<script lang="ts">/* eslint-disable vue/valid-template-root */</script>
-<template>
-</template>
-<script setup lang="ts">
+<script lang="ts">
+/* eslint-disable vue/valid-template-root */
 import { h, onMounted } from 'vue';
 import { VERSION } from '../const';
 import { useNotification, NButton } from 'naive-ui';
 import { getRecorderLatestVersion } from '../utils/version';
 import { compare as compareVersion } from 'semver';
 import { recorderController } from '../utils/RecorderController';
+
+</script>
+<script setup lang="ts">
 
 const notification = useNotification();
 
@@ -86,3 +87,5 @@ function onRecorderChange() {
 recorderController.addEventListener('recorder-change', onRecorderChange);
 
 </script>
+<template>
+</template>

@@ -11,8 +11,7 @@
     </template>
   </n-list-item>
 </template>
-
-<script setup lang="ts">
+<script lang="ts">
 import { onMounted, PropType, ref, computed, StyleValue } from 'vue';
 import { useThemeVars, NButton, NListItem, NIcon, NDropdown } from 'naive-ui';
 import { EllipsisHorizontal } from '@vicons/ionicons5';
@@ -20,6 +19,9 @@ import VersionTag from './VersionTag.vue';
 import { Recorder } from '../utils/api';
 import { rgba, hexToRgb } from '../utils/color';
 import { Server } from '../utils/RecorderController';
+
+</script>
+<script setup lang="ts">
 
 const themeVars = useThemeVars();
 
