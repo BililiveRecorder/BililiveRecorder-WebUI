@@ -1,5 +1,5 @@
 import { Recorder } from './api';
-import { EMBEDDED_BUILD, STORAGE_KEY_SERVERS } from '../const';
+import { EMBEDDED_BUILD, STORAGE_KEY_SERVERS, BASE_URL } from '../const';
 
 export interface BasicAuth {
   type: 'basic';
@@ -35,7 +35,9 @@ class RecorderApi extends EventTarget {
   constructor() {
     super();
     if (EMBEDDED_BUILD) {
-      this.recorder = new Recorder<Server>(window.origin, {}, { id: 'local', path: window.origin, name: 'Local' });
+      let base_url_ui = window.location.protocol + "//" + window.location.host + BASE_URL;
+      let host_url = (new URL('..', base_url_ui)).href
+      this.recorder = new Recorder<Server>(host_url, {}, { id: 'local', path: host_url, name: 'Local' });
       return;
     }
     this.loadServers();
