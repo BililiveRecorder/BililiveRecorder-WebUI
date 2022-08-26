@@ -21,9 +21,9 @@
       </n-grid-item>
     </n-grid>
     <n-modal v-model:show="showNewRoomDialog" style="max-width: 600px;" preset="card" title="添加房间">
-      <n-form ref="newRoomFormRef" :model="newRoomModel" :rules="newRoomRules">
+      <n-form ref="newRoomFormRef" :model="newRoomModel">
         <n-form-item path="roomId" label="房间号">
-          <n-input v-model:value="newRoomModel.roomId" />
+          <n-input type="textarea" v-model:value="newRoomModel.roomId" placeholder="一行一个直播间，支持直播间链接"/>
         </n-form-item>
         <n-form-item path="autoRecord" label="自动录制">
           <n-switch v-model:value="newRoomModel.autoRecord" />
@@ -99,7 +99,7 @@ import {
 import RoomCard from '../../components/RoomCard.vue';
 import RoomSettingModal from '../../components/RoomSettingModal.vue';
 import { Sync } from '@vicons/ionicons5';
-import { FormInst, FormRules } from 'naive-ui/lib/form/src/interface';
+import { FormInst } from 'naive-ui/lib/form/src/interface';
 import { recorderController } from '../../utils/RecorderController';
 import { msToHuman, byteToHuman, dateToTimeWithMs } from '../../utils/unitConvert';
 
@@ -256,12 +256,12 @@ async function addNewRoom(roomid: number, autoRecord: boolean = true) {
   }
   try {
     await recorderController.recorder.addRoom(roomid, autoRecord);
+    message.error(`添加房间 ${roomid} 成功`);
     loadingBar.finish();
-    getRoomList();
   } catch (error) {
     loadingBar.error();
     console.error(error);
-    message.error('添加房间失败');
+    message.error(`添加房间 ${roomid} 失败`);
   }
 }
 
@@ -299,25 +299,10 @@ interface NewRoomModelType {
   autoRecord: boolean;
 }
 
-const ROOM_ID_FROM_LINK_REGEX = /^(?:(?:https?:\/\/)?live\.bilibili\.com\/(?:blanc\/|h5\/)?)?(\d*)(?:\?.*)?$/;
+const ROOM_ID_FROM_LINK_REGEX = /^(?:(?:https?:\/\/)?live\.bilibili\.com\/(?:blanc\/|h5\/)?)?(\d+)(?:\?.*)?(?:#.*)?$/;
 
 const showNewRoomDialog = ref(false);
 const newRoomFormRef = ref<FormInst | null>(null);
-const newRoomRules: FormRules = {
-  roomId: [
-    {
-      required: true,
-      message: '请输入房间号或房间链接',
-    },
-    {
-      validator: (rule, value) => {
-        return ROOM_ID_FROM_LINK_REGEX.test(value);
-      },
-      message: '请输入正确的房间号或房间链接',
-      trigger: ['input', 'blur'],
-    },
-  ],
-};
 const newRoomModel = ref<NewRoomModelType>({
   roomId: '',
   autoRecord: true,
@@ -330,11 +315,29 @@ async function onNewRoomFormSubmit() {
     if (errors) {
       return;
     }
-    const roomIdString = newRoomModel.value.roomId;
-    const roomId = roomIdString.match(ROOM_ID_FROM_LINK_REGEX) || [, roomIdString];
+    const roomIds:number[] = newRoomModel.value.roomId.trim().
+      split('\n')
+      .map((e)=>e.trim())
+      .filter((e)=>e.length>0).map((e)=>{
+        const matchResult=e.match(ROOM_ID_FROM_LINK_REGEX);
+        if (matchResult) {
+          return parseInt(matchResult[1], 10);
+        } else {
+          return null;
+        }
+      }).filter((e)=>typeof e === 'number') as number[];
     toggleNewRoomDialog();
-    // @ts-expect-error
-    addNewRoom(parseInt(roomId[1], 10), newRoomModel.value.autoRecord);
+    newRoomModel.value.roomId = '';
+    const autoRecord=newRoomModel.value.autoRecord;
+    message.info(`共识别到${roomIds.length}个直播间，现在开始添加`);
+    const timer=setInterval(()=>{
+      if (roomIds.length > 0) {
+        addNewRoom(roomIds.pop() as number, autoRecord);
+      } else {
+        clearInterval(timer);
+        getRoomList();
+      }
+    }, 1000);
   });
 }
 
