@@ -1,11 +1,12 @@
-<script setup lang="ts">
+<script lang="ts">
 import { useRouter, useRoute } from 'vue-router';
 import { FileDto, FolderDto } from '../utils/api';
 import { byteToHuman } from '../utils/unitConvert';
 import { NIcon, NButton, NTime, useThemeVars } from 'naive-ui';
 import { File, FileVideo, Folder } from '@vicons/fa';
 import { recorderController } from '../utils/RecorderController';
-
+</script>
+<script setup lang="ts">
 const theme = useThemeVars();
 const route = useRoute();
 const router = useRouter();

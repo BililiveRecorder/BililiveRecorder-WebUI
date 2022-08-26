@@ -28,11 +28,11 @@ window.MonacoEnvironment = {
     }
   },
 };
-</script>
-<script setup lang="ts">
 import { editor as MonacoEditor } from 'monaco-editor';
 import { onMounted, ref, onBeforeUnmount } from 'vue';
 import { NButton } from 'naive-ui';
+</script>
+<script setup lang="ts">
 
 const props = defineProps({
   value: {

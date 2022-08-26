@@ -11,11 +11,14 @@
     </div>
   </n-layout-header>
 </template>
-
-<script setup lang="ts">
+<script lang="ts">
 import { inject, Ref } from 'vue';
 import { NLayoutHeader, NH3, NButton, NIcon } from 'naive-ui';
 import { ContrastOutline } from '@vicons/ionicons5';
+
+</script>
+<script setup lang="ts">
+
 const switchThemeInject = inject<Ref<Function>>('switchTheme');
 function switchTheme() {
   if (switchThemeInject) {

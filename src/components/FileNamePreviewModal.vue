@@ -1,9 +1,12 @@
-<script setup lang="ts">
+<script lang="ts">
 import { computed, ref } from 'vue';
 import { NModal, NSpace, NInput, NInputNumber, NForm, NFormItem, NButton, NText } from 'naive-ui';
 import type { FileNameTemplateContextDto } from '../utils/api';
 import { debounce } from 'lodash-es';
 import { recorderController } from '../utils/RecorderController';
+
+</script>
+<script setup lang="ts">
 
 const props = defineProps({
   show: {

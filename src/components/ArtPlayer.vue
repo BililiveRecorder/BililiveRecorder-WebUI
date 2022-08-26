@@ -798,12 +798,14 @@ type Danmu = {
 
 
 export type DanmaSource = Danmu[] | string | (() => Promise<Danmu[]>) | Promise<Danmu[]>
-</script>
-<script setup lang="ts">
+
 import { ref, onMounted, onUnmounted, PropType } from 'vue';
 import ArtPlayer from 'artplayer';
 import artPlayerPluginDanmuku from 'artplayer-plugin-danmuku';
 import mpegtsjs from 'mpegts.js';
+
+</script>
+<script setup lang="ts">
 
 let instance: Artplayer | null = null;
 defineExpose({
