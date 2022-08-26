@@ -4,6 +4,31 @@
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" href="/favicon.ico" />
+  <base href="/" />
+  <script id="baseUpdater">
+    (function () {
+      if (document.currentScript && "string" === typeof document.currentScript.dataset.href) {
+        const SERVER_PATH = document.currentScript.dataset.href;
+        console.log("SERVER_PATH: " + SERVER_PATH);
+        console.log("location.pathname: " + location.pathname);
+        if (SERVER_PATH.length === 0) {
+          const BASE = location.pathname + '/';
+          console.log("base path: " + BASE);
+          document.getElementsByTagName('base')[0].href = BASE
+        }
+        else if (location.pathname.endsWith(SERVER_PATH)) {
+          var i = location.pathname.lastIndexOf(SERVER_PATH);
+          if (i > -1) {
+            const BASE = location.pathname.slice(0, i) + '/';
+            console.log("base path: " + BASE);
+            document.getElementsByTagName('base')[0].href = BASE
+          }
+        } else {
+          console.log('????');
+        }
+      }
+    })()
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BililiveRecorder-WebUI</title>
 </head>
