@@ -17,7 +17,7 @@
         <room-card :room="room" v-on:start-record="startRecord(room)" v-on:stop-record="stopRecord(room)"
           v-on:start-auto-record="startAutoRecord(room)" v-on:stop-auto-record="stopAutoRecord(room)"
           v-on:delete="deleteRoom(room)" v-on:self-update="(room) => { selfUpdateRoom(room, i) }"
-          v-on:show-stats="handleShowStat(room)" />
+          v-on:show-stats="handleShowStat(room)" v-on:room-setting="openRoomSetting(room)" />
       </n-grid-item>
     </n-grid>
     <n-modal v-model:show="showNewRoomDialog" style="max-width: 600px;" preset="card" title="添加房间">
@@ -84,6 +84,7 @@
         </template>
       </n-drawer-content>
     </n-drawer>
+    <room-setting-modal v-model:show="showRoomSetting" :roomId="currentSettingRoomId" :objectId="currentSettingRoomObjectId"/>
   </div>
 </template>
 
@@ -96,15 +97,22 @@ import {
   useLoadingBar, useMessage, useNotification, NotificationReactive,
 } from 'naive-ui';
 import RoomCard from '../../components/RoomCard.vue';
+import RoomSettingModal from '../../components/RoomSettingModal.vue';
 import { Sync } from '@vicons/ionicons5';
 import { FormInst, FormRules } from 'naive-ui/lib/form/src/interface';
 import { recorderController } from '../../utils/RecorderController';
 import { msToHuman, byteToHuman, dateToTimeWithMs } from '../../utils/unitConvert';
 
+
 const message = useMessage();
 const loadingBar = useLoadingBar();
 const notification = useNotification();
+
 const order = ref('none');
+
+const currentSettingRoomId=ref(0);
+const currentSettingRoomObjectId=ref('');
+const showRoomSetting=ref(false);
 
 let pullStatFailCount = 0;
 
@@ -277,6 +285,12 @@ async function deleteRoom(room: RoomDto) {
 
 function selfUpdateRoom(room: RoomDto, i: number) {
   orderedRoom.value[i] = room;
+}
+
+function openRoomSetting(room:RoomDto) {
+  currentSettingRoomId.value=room.roomId;
+  currentSettingRoomObjectId.value=room.objectId;
+  showRoomSetting.value=true;
 }
 
 // new room
