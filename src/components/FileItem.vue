@@ -42,7 +42,7 @@ function goVideoPreview(e: MouseEvent) {
 
 </script>
 <template>
-  <a class="item" :href="file.isFolder ? ('#' + props.currentPath + file.name) : calcFilePath(file.url)" :style="{
+  <a class="item" :href="file.isFolder ? (router.currentRoute.value.path + '#' + props.currentPath + file.name) : calcFilePath(file.url)" :style="{
     '--text-color': theme.textColor1,
     '--hover-color': theme.hoverColor,
     '--pressed-color': theme.pressedColor,

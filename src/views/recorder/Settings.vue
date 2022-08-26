@@ -126,17 +126,17 @@
     <div class="anchor">
       <n-anchor :show-rail="false" offset-target="#app-layout" position="fix" ignore-gap z-index="1" type="block"
         :internalScrollable="false" style="position:sticky; top:64px;">
-        <n-anchor-link title="弹幕录制" href="#danmaku-record" />
-        <n-anchor-link title="录制模式" href="#record-mode" />
-        <n-anchor-link title="自动分段" href="#auto-split" />
-        <n-anchor-link title="文件名" href="#filename" />
-        <n-anchor-link title="录制画质" href="#record-quality" />
-        <n-anchor-link title="Webhook" href="#webhook" />
-        <n-anchor-link v-if="showAdvanced" title="请求的 API Host" href="#live-api-host" />
-        <n-anchor-link v-if="showAdvanced" title="Cookie" href="#cookie" />
-        <n-anchor-link v-if="showAdvanced" title="时间间隔" href="#timing" />
-        <n-anchor-link v-if="showAdvanced" title="网络设置" href="#network" />
-        <n-anchor-link v-if="showAdvanced" title="用户脚本" href="#userscript" />
+        <n-anchor-link title="弹幕录制" href="#danmaku-record" @click="(e)=>{e.preventDefault()}"/>
+        <n-anchor-link title="录制模式" href="#record-mode" @click="(e)=>{e.preventDefault()}"/>
+        <n-anchor-link title="自动分段" href="#auto-split" @click="(e)=>{e.preventDefault()}"/>
+        <n-anchor-link title="文件名" href="#filename" @click="(e)=>{e.preventDefault()}"/>
+        <n-anchor-link title="录制画质" href="#record-quality" @click="(e)=>{e.preventDefault()}"/>
+        <n-anchor-link title="Webhook" href="#webhook" @click="(e)=>{e.preventDefault()}"/>
+        <n-anchor-link v-if="showAdvanced" title="请求的 API Host" href="#live-api-host" @click="(e)=>{e.preventDefault()}"/>
+        <n-anchor-link v-if="showAdvanced" title="Cookie" href="#cookie" @click="(e)=>{e.preventDefault()}"/>
+        <n-anchor-link v-if="showAdvanced" title="时间间隔" href="#timing" @click="(e)=>{e.preventDefault()}"/>
+        <n-anchor-link v-if="showAdvanced" title="网络设置" href="#network" @click="(e)=>{e.preventDefault()}"/>
+        <n-anchor-link v-if="showAdvanced" title="用户脚本" href="#userscript" @click="(e)=>{e.preventDefault()}"/>
       </n-anchor>
     </div>
     <file-name-preview-modal v-model:show="showFileNamePreviewModal"

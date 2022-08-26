@@ -5,14 +5,13 @@ import RoomList from './views/recorder/RoomList.vue';
 import Settings from './views/recorder/Settings.vue';
 import FileBrowser from './views/recorder/FileBrowser.vue';
 import Home from './views/Home.vue';
-import { BASE_URL, EMBEDDED_BUILD } from './const';
+import { EMBEDDED_BUILD } from './const';
 import { recorderController } from './utils/RecorderController';
-
 
 const routes: RouteRecordRaw[] = [
   { path: '/:pathMatch(.*)*', component: Blank, meta: { key: '404', allowInEmbedded: true } },
   { path: '/', component: Home, meta: { key: 'index' } },
-  { path: '/about', component: ()=> import('./views/About.vue'), meta: { title: '关于', key: 'about', allowInEmbedded: true } },
+  { path: '/about', component: () => import('./views/About.vue'), meta: { title: '关于', key: 'about', allowInEmbedded: true } },
   { path: '/recorder/:id', name: 'Recorder', component: Dashboard, meta: { title: 'B站录播姬', key: 'dashboard', allowInEmbedded: true } },
   { path: '/recorder/:id/rooms', name: 'Rooms', component: RoomList, meta: { requireController: true, title: '房间列表', key: 'rooms', allowInEmbedded: true } },
   { path: '/recorder/:id/settings', name: 'Settings', component: Settings, meta: { requireController: true, title: '设置', key: 'settings', allowInEmbedded: true } },
@@ -23,9 +22,10 @@ const routes: RouteRecordRaw[] = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(BASE_URL),
+  history: createWebHistory(EMBEDDED_BUILD ? document.getElementsByTagName('base')[0].attributes.getNamedItem('href')?.value : undefined),
   routes,
 });
+
 router.beforeEach(function (to, from, next) {
   if (EMBEDDED_BUILD && !to.meta.allowInEmbedded) {
     return next('/recorder/local');
@@ -45,6 +45,5 @@ router.beforeEach(function (to, from, next) {
     next();
   }
 });
-
 
 export default router;
