@@ -5,9 +5,8 @@ import RoomList from './views/recorder/RoomList.vue';
 import Settings from './views/recorder/Settings.vue';
 import FileBrowser from './views/recorder/FileBrowser.vue';
 import Home from './views/Home.vue';
-import { BASE_URL, EMBEDDED_BUILD } from './const';
+import { EMBEDDED_BUILD } from './const';
 import { recorderController } from './utils/RecorderController';
-
 
 const routes: RouteRecordRaw[] = [
   { path: '/:pathMatch(.*)*', component: Blank, meta: { key: '404', allowInEmbedded: true } },
@@ -23,7 +22,7 @@ const routes: RouteRecordRaw[] = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(BASE_URL),
+  history: createWebHistory(),
   routes,
 });
 router.beforeEach(function (to, from, next) {
