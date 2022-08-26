@@ -62,6 +62,11 @@ onBeforeRouteUpdate((to, from, next) => {
         if (server) {
           controller.changeHost(server.id);
           next();
+          controller.recorder!.getVersion().then((v) => {
+            version.value = v.fullSemVer;
+          }).catch(()=>{
+            version.value = 'unknown';
+          });
         } else if (!EMBEDDED_BUILD) {
           next('/');
         }
