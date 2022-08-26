@@ -28,11 +28,10 @@ jobs:
       - name: NPM install
         run: npm install
       - name: Build for Github Pages
-        env:
-          BASE_URL: "/BililiveRecorder-WebUI/"
         run: |
           rm -rf dist
           npx vite build
+          sed -i 's/<base href="\/">/<base href="\/BililiveRecorder-WebUI\/">/g' dist/index.html
           cp dist/index.html dist/404.html
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3

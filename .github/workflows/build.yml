@@ -36,7 +36,7 @@ jobs:
           name: dist
           path: dist
       - name: Build for Embedded
-        run: npx vite build && sed -i 's/<base href="\/">/<base href="\/ui\/">/g' dist/index.html
+        run: npx vite build
         env:
           VITE_EMBEDDED_BUILD: true
       - name: Upload a Build Artifact for Embedded
