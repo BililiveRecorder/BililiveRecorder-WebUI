@@ -29,6 +29,7 @@ const context = ref<FileNameTemplateContextDto>({
   title: '废物还不干活',
   areaParent: '虚拟主播',
   areaChild: '虚拟主播',
+  partIndex: 1,
   qn: 10000,
   json: '{}',
 });
@@ -103,6 +104,9 @@ const jsonVerifyStatus = computed(() => {
               <n-input v-model:value="context.areaParent" @input="debounceTest" />
               <n-input v-model:value="context.areaChild" @input="debounceTest" />
             </n-space>
+          </n-form-item>
+          <n-form-item label="片段序号">
+            <n-input-number v-model:value="context.partIndex" @input="debounceTest" :show-button="false" />
           </n-form-item>
           <n-form-item label="画质">
             <n-input-number v-model:value="context.qn" @input="debounceTest" :show-button="false" />

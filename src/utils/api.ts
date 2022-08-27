@@ -230,6 +230,7 @@ export interface FileNameTemplateContextDto{
   title: string;
   areaParent: string;
   areaChild: string;
+  partIndex: number;
   qn: number;
   json: string;
 }
