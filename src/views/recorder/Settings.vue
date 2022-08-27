@@ -52,6 +52,7 @@
           <optional-input type="number" prefix="每" suffix="保存为一个文件" v-model:value="newConfig['optionalCuttingNumber']"
             :same-as-default="true" unit="MiB" max-input-width="150px" />
         </n-collapse-transition>
+
       </div>
       <div id="filename" class="setting-box">
         <n-h3>文件名</n-h3>
@@ -63,6 +64,10 @@
         <n-h3>录制画质</n-h3>
         <optional-input style="max-width: 700px;" type="text" v-model:value="newConfig['optionalRecordingQuality']"
           :same-as-default="false" />
+      </div>
+      <div id="stream-cover" class="setting-box">
+        <optional-input type="boolean" label="保存直播封面"
+          v-model:value="newConfig['optionalSaveStreamCover']" :same-as-default="true" />
       </div>
       <div id="webhook" class="setting-box">
         <n-h3>Webhook</n-h3>
@@ -88,21 +93,6 @@
           <optional-input type="text" :max-input-width="'700px'" v-model:value="newConfig['optionalCookie']"
             :same-as-default="true" />
         </div>
-        <div id="timing" class="setting-box">
-          <n-h3>时间间隔</n-h3>
-          <optional-input style="max-width: 700px;" type="number" label="HTTP API 检查时间间隔"
-            v-model:value="newConfig['optionalTimingCheckInterval']" unit="秒" max-input-width="150px" />
-          <optional-input style="max-width: 700px;" type="number" label="录制断开重连时间间隔"
-            v-model:value="newConfig['optionalTimingStreamRetry']" unit="毫秒" max-input-width="150px" />
-          <optional-input style="max-width: 700px;" type="number" label="录制无指定画质重连时间间隔"
-            v-model:value="newConfig['optionalTimingStreamRetryNoQn']" unit="秒" max-input-width="150px" />
-          <optional-input style="max-width: 700px;" type="number" label="连接直播服务器超时时间"
-            v-model:value="newConfig['optionalTimingStreamConnect']" unit="毫秒" max-input-width="150px" />
-          <optional-input style="max-width: 700px;" type="number" label="弹幕服务器重连时间间隔"
-            v-model:value="newConfig['optionalTimingDanmakuRetry']" unit="毫秒" max-input-width="150px" />
-          <optional-input style="max-width: 700px;" type="number" label="最大允许未收到直播数据时间"
-            v-model:value="newConfig['optionalTimingWatchdogTimeout']" unit="毫秒" max-input-width="150px" />
-        </div>
         <div id="network" class="setting-box">
           <n-h3>网络设置</n-h3>
           <optional-input type="boolean" label="使用系统代理"
@@ -110,6 +100,26 @@
           <optional-input type="enum" label="允许使用的网络类型"
             v-model:value="newConfig['optionalNetworkTransportAllowedAddressFamily']" :enums="IPFamilies"
             :same-as-default="true" />
+          <optional-input type="enum" label="弹幕链接协议"
+            v-model:value="newConfig['optionalDanmakuTransport']" :enums="DanmakuTransport"
+            :same-as-default="true" />
+        </div>
+        <div id="timing" class="setting-box">
+          <n-h3>时间间隔</n-h3>
+          <optional-input style="max-width: 700px;" type="number" label="HTTP API 检查时间间隔"
+            v-model:value="newConfig['optionalTimingCheckInterval']" unit="秒" max-input-width="150px" />
+          <optional-input style="max-width: 700px;" type="number" label="API请求超时时间"
+            v-model:value="newConfig['optionalTimingApiTimeout']" unit="秒" max-input-width="150px" />
+          <optional-input style="max-width: 700px;" type="number" label="录制断开重连时间间隔"
+            v-model:value="newConfig['optionalTimingStreamRetry']" unit="毫秒" max-input-width="150px" />
+          <optional-input style="max-width: 700px;" type="number" label="录制无指定画质重连时间间隔"
+            v-model:value="newConfig['optionalTimingStreamRetryNoQn']" unit="秒" max-input-width="150px" />
+          <optional-input style="max-width: 700px;" type="number" label="最大允许未收到直播数据时间"
+            v-model:value="newConfig['optionalTimingWatchdogTimeout']" unit="毫秒" max-input-width="150px" />
+          <optional-input style="max-width: 700px;" type="number" label="连接直播服务器超时时间"
+            v-model:value="newConfig['optionalTimingStreamConnect']" unit="毫秒" max-input-width="150px" />
+          <optional-input style="max-width: 700px;" type="number" label="弹幕服务器重连时间间隔"
+            v-model:value="newConfig['optionalTimingDanmakuRetry']" unit="毫秒" max-input-width="150px" />
         </div>
         <div id="userscript" class="setting-box">
           <n-space :justify="'space-between'">
@@ -131,11 +141,12 @@
         <n-anchor-link title="自动分段" href="#auto-split" @click="(e)=>{e.preventDefault()}"/>
         <n-anchor-link title="文件名" href="#filename" @click="(e)=>{e.preventDefault()}"/>
         <n-anchor-link title="录制画质" href="#record-quality" @click="(e)=>{e.preventDefault()}"/>
+        <n-anchor-link title="保存封面" href="#stream-cover" @click="(e)=>{e.preventDefault()}"/>
         <n-anchor-link title="Webhook" href="#webhook" @click="(e)=>{e.preventDefault()}"/>
         <n-anchor-link v-if="showAdvanced" title="请求的 API Host" href="#live-api-host" @click="(e)=>{e.preventDefault()}"/>
         <n-anchor-link v-if="showAdvanced" title="Cookie" href="#cookie" @click="(e)=>{e.preventDefault()}"/>
-        <n-anchor-link v-if="showAdvanced" title="时间间隔" href="#timing" @click="(e)=>{e.preventDefault()}"/>
         <n-anchor-link v-if="showAdvanced" title="网络设置" href="#network" @click="(e)=>{e.preventDefault()}"/>
+        <n-anchor-link v-if="showAdvanced" title="时间间隔" href="#timing" @click="(e)=>{e.preventDefault()}"/>
         <n-anchor-link v-if="showAdvanced" title="用户脚本" href="#userscript" @click="(e)=>{e.preventDefault()}"/>
       </n-anchor>
     </div>
@@ -175,27 +186,31 @@ function getEmptyConfigItem(defaultValue: any): ConfigItem {
   };
 }
 
-const RecordModes = [{
-  label: '标准模式',
-  value: 0,
-},
-{
-  label: '原始数据模式',
-  value: 1,
-}];
+const RecordModes = [
+  {
+    label: '标准模式',
+    value: 0,
+  },
+  {
+    label: '原始数据模式',
+    value: 1,
+  },
+];
 
-const CuttingModes = [{
-  label: '不分段',
-  value: 0,
-},
-{
-  label: '根据时间切割',
-  value: 1,
-},
-{
-  label: '根据文件大小切割',
-  value: 2,
-}];
+const CuttingModes = [
+  {
+    label: '不分段',
+    value: 0,
+  },
+  {
+    label: '根据时间切割',
+    value: 1,
+  },
+  {
+    label: '根据文件大小切割',
+    value: 2,
+  },
+];
 
 const IPFamilies = [
   {
@@ -213,7 +228,27 @@ const IPFamilies = [
   {
     label: '仅IPv6',
     value: 2,
-  }];
+  },
+];
+
+const DanmakuTransport = [
+  {
+    label: '随机',
+    value: 0,
+  },
+  {
+    label: 'TCP',
+    value: 1,
+  },
+  {
+    label: 'WS',
+    value: 2,
+  },
+  {
+    label: 'WSS',
+    value: 3,
+  },
+];
 
 const newConfig = ref<{ [key: string]: ConfigItem }>({
   'optionalRecordDanmaku': getEmptyConfigItem(defaultConfig.value.recordDanmaku),

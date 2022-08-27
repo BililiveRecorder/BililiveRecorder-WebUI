@@ -41,6 +41,10 @@
         <optional-input style="max-width: 700px;" type="text"
           v-model:value="newRoomConfig['optionalRecordingQuality']" :same-as-default="false" />
       </div>
+      <div id="stream-cover" class="setting-box">
+        <optional-input type="boolean" label="保存直播封面"
+          v-model:value="newRoomConfig['optionalSaveStreamCover']" :same-as-default="true" />
+      </div>
       <div id="danmaku-record" class="setting-box">
         <n-h3>弹幕录制</n-h3>
         <optional-input type="boolean" label="保存弹幕" v-model:value="newRoomConfig['optionalRecordDanmaku']" />
