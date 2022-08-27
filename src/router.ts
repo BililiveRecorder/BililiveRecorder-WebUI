@@ -22,7 +22,7 @@ const routes: RouteRecordRaw[] = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(EMBEDDED_BUILD ? document.getElementsByTagName('base')[0].attributes.getNamedItem('href')?.value : undefined),
+  history: createWebHistory(),
   routes,
 });
 
