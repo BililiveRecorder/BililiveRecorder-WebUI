@@ -468,7 +468,7 @@ export class Recorder<T = any> {
       'wpfShowTitleAndArea': true,
       'wpfNotifyStreamStart': false,
       'cookie': '',
-      'liveApiHost': 'https: //api.live.bilibili.com',
+      'liveApiHost': 'https://api.live.bilibili.com',
       'timingCheckInterval': 600,
       'timingApiTimeout': 10000,
       'timingStreamRetry': 6000,
