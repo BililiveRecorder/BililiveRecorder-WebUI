@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, inject, onMounted, ref, watch } from 'vue';
 import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
 import { FileDto, FolderDto } from '../../utils/api';
 import { recorderController } from '../../utils/RecorderController';
@@ -10,6 +10,8 @@ import FileItem from '../../components/FileItem.vue';
 const theme = useThemeVars();
 const route = useRoute();
 const router = useRouter();
+const updateTitle = inject<(...extra:string[])=>void>('updateTitle') || function () {};
+
 const currentPath = ref('/');
 const files = ref<Array<FileDto | FolderDto>>([]);
 const path = computed(() => {
@@ -69,6 +71,10 @@ onBeforeRouteUpdate((to, from) => {
       router.push({ hash: '#/' });
     }
   });
+});
+
+watch(currentPath, (newVal)=>{
+  setTimeout(()=>updateTitle(newVal), 0);
 });
 
 function goFolder(path: string) {

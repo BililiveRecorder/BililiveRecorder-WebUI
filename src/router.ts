@@ -12,7 +12,7 @@ const routes: RouteRecordRaw[] = [
   { path: '/:pathMatch(.*)*', component: Blank, meta: { key: '404', allowInEmbedded: true } },
   { path: '/', component: Home, meta: { key: 'index' } },
   { path: '/about', component: () => import('./views/About.vue'), meta: { title: '关于', key: 'about', allowInEmbedded: true } },
-  { path: '/recorder/:id', name: 'Recorder', component: Dashboard, meta: { title: 'B站录播姬', key: 'dashboard', allowInEmbedded: true } },
+  { path: '/recorder/:id', name: 'Recorder', component: Dashboard, meta: { key: 'dashboard', allowInEmbedded: true } },
   { path: '/recorder/:id/rooms', name: 'Rooms', component: RoomList, meta: { requireController: true, title: '房间列表', key: 'rooms', allowInEmbedded: true } },
   { path: '/recorder/:id/settings', name: 'Settings', component: Settings, meta: { requireController: true, title: '设置', key: 'settings', allowInEmbedded: true } },
   { path: '/recorder/:id/logs', name: 'Logs', component: Blank, meta: { requireController: true, title: '日志', key: 'logs', allowInEmbedded: true } },
@@ -45,5 +45,4 @@ router.beforeEach(function (to, from, next) {
     next();
   }
 });
-
 export default router;
