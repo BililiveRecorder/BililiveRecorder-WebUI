@@ -35,17 +35,11 @@ class RecorderApi extends EventTarget {
   constructor() {
     super();
     if (EMBEDDED_BUILD) {
-      let origin=window.origin;
-      const baseEls=document.getElementsByTagName('base');
-
-      if (baseEls.length>0) {
-        origin=new URL('../', document.baseURI).toString();
-      }
-
-      this.recorder = new Recorder<Server>(origin, {}, { id: 'local', path: origin, name: 'Local' });
-      return;
+      const localRecorder = new URL('../', document.baseURI).toString();
+      this.recorder = new Recorder<Server>(localRecorder, {}, { id: 'local', path: localRecorder, name: 'Local' });
+    } else {
+      this.loadServers();
     }
-    this.loadServers();
   }
   public changeHost(id:string, force:boolean = false) {
     if (id == this.recorder?.meta.id && !force) {
