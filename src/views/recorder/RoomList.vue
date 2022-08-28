@@ -256,7 +256,7 @@ async function addNewRoom(roomid: number, autoRecord: boolean = true) {
   }
   try {
     await recorderController.recorder.addRoom(roomid, autoRecord);
-    message.error(`添加房间 ${roomid} 成功`);
+    message.success(`添加房间 ${roomid} 成功`);
     loadingBar.finish();
   } catch (error) {
     loadingBar.error();
