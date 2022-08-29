@@ -36,6 +36,11 @@ export default defineConfig(({ command }) => {
           target: 'http://127.0.0.1:8000',
           changeOrigin: true,
         },
+        '^/unroot/.*': {
+          target: 'http://127.0.0.1:8000',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/unroot/, ''),
+        },
       },
     },
     build: {

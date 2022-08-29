@@ -24,7 +24,7 @@
           <n-input v-model:value="serverField.name" :disabled="verifying" placeholder="服务器名称"></n-input>
         </n-form-item>
         <n-form-item label="服务器地址">
-          <n-input v-model:value="serverField.path" :disabled="verifying" placeholder="http://localhost:8000"></n-input>
+          <n-input v-model:value="serverField.path" :disabled="verifying" placeholder="http://localhost:8000/"></n-input>
         </n-form-item>
         <n-form-item label="验证方式" label-placement="left">
           <n-radio-group v-model:value="serverField.authType" :disabled="verifying">
@@ -135,6 +135,9 @@ async function saveAndVerify() {
     message.error('服务器地址不能为空');
     verifying.value = false;
     return;
+  }
+  if (!serverField.path.endsWith('/')) {
+    serverField.path=serverField.path+'/';
   }
   try {
     const extraHeaders: { [key: string]: any } = {};

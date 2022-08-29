@@ -148,6 +148,9 @@ class RecorderApi extends EventTarget {
     if (typeof server.path !== 'string') {
       throw new Error('path is not a string');
     }
+    if (!server.path.endsWith('/')) {
+      server.path = server.path + '/';
+    }
     if (typeof server.name !== 'string') {
       throw new Error('name is not a string');
     }
