@@ -6,7 +6,9 @@ export function byteToHuman(bytes: number): string {
   if (unitIndex < 0) {
     unitIndex = 0;
   }
-  return `${(bytes / Math.pow(1024, unitIndex)).toFixed(2)} ${units[unitIndex]}`;
+  let num=(bytes / Math.pow(1024, unitIndex)).toFixed(2).slice(0, 4);
+  if (num[num.length-1] == '.')num=num.slice(0, 3);
+  return `${num} ${units[unitIndex]}`;
 }
 
 export function msToHuman(ms: number, includeMs: boolean = false): string {

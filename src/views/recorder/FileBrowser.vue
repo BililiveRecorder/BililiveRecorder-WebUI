@@ -93,12 +93,24 @@ function goFolder(path: string) {
           {{ folder.name }}
         </n-breadcrumb-item>
       </n-breadcrumb>
-      <file-item v-for="file in files" :key="file.name" :file="file" :current-path="currentPath" />
+      <div class="files">
+        <file-item v-for="file in files" :key="file.name" :file="file" :current-path="currentPath" />
+      </div>
     </n-space>
   </div>
 </template>
 <style lang="scss" scoped>
 .file-browser-container {
-  padding: 24px;
+  padding: 8px;
+  .files{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+@media (min-width: 668px) {
+  .file-browser-container {
+    padding: 24px;
+  }
 }
 </style>

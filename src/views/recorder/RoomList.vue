@@ -511,7 +511,7 @@ onUnmounted(() => {
 </script>
 <style lang="scss" scoped>
 .room-list-container {
-  padding: 24px;
+  padding: 8px;
 }
 
 .recording-stats,
@@ -520,6 +520,12 @@ onUnmounted(() => {
   p,
   h3 {
     margin: 0;
+  }
+}
+
+@media (min-width: 668px) {
+  .room-list-container {
+    padding: 24px;
   }
 }
 </style>

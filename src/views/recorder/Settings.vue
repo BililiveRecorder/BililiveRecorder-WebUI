@@ -396,7 +396,7 @@ function handleFileNamePreviewModalClose(newTemplate: string) {
 </script>
 <style scoped lang="scss">
 .settings-container {
-  padding: 24px;
+  padding: 8px;
   display: flex;
   flex-direction: row
 }
@@ -413,6 +413,12 @@ function handleFileNamePreviewModalClose(newTemplate: string) {
 @media (min-width: 768px) {
   .anchor {
     display: block
+  }
+}
+
+@media (min-width: 668px) {
+  .settings-container {
+    padding: 24px;
   }
 }
 </style>

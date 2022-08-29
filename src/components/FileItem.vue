@@ -62,18 +62,18 @@ function goVideoPreview(e: MouseEvent) {
         <file-video v-else-if="file.name.endsWith('.flv')" />
         <file v-else />
       </n-icon>
-      <span>{{ file.name }}</span>
-      <span v-if="!file.isFolder">{{ byteToHuman(file.size) }}</span>
+      <span class="name">{{ file.name }}</span>
+      <span class="filesize" v-if="!file.isFolder">{{ byteToHuman(file.size) }}</span>
     </div>
-    <n-time :time="new Date(file.lastModified)"
-      :type="(Date.now() - new Date(file.lastModified).valueOf() > 2678400000) ? 'datetime' : 'relative'"></n-time>
+    <n-time class="time" :time="new Date(file.lastModified)"
+      :type="(Date.now() - new Date(file.lastModified).valueOf() > 2678400000) ? 'date' : 'relative'"></n-time>
   </a>
 </template>
 <style lang="scss" scoped>
 .item {
   color: var(--text-color);
   text-decoration: none;
-  padding: 2px 16px;
+  padding: 2px 0.5rem;
   border-radius: var(--border-radius);
   background-color: var(--background-color);
   display: flex;
@@ -81,12 +81,15 @@ function goVideoPreview(e: MouseEvent) {
   justify-content: space-between;
   align-items: center;
   font-size: 13px;
+  max-width: 100%;
 
   .item-left {
     display: flex;
+    flex: 1;
     flex-direction: row;
     align-items: center;
     gap: 8px;
+    max-width: 100%;
   }
 
   &:hover {
@@ -95,6 +98,38 @@ function goVideoPreview(e: MouseEvent) {
 
   &:active {
     background-color: var(--pressed-color);
+  }
+  .name{
+    text-overflow: ellipsis;
+    overflow: hidden;
+    flex: 1;
+    white-space: nowrap;
+    max-width: calc(100% - 20px - 3rem);
+  }
+  .time{
+    display: none;
+  }
+
+
+  .filesize{
+    min-width: 2rem;
+  }
+}
+@media (min-width: 668px) {
+  .item{
+    .item-left {
+      width: 100%;
+    }
+    .name{
+      flex: initial;
+      max-width: initial;
+    }
+    .time{
+      display: inline;
+    }
+    .filesize{
+      justify-self: flex-end;
+    }
   }
 }
 </style>
