@@ -16,6 +16,7 @@ export interface Server {
   name: string;
   extraHeaders?: kvpairs[];
   auth?: BasicAuth | NoneAuth;
+  iconPath?: string;
 }
 
 export interface kvpairs {

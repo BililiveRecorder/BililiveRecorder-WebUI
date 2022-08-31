@@ -43,6 +43,10 @@
           <n-dynamic-input :disabled="verifying" v-model:value="serverField.extraHeaders" preset="pair"
             key-placeholder="Name" value-placeholder="Value"></n-dynamic-input>
         </n-form-item>
+        <n-form-item label="图标">
+          <n-input :disabled="verifying" v-model:value="serverField.iconPath"
+            placeholder="http://"></n-input>
+        </n-form-item>
       </n-form>
       <template #footer>
         <div style="display:flex; justify-content:flex-end">
@@ -117,6 +121,7 @@ const serverField = reactive({
     username: '',
     password: '',
   },
+  iconPath: '',
 });
 
 function toggleNewServerModal() {
@@ -151,6 +156,7 @@ async function saveAndVerify() {
     newServer.id = serverField.id;
     newServer.path = serverField.path;
     newServer.name = serverField.name;
+    newServer.iconPath = serverField.iconPath;
     if (serverField.extraHeaders.length > 0) {
       newServer.extraHeaders = serverField.extraHeaders.map((h) => {
         return {
@@ -190,6 +196,7 @@ function resetServer() {
   serverField.authType = 'none';
   serverField.auth.username = '';
   serverField.auth.password = '';
+  serverField.iconPath='';
 }
 
 function removeServer(id: string) {
@@ -209,6 +216,7 @@ function modifyServer(target: Server) {
     username: target.auth?.type === 'basic' ? target.auth?.username : '',
     password: target.auth?.type === 'basic' ? target.auth?.password : '',
   };
+  serverField.iconPath = target.iconPath || '';
   toggleNewServerModal();
 }
 </script>

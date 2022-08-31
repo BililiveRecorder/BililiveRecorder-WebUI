@@ -1,7 +1,13 @@
 <template>
   <n-list-item class="server" :style="style">
-    {{ server.name }}
-    <version-tag :version="'v' + version" type="recorder" />
+    <div class="item">
+      <div class="icon">
+        <img v-if="server.iconPath" :src="server.iconPath" referrerpolicy="no-referrer"/>
+        <component v-else :is="icon" />
+      </div>
+      <span>{{ server.name }}</span>
+      <version-tag :version="'v' + version" type="recorder" />
+    </div>
     <template #suffix>
       <n-dropdown :options="options" trigger="click" @select="onSelect">
         <n-button quaternary size="small" @click="stopPropagation">
@@ -19,6 +25,7 @@ import VersionTag from './VersionTag.vue';
 import { Recorder } from '../utils/api';
 import { rgba, hexToRgb } from '../utils/color';
 import { Server } from '../utils/RecorderController';
+import { generateServerIcon } from '../utils/ServerIconGenerator';
 
 </script>
 <script setup lang="ts">
@@ -26,6 +33,8 @@ import { Server } from '../utils/RecorderController';
 const themeVars = useThemeVars();
 
 const version = ref('');
+
+const icon = ref<any>();
 
 const props = defineProps({
   server: {
@@ -85,6 +94,7 @@ onMounted(() => {
   }).catch(() => {
     version.value = 'unknown';
   });
+  icon.value=generateServerIcon(props.server);
 });
 
 function onSelect(key: string) {
@@ -94,15 +104,38 @@ function onSelect(key: string) {
 
 </script>
 
-<style lang="sass">
+<style lang="scss" scoped>
 
-.server
-  color: var(--n-color)
-  background: var(--n-bg-color)
-  &:hover
-    color: var(--n-hover-color)
-    background: var(--n-bg-hover-color)
-  &:active
-    color: var(--n-pressed-color)
-    background: var(--n-bg-pressed-color)
+.server{
+  color: var(--n-color);
+  background: var(--n-bg-color);
+
+  &:hover{
+    color: var(--n-hover-color);
+    background: var(--n-bg-hover-color);
+  }
+
+  &:active{
+    color: var(--n-pressed-color);
+    background: var(--n-bg-pressed-color);
+  }
+}
+.item{
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  .icon {
+    max-width: 32px;
+    max-height: 32px;
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+    img{
+      width: 100%;
+      height: 100%;
+      border-radius: 100%;
+    }
+  }
+}
+
 </style>
