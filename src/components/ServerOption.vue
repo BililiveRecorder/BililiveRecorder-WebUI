@@ -18,7 +18,7 @@
   </n-list-item>
 </template>
 <script lang="ts">
-import { onMounted, PropType, ref, computed, StyleValue } from 'vue';
+import { onMounted, PropType, ref, computed, StyleValue, shallowRef } from 'vue';
 import { useThemeVars, NButton, NListItem, NIcon, NDropdown } from 'naive-ui';
 import { EllipsisHorizontal } from '@vicons/ionicons5';
 import VersionTag from './VersionTag.vue';
@@ -34,7 +34,7 @@ const themeVars = useThemeVars();
 
 const version = ref('');
 
-const icon = ref<any>();
+const icon = shallowRef<any>();
 
 const props = defineProps({
   server: {
