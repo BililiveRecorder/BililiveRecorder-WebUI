@@ -6,7 +6,7 @@ import { recorderController } from '../../utils/RecorderController';
 import { NBreadcrumb, NBreadcrumbItem, NSelect, useThemeVars } from 'naive-ui';
 import FileItem from '../../components/FileItem.vue';
 import { STORAGE_FILES_SORT_OPTION } from '../../const';
-const sortOptions=[
+const sortOptions = [
   {
     label: '最后修改时间 ↓',
     value: 1,
@@ -44,7 +44,7 @@ const updateTitle = inject<(...extra:string[])=>void>('updateTitle') || function
 
 const currentPath = ref('/');
 const files = ref<Array<FileDto | FolderDto>>([]);
-const sort = ref(parseInt(window.localStorage.getItem(STORAGE_FILES_SORT_OPTION)||'4'));
+const sort = ref(parseInt(window.localStorage.getItem(STORAGE_FILES_SORT_OPTION) || '4'));
 const path = computed(() => {
   const folders = currentPath.value.split('/').filter((p) => p !== '');
   let path = '';
@@ -74,11 +74,11 @@ function sortFiles(files:Array<FileDto|FolderDto>) {
       });
     case 3:
       return files.sort((a, b)=>{
-        return b.name>a.name ? 1 : -1;
+        return b.name > a.name ? 1 : -1;
       });
     case 4:
       return files.sort((a, b)=>{
-        return a.name>b.name ? 1 : -1;
+        return a.name > b.name ? 1 : -1;
       });
     case 5:
       return files.sort((a, b)=>{

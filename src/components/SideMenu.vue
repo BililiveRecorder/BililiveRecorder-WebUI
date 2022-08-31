@@ -25,7 +25,7 @@ function renderIcon(icon: Component) {
 }
 
 function renderServerIcon(server:Server) {
-  if (server.iconPath && typeof server.iconPath === 'string' && server.iconPath.length>0) {
+  if (server.iconPath && typeof server.iconPath === 'string' && server.iconPath.length > 0) {
     return ()=>h('img', {
       'src': server.iconPath,
       'referrerpolicy': 'no-referrer',
@@ -80,7 +80,7 @@ function connectedMenu(): Array<MenuOption | MenuGroupOption> {
           type: 'divider',
         });
       }
-      result=result.concat([{
+      result = result.concat([{
         label: r.name,
         key: r.id,
         path: `/recorder/${r.id}`,

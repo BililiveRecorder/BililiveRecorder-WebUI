@@ -110,9 +110,9 @@ const notification = useNotification();
 
 const order = ref('none');
 
-const currentSettingRoomId=ref(0);
-const currentSettingRoomObjectId=ref('');
-const showRoomSetting=ref(false);
+const currentSettingRoomId = ref(0);
+const currentSettingRoomObjectId = ref('');
+const showRoomSetting = ref(false);
 
 let pullStatFailCount = 0;
 
@@ -288,9 +288,9 @@ function selfUpdateRoom(room: RoomDto, i: number) {
 }
 
 function openRoomSetting(room:RoomDto) {
-  currentSettingRoomId.value=room.roomId;
-  currentSettingRoomObjectId.value=room.objectId;
-  showRoomSetting.value=true;
+  currentSettingRoomId.value = room.roomId;
+  currentSettingRoomObjectId.value = room.objectId;
+  showRoomSetting.value = true;
 }
 
 // new room
@@ -318,8 +318,8 @@ async function onNewRoomFormSubmit() {
     const roomIds:number[] = newRoomModel.value.roomId.trim().
       split('\n')
       .map((e)=>e.trim())
-      .filter((e)=>e.length>0).map((e)=>{
-        const matchResult=e.match(ROOM_ID_FROM_LINK_REGEX);
+      .filter((e)=>e.length > 0).map((e)=>{
+        const matchResult = e.match(ROOM_ID_FROM_LINK_REGEX);
         if (matchResult) {
           return parseInt(matchResult[1], 10);
         } else {
@@ -328,9 +328,9 @@ async function onNewRoomFormSubmit() {
       }).filter((e)=>typeof e === 'number') as number[];
     toggleNewRoomDialog();
     newRoomModel.value.roomId = '';
-    const autoRecord=newRoomModel.value.autoRecord;
+    const autoRecord = newRoomModel.value.autoRecord;
     message.info(`共识别到${roomIds.length}个直播间，现在开始添加`);
-    const timer=setInterval(()=>{
+    const timer = setInterval(()=>{
       if (roomIds.length > 0) {
         addNewRoom(roomIds.pop() as number, autoRecord);
       } else {

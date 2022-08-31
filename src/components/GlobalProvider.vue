@@ -27,7 +27,7 @@ const themeMap = [darkTheme, lightTheme];
 const theme = ref(darkTheme);
 
 onMounted(()=>{
-  const storageValue= localStorage.getItem(STORAGE_THEME);
+  const storageValue = localStorage.getItem(STORAGE_THEME);
   if (storageValue !== null) {
     currentTheme = parseInt(storageValue);
   }
@@ -57,12 +57,12 @@ function updateTitle(...extra:string[]) {
     titleElement.unshift(recorderController.recorder.meta.name || '？？？？');
   }
   if (currentRoute.meta.title) {
-    const t=typeof currentRoute.meta.title === 'function' ? currentRoute.meta.title() : currentRoute.meta.title;
+    const t = typeof currentRoute.meta.title === 'function' ? currentRoute.meta.title() : currentRoute.meta.title;
     if (t) {
       titleElement.unshift(t);
     }
   }
-  if (extra.length>0) {
+  if (extra.length > 0) {
     titleElement = extra.concat(titleElement);
   }
   document.title = titleElement.join(' - ');

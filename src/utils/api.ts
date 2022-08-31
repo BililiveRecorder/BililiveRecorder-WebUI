@@ -438,7 +438,7 @@ export class Recorder<T = any> {
   }
 
   async graphql<T>(queryName: string, query: string, variables: any|null): Promise<T> {
-    const res= await this.request<any>('POST', `graphql`, { queryName, query, variables });
+    const res = await this.request<any>('POST', `graphql`, { queryName, query, variables });
     if (res.error) {
       throw res.error;
     } else {
@@ -485,11 +485,11 @@ export class Recorder<T = any> {
     };
   }
   static getMockGlobalConfig(): GlobalConfigDto {
-    const result:{[key:string]:Optional<any>}={};
-    const defaultConfig=this.getMockDefaultConfig();
+    const result:{[key:string]:Optional<any>} = {};
+    const defaultConfig = this.getMockDefaultConfig();
     Object.keys(this.getMockDefaultConfig()).forEach((e)=>{
-      const key='Optional'+e[0].toUpperCase()+e.slice(1-e.length);
-      result[key]={
+      const key = 'Optional' + e[0].toUpperCase() + e.slice(1 - e.length);
+      result[key] = {
         hasValue: false,
         // @ts-ignore
         value: defaultConfig[e],

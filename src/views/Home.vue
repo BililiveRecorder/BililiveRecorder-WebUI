@@ -143,7 +143,7 @@ async function saveAndVerify() {
     return;
   }
   if (!serverField.path.endsWith('/')) {
-    serverField.path=serverField.path+'/';
+    serverField.path = serverField.path + '/';
   }
   try {
     const extraHeaders: { [key: string]: any } = {};
@@ -197,7 +197,7 @@ function resetServer() {
   serverField.authType = 'none';
   serverField.auth.username = '';
   serverField.auth.password = '';
-  serverField.iconPath='';
+  serverField.iconPath = '';
 }
 
 function removeServer(id: string) {

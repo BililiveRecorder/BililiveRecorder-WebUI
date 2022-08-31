@@ -94,7 +94,7 @@ onMounted(() => {
   }).catch(() => {
     version.value = 'unknown';
   });
-  icon.value=generateServerIcon(props.server);
+  icon.value = generateServerIcon(props.server);
 });
 
 function onSelect(key: string) {

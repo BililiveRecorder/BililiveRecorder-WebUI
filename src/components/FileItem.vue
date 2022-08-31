@@ -22,7 +22,7 @@ const props = defineProps({
 });
 
 function calcFilePath(url: string) {
-  return new URL('.'+url, recorderController.recorder?.meta.path).toString();
+  return new URL('.' + url, recorderController.recorder?.meta.path).toString();
 }
 
 function onClick(e: MouseEvent) {

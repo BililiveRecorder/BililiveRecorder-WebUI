@@ -6,8 +6,8 @@ export function byteToHuman(bytes: number): string {
   if (unitIndex < 0) {
     unitIndex = 0;
   }
-  let num=(bytes / Math.pow(1024, unitIndex)).toFixed(2).slice(0, 4);
-  if (num[num.length-1] == '.')num=num.slice(0, 3);
+  let num = (bytes / Math.pow(1024, unitIndex)).toFixed(2).slice(0, 4);
+  if (num[num.length - 1] == '.')num = num.slice(0, 3);
   return `${num} ${units[unitIndex]}`;
 }
 
@@ -28,5 +28,5 @@ export function msToHuman(ms: number, includeMs: boolean = false): string {
 }
 
 export function dateToTimeWithMs(date: Date): string {
-  return `${date.getHours()}:${date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()}:${date.getSeconds()>9?date.getSeconds():'0'+date.getSeconds()}.${date.getMilliseconds()}`;
+  return `${date.getHours()}:${date.getMinutes() > 9 ? date.getMinutes() : '0' + date.getMinutes()}:${date.getSeconds() > 9 ? date.getSeconds() : '0' + date.getSeconds()}.${date.getMilliseconds()}`;
 }

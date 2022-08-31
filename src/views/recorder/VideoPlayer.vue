@@ -65,7 +65,7 @@ const playerOptions = ref<ArtPlayerOptions>({ url: '' });
 const danmuSource = ref<any>(() => ([]));
 
 function calcFilePath(url: string) {
-  return new URL('.'+url, recorderController.recorder?.meta.path).toString();
+  return new URL('.' + url, recorderController.recorder?.meta.path).toString();
 }
 
 const headers = recorderController.recorder!._getHeader();

@@ -121,7 +121,7 @@ const props = defineProps({
   },
 });
 
-const emit=defineEmits(['update:show']);
+const emit = defineEmits(['update:show']);
 
 watch(()=>props.show, function (newVal, oldValue) {
   if (newVal) {
@@ -142,8 +142,8 @@ function close() {
 }
 
 async function initSetting() {
-  loading.value=true;
-  newRoomConfig.value={};
+  loading.value = true;
+  newRoomConfig.value = {};
   if (recorderController.recorder == null) {
     return;
   }

@@ -88,7 +88,7 @@ class RecorderApi extends EventTarget {
             if (typeof s.name !== 'string') {
               throw new Error('name is not a string');
             }
-            if (typeof s.extraHeaders !='undefined' ) {
+            if (typeof s.extraHeaders != 'undefined' ) {
               if (Array.isArray(s.extraHeaders)) {
                 s.extraHeaders.forEach((h) => {
                   if (typeof h.key !== 'string') {
@@ -157,13 +157,13 @@ class RecorderApi extends EventTarget {
     }
     if (Array.isArray(server.extraHeaders)) {
       server.extraHeaders.forEach((h) => {
-        if (typeof h.key =='number') {
+        if (typeof h.key == 'number') {
           h.key = h.key + '';
         }
         if (typeof h.key !== 'string') {
           throw new Error('extraHeaders.name is not a string');
         }
-        if (typeof h.value =='number') {
+        if (typeof h.value == 'number') {
           h.value = h.value + '';
         }
         if (typeof h.value !== 'string') {
