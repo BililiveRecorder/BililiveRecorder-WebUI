@@ -2,9 +2,9 @@
 
 给 BililiveRecorder.Cli 添加一个简单的网页界面。分为两个版本，嵌入版和群控版。
 
-嵌入版会在 BililiveRecorder.Cli 打包时嵌入到 BililiveRecorder.Cli 中，特征为只能控制本机，无法添加服务器。
+嵌入版会在 BililiveRecorder.Cli 打包时嵌入到 BililiveRecorder.Cli 中，特征为只能控制本机，无法添加录播姬。
 
-群控版允许用户自助添加控制任意数量的服务器，
+群控版允许用户自助添加控制任意数量的录播姬，
 
 ## 常见问题：
 

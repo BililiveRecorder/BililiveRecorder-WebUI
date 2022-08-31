@@ -13,18 +13,22 @@
             :selected="currentRecorderId == server.id" @click="router.push(`/recorder/${server.id}`)"
             @delete="removeServer(server.id)" @modify="modifyServer(server)"></server-option>
         </n-scrollbar>
-        <n-empty v-else style="height: 100%;justify-content: center;" description="点击下方按钮添加服务器"></n-empty>
+        <n-empty v-else style="height: 100%;justify-content: center;" description="点击下方按钮添加录播姬"></n-empty>
       </n-list>
     </div>
-    <n-button @click="toggleNewServerModal">添加服务器</n-button>
+    <n-button @click="toggleNewServerModal">添加录播姬</n-button>
     <n-modal v-model:show="showNewServerModal" preset="card" style="width: min(600px,100vw);"
-      :title="serverField.id ? '添加服务器' : '编辑服务器'" v-on:after-leave="resetServer">
+      :title="serverField.id ? '编辑录播姬' : '添加录播姬'" v-on:after-leave="resetServer">
       <n-form>
-        <n-form-item label="服务器名称">
-          <n-input v-model:value="serverField.name" :disabled="verifying" placeholder="服务器名称"></n-input>
+        <n-form-item label="录播姬名称">
+          <n-input v-model:value="serverField.name" :disabled="verifying" placeholder="录播姬名称"></n-input>
         </n-form-item>
-        <n-form-item label="服务器地址">
+        <n-form-item label="录播姬地址">
           <n-input v-model:value="serverField.path" :disabled="verifying" placeholder="http://localhost:8000/"></n-input>
+        </n-form-item>
+        <n-form-item label="图标">
+          <n-input :disabled="verifying" v-model:value="serverField.iconPath"
+            placeholder="http://"></n-input>
         </n-form-item>
         <n-form-item label="验证方式" label-placement="left">
           <n-radio-group v-model:value="serverField.authType" :disabled="verifying">
@@ -43,10 +47,7 @@
           <n-dynamic-input :disabled="verifying" v-model:value="serverField.extraHeaders" preset="pair"
             key-placeholder="Name" value-placeholder="Value"></n-dynamic-input>
         </n-form-item>
-        <n-form-item label="图标">
-          <n-input :disabled="verifying" v-model:value="serverField.iconPath"
-            placeholder="http://"></n-input>
-        </n-form-item>
+        <p>注意：所有的身份验证信息都是明文存储在浏览器中，验证信息不会被发送到网站，请保护好您自己的设备，不要中病毒，以免造成不必要的损失。</p>
       </n-form>
       <template #footer>
         <div style="display:flex; justify-content:flex-end">
@@ -132,12 +133,12 @@ async function saveAndVerify() {
   verifying.value = true;
   serverField.name = serverField.name.trim();
   if (serverField.name.length === 0) {
-    message.error('服务器名称不能为空');
+    message.error('录播姬名称不能为空');
     verifying.value = false;
     return;
   }
   if (serverField.path.length === 0) {
-    message.error('服务器地址不能为空');
+    message.error('录播姬地址不能为空');
     verifying.value = false;
     return;
   }

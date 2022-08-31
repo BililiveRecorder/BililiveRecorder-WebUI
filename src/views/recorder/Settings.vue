@@ -299,7 +299,7 @@ async function init(): Promise<void> {
       message.error(error?.message || error.toString(), {
         keepAliveOnHover: true,
       });
-      message.error(`加载默认配置失败，可能部分设置项默认值与服务器不一致，请注意。`);
+      message.error(`加载默认配置失败，可能部分设置项默认值与录播姬不一致，请注意。`);
       console.error(error);
     }
   }
