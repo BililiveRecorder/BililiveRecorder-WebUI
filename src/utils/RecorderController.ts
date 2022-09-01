@@ -117,9 +117,15 @@ class RecorderApi extends EventTarget {
       const data = window.localStorage.getItem(STORAGE_KEY_SERVERS);
       if (data) {
         this.servers = [];
-        const parsed = JSON.parse(data) as Server[];
+        let parsed:Server[] = [];
+        try {
+          parsed = JSON.parse(data) as Server[];
+        } catch (error) {
+          console.error(error);
+        }
         parsed.forEach((s) => {
           try {
+            // verify id
             if (typeof s.id === 'undefined') {
               s.id = generateRandomId();
             }
