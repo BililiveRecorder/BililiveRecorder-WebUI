@@ -28,6 +28,50 @@ function generateRandomId() {
   return Math.random().toString(36).substring(2, 8);
 }
 
+export function verifyServer(server:Server):boolean {
+  if (typeof server.path !== 'string') {
+    throw new Error('path is not a string');
+  }
+  if (typeof server.name !== 'string') {
+    throw new Error('name is not a string');
+  }
+  if (typeof server.extraHeaders != 'undefined' ) {
+    if (Array.isArray(server.extraHeaders)) {
+      server.extraHeaders.forEach((h) => {
+        if (typeof h.key !== 'string') {
+          throw new Error('extraHeaders.key is not a string');
+        }
+        if (typeof h.value !== 'string') {
+          throw new Error('extraHeaders.value is not a string');
+        }
+      });
+      if (server.extraHeaders.length === 0) {
+        delete server.extraHeaders;
+      }
+    } else {
+      throw new Error('extraHeaders is not an array');
+    }
+  }
+  if (typeof server.auth !== 'undefined') {
+    if (server.auth.type === 'basic') {
+      if (typeof server.auth.username !== 'string') {
+        throw new Error('auth.username is not a string');
+      }
+      if (typeof server.auth.password !== 'string') {
+        throw new Error('auth.password is not a string');
+      }
+    } else if (server.auth.type === 'none') {
+      // noop
+    } else {
+      throw new Error('auth.type is not basic or none');
+    }
+  }
+  if (typeof server.iconPath !== 'undefined' && typeof server.iconPath !== 'string') {
+    throw new Error('iconPath should be string or none');
+  }
+  return true;
+}
+
 class RecorderApi extends EventTarget {
   public recorder:Recorder<Server> | null = null;
   private _supportLocalStorage: boolean = !!window.localStorage;
@@ -82,43 +126,7 @@ class RecorderApi extends EventTarget {
             if (this.servers.find((ss) => ss.id === s.id)) {
               s.id = generateRandomId();
             }
-            if (typeof s.path !== 'string') {
-              throw new Error('path is not a string');
-            }
-            if (typeof s.name !== 'string') {
-              throw new Error('name is not a string');
-            }
-            if (typeof s.extraHeaders != 'undefined' ) {
-              if (Array.isArray(s.extraHeaders)) {
-                s.extraHeaders.forEach((h) => {
-                  if (typeof h.key !== 'string') {
-                    throw new Error('extraHeaders.key is not a string');
-                  }
-                  if (typeof h.value !== 'string') {
-                    throw new Error('extraHeaders.value is not a string');
-                  }
-                });
-                if (s.extraHeaders.length === 0) {
-                  delete s.extraHeaders;
-                }
-              } else {
-                throw new Error('extraHeaders is not an array');
-              }
-            }
-            if (typeof s.auth !== 'undefined') {
-              if (s.auth.type === 'basic') {
-                if (typeof s.auth.username !== 'string') {
-                  throw new Error('auth.username is not a string');
-                }
-                if (typeof s.auth.password !== 'string') {
-                  throw new Error('auth.password is not a string');
-                }
-              } else if (s.auth.type === 'none') {
-                // noop
-              } else {
-                throw new Error('auth.type is not basic or none');
-              }
-            }
+            verifyServer(s);
             this.servers.push(s);
           } catch (error) {
             console.error(error);
@@ -146,35 +154,9 @@ class RecorderApi extends EventTarget {
     if (this.servers.find((ss) => ss.id === server.id)) {
       server.id = generateRandomId();
     }
-    if (typeof server.path !== 'string') {
-      throw new Error('path is not a string');
-    }
+    verifyServer(server);
     if (!server.path.endsWith('/')) {
       server.path = server.path + '/';
-    }
-    if (typeof server.name !== 'string') {
-      throw new Error('name is not a string');
-    }
-    if (Array.isArray(server.extraHeaders)) {
-      server.extraHeaders.forEach((h) => {
-        if (typeof h.key == 'number') {
-          h.key = h.key + '';
-        }
-        if (typeof h.key !== 'string') {
-          throw new Error('extraHeaders.name is not a string');
-        }
-        if (typeof h.value == 'number') {
-          h.value = h.value + '';
-        }
-        if (typeof h.value !== 'string') {
-          throw new Error('extraHeaders.value is not a string');
-        }
-      });
-      if (server.extraHeaders.length === 0) {
-        server.extraHeaders;
-      }
-    } else if (typeof server.extraHeaders !== 'undefined') {
-      throw new Error('extraHeaders is not an array');
     }
     this.servers.push(server);
     this.dispatchEvent(new CustomEvent('recorders-list-update' ));
@@ -202,6 +184,10 @@ class RecorderApi extends EventTarget {
     if (this.recorder?.meta.id === id) {
       this.changeHost(id, true);
     }
+  }
+
+  public exportJSON() {
+    return JSON.stringify(this.servers, null, 2);
   }
 }
 

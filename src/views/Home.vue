@@ -17,6 +17,20 @@
       </n-list>
     </div>
     <n-button @click="toggleNewServerModal">添加录播姬</n-button>
+    <div class="file-operations">
+      <n-popconfirm @positive-click="importServer">
+        <template #trigger>
+          <n-button quaternary type="tertiary">导入</n-button>
+        </template>
+        <div style="max-width: min(100vw, 200px); white-space: normal;">注意：所有的身份验证信息都是明文存储在浏览器中，请保护好您的设备。</div>
+      </n-popconfirm>
+      <n-popconfirm @positive-click="exportAllServer">
+        <template #trigger>
+          <n-button quaternary type="tertiary">导出</n-button>
+        </template>
+        <div style="max-width: min(100vw, 200px); white-space: normal;">注意：所有的身份验证信息都是明文存储在文件中，请妥善保存。</div>
+      </n-popconfirm>
+    </div>
     <n-modal v-model:show="showNewServerModal" preset="card" style="width: min(600px,100vw);"
       :title="serverField.id ? '编辑录播姬' : '添加录播姬'" v-on:after-leave="resetServer">
       <n-form>
@@ -61,12 +75,12 @@
 import { VERSION } from '../const';
 import {
   useMessage, NH1, NEmpty, NButton, NScrollbar, NList, NModal, NForm, NFormItem, NInput, NDynamicInput,
-  NRadio, NRadioGroup,
+  NRadio, NRadioGroup, NPopconfirm,
 } from 'naive-ui';
 import { onMounted, onUnmounted, reactive, ref } from 'vue';
 import { Recorder } from '../utils/api';
 import ServerOption from '../components/ServerOption.vue';
-import { recorderController, Server } from '../utils/RecorderController';
+import { recorderController, Server, verifyServer } from '../utils/RecorderController';
 import { useRouter } from 'vue-router';
 import VersionTag from '../components/VersionTag.vue';
 
@@ -220,6 +234,56 @@ function modifyServer(target: Server) {
   serverField.iconPath = target.iconPath || '';
   toggleNewServerModal();
 }
+
+function exportAllServer() {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new File([recorderController.exportJSON()], 'ServerList.json', { type: 'application/json' }));
+  a.target = '_blank';
+  a.download = 'ServerList.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function importServer() {
+  const inputEl = document.createElement('input');
+  inputEl.type = 'file';
+  inputEl.accept = '.json,application/json,text/json';
+  inputEl.addEventListener('change', (ev)=>{
+    if (inputEl.files && inputEl.files.length > 0) {
+      inputEl.files[0].text().then((text)=>{
+        try {
+          const servers = JSON.parse(text);
+          if (!Array.isArray(servers)) {
+            message.error('导入失败，文件不是json数组');
+            return;
+          }
+          if (servers.length > 0 ) {
+            message.info(`导入中，疑似有${servers.length}个录播姬`);
+          } else {
+            message.warning('导入失败，文件是空数组');
+            return;
+          }
+          servers.forEach((e, i)=>{
+            try {
+              verifyServer(e);
+              e.id = generateRandomId();
+              recorderController.addServer(e);
+              message.success(`第 ${i} 个录播姬导入成功：${e.name}`);
+            } catch (error:any) {
+              message.error(`第 ${i} 个录播姬导入失败：${error.message || error.toString()}`);
+            }
+          });
+          message.info('导入结束');
+        } catch (error) {
+          message.error('导入失败，文件不是合格的JSON');
+        }
+      });
+    }
+  });
+  inputEl.click();
+}
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -238,6 +302,9 @@ function modifyServer(target: Server) {
     flex-direction: column;
     margin: 1vh 0;
     --max-vh: 45vh;
+  }
+  .file-operations{
+    margin-top: 24px;
   }
 }
 
