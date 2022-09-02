@@ -834,7 +834,6 @@ onMounted(() => {
     customType: {
       flv: function (video, url) {
         if (mpegtsjs.isSupported()) {
-          console.log(props.headers);
           const flvPlayer = mpegtsjs.createPlayer({
             type: 'flv',
             url: url,
