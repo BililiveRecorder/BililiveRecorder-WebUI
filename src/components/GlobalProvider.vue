@@ -32,6 +32,7 @@ onMounted(()=>{
     currentTheme = parseInt(storageValue);
   }
   currentTheme = isNaN(currentTheme) ? 0 : currentTheme % 2;
+  theme.value = themeMap[currentTheme];
 });
 
 provide('switchTheme', {
