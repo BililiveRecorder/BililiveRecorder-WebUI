@@ -42,7 +42,9 @@ export function LogLine({ log, format: formatConfig, level: levelConfig }: {
       }
       if (log[match.value[1]] == '@x') useAtX = true;
       if (log[match.value[1]]) {
-        content.push(<span class={'variable'}>{log[match.value[1]]}</span>);
+        content.push(<span class={'variable'}>{
+          typeof log[match.value[1]] === 'object' ? JSON.stringify(log[match.value[1]]) : log[match.value[1]]
+        }</span>);
       } else {
         content.push(match.value[0]);
       }

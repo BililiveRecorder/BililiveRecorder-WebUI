@@ -6,7 +6,7 @@ export function LogDetail({ log }: { log: RecorderLog }) {
     {
       keys.map((k) => {
         return (<>
-          <div>{k}</div><div>{log[k]}</div>
+          <div>{k}</div><div>{typeof log[k] === 'object' ? JSON.stringify(log[k]) : log[k]}</div>
         </>);
       })
     }
