@@ -276,6 +276,7 @@ const newConfig = ref<{ [key: string]: ConfigItem }>({
   'optionalNetworkTransportUseSystemProxy': getEmptyConfigItem(defaultConfig.value.networkTransportUseSystemProxy),
   'optionalNetworkTransportAllowedAddressFamily': getEmptyConfigItem(defaultConfig.value.networkTransportAllowedAddressFamily),
   'optionalUserScript': getEmptyConfigItem(defaultConfig.value.userScript),
+  'optionalSaveStreamCover': getEmptyConfigItem(defaultConfig.value.saveStreamCover),
 });
 
 let lastload: string | undefined = '';
