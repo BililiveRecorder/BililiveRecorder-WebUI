@@ -1,4 +1,4 @@
-import { RecorderLog } from "../utils/api";
+import { RecorderLog } from '../utils/api';
 
 interface FormatConfig {
   showTime: boolean;
@@ -16,10 +16,9 @@ interface LevelConfig {
 }
 
 function shortContext(context: string) {
-  var a = context.split('.')
-  return a[a.length - 1]
+  const a = context.split('.');
+  return a[a.length - 1];
 }
-
 
 export function LogLine({ log, format: formatConfig, level: levelConfig }: {
   log: RecorderLog, format: FormatConfig, level: LevelConfig
@@ -29,8 +28,8 @@ export function LogLine({ log, format: formatConfig, level: levelConfig }: {
   if (typeof levelConfig[level] == 'boolean' && !levelConfig[level]) {
     return;
   }
-  const content: any[] = []
-  let useAtX = false
+  const content: any[] = [];
+  let useAtX = false;
   if (log['@mt']) {
     const template = log['@mt'];
     let lastIndex = 0;
@@ -41,7 +40,7 @@ export function LogLine({ log, format: formatConfig, level: levelConfig }: {
       if (before.length > 0) {
         content.push(before);
       }
-      if (log[match.value[1]] == '@x') useAtX = true
+      if (log[match.value[1]] == '@x') useAtX = true;
       if (log[match.value[1]]) {
         content.push(<span class={'variable'}>{log[match.value[1]]}</span>);
       } else {
@@ -55,12 +54,12 @@ export function LogLine({ log, format: formatConfig, level: levelConfig }: {
       content.push(rest);
     }
     if (log['@x'] && !useAtX) {
-      content.push(<span class={'variable expction'}>{log['@x'].split(/[\r\n]+/)[0]}</span>)
+      content.push(<span class={'variable expction'}>{log['@x'].split(/[\r\n]+/)[0]}</span>);
     }
   } else if (log['@m']) {
     content.push(log['@m']);
   } else {
-    content.push('无法解析的日志')
+    content.push('无法解析的日志');
   }
   return <div class={`log-line ${level}`}>
     {formatConfig.showTime ? <span class={'time'}>{formatConfig.showDate ? new Date(log['@t']).toLocaleString() : new Date(log['@t']).toLocaleTimeString()}</span> : null}
@@ -74,5 +73,5 @@ export function LogLine({ log, format: formatConfig, level: levelConfig }: {
       }
       {content}
     </div>
-  </div>
+  </div>;
 }
