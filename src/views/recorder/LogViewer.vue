@@ -1,5 +1,5 @@
 <script lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { NCheckbox, NH2, NScrollbar, NDrawer, NDrawerContent, NButton, useThemeVars } from 'naive-ui';
 import { recorderController } from '../../utils/RecorderController';
 import { LogLine } from '../../components/LogLine';
@@ -43,7 +43,6 @@ function showLogDetail(log:RecorderLog) {
   showingLog.value = log;
   showDrawer.value = true;
 }
-
 function closeLogDetail() {
   showDrawer.value = false;
 }
@@ -51,11 +50,10 @@ function closeLogDetail() {
 onMounted(()=>{
   getLog();
   timer = setInterval(getLog, 5000);
-  return ()=>{
-    clearInterval(timer);
-  };
 });
-
+onUnmounted(()=>{
+  clearInterval(timer);
+});
 </script>
 <template>
   <div class="log-container">
@@ -121,15 +119,17 @@ onMounted(()=>{
         '--fatal-color-hover': theme.hoverColor,
         '--fatal-color-variable': theme.tagColor,
       }">
-        <log-line v-for="(log,index) in logs" :log="log" :format="formatConfig" :level="levelConfig" :key="index" />
+        <log-line v-for="(log,index) in logs" :log="log" :format="formatConfig" :level="levelConfig" :key="index" @click="showLogDetail(log)"/>
       </div>
     </n-scrollbar>
-    <n-drawer v-model:show="showDrawer" :show-mask="false" :width="400">
+    <n-drawer v-model:show="showDrawer" :show-mask="false" :width="400" :mask-closable="false">
       <n-drawer-content>
         <template #header>
           详细
         </template>
-        <log-detail :log="showingLog"/>
+        <n-scrollbar>
+          <log-detail :log="showingLog"/>
+        </n-scrollbar>
         <template #footer>
           <n-button @click="closeLogDetail">关闭</n-button>
         </template>
@@ -247,6 +247,11 @@ onMounted(()=>{
       background-color: var(--fatal-color-hover);
     }
   }
+}
+.log-detail{
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  word-break: break-all;
 }
 @media (max-width: 768px){
   .log-container{
