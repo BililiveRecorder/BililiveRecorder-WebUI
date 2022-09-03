@@ -62,7 +62,7 @@ export function LogLine({ log, format: formatConfig, level: levelConfig }: {
     content.push('无法解析的日志');
   }
   return <div class={`log-line ${level}`}>
-    {formatConfig.showTime ? <span class={'time'}>{formatConfig.showDate ? new Date(log['@t']).toLocaleString() : new Date(log['@t']).toLocaleTimeString()}</span> : null}
+    {formatConfig.showTime ? <span class={'time'}>{formatConfig.showDate ? new Date(log['@t']).toLocaleString('zh-CN') : new Date(log['@t']).toLocaleTimeString('zh-CN')}</span> : null}
     <span class={'level'}>{level}</span>
     <div class={'content'}>
       {
