@@ -300,6 +300,21 @@ export type SetGlobalConfig = Partial<GlobalConfigDto>
 
 export type SetRoomConfig = Partial<RoomConfigDto>
 
+export interface RecorderLog {
+  '@t': string;
+  '@m'?: string;
+  '@mt'?: string;
+  '@l'?: 'Verbose' | 'Debug' | 'Info' | 'Warning' | 'Error' | 'Fatal';
+  '@x'?: string;
+  [key: string]: any;
+}
+
+export interface JsonLogDto {
+  continuous: boolean;
+  cursor: number;
+  logs: Array<RecorderLog>;
+}
+
 /* eslint-enable no-unused-vars */
 export class Recorder<T = any> {
   public readonly host: string;
@@ -435,6 +450,10 @@ export class Recorder<T = any> {
 
   async refreshRoomInfoByObjectId(objectId: string): Promise<RoomDto> {
     return await this.request<RoomDto>('POST', `api/room/${objectId}/refresh`, {});
+  }
+
+  async fetchLog(after:number = 0):Promise<JsonLogDto> {
+    return await this.request<JsonLogDto>('GET', `api/log/fetch?${new URLSearchParams({ after: after.toFixed(0) }).toString()}`);
   }
 
   async graphql<T>(queryName: string, query: string, variables: any|null): Promise<T> {

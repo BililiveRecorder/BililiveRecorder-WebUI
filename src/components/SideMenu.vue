@@ -114,7 +114,6 @@ function connectedMenu(): Array<MenuOption | MenuGroupOption> {
         key: 'logs',
         path: `/recorder/${r.id}/logs`,
         icon: renderIcon(DocumentTextOutline),
-        disabled: true,
       }]);
       if (i < recorders.length - 1) {
         result.push({
@@ -166,7 +165,6 @@ function embeddedMenu(): Array<MenuOption | MenuGroupOption> {
     key: 'logs',
     path: `/recorder/local/logs`,
     icon: renderIcon(DocumentTextOutline),
-    disabled: true,
   },
   {
     label: '关于',
