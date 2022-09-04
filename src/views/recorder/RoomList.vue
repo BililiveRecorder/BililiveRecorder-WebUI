@@ -99,7 +99,7 @@ import {
 import RoomCard from '../../components/RoomCard.vue';
 import RoomSettingModal from '../../components/RoomSettingModal.vue';
 import { Sync } from '@vicons/ionicons5';
-import { FormInst } from 'naive-ui/lib/form/src/interface';
+import { FormInst } from 'naive-ui';
 import { recorderController } from '../../utils/RecorderController';
 import { msToHuman, byteToHuman, dateToTimeWithMs } from '../../utils/unitConvert';
 
