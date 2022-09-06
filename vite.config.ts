@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
+import { visualizer } from 'rollup-plugin-visualizer';
 import { execSync } from 'child_process';
 import { inc } from 'semver';
 
@@ -21,7 +22,7 @@ function getVersion() {
 export default defineConfig(({ command }) => {
   return {
     base: process.env.BASE_URL || './',
-    plugins: [vue(), vueJsx()],
+    plugins: [vue(), vueJsx(), visualizer()],
     server: {
       proxy: {
         '/api': {
@@ -48,6 +49,9 @@ export default defineConfig(({ command }) => {
     },
     define: {
       __VERSION__: command == 'build' ? '"' + getVersion() + '"' : '"dev"',
+    },
+    optimizeDeps: {
+      exclude: ['monaco-editor'],
     },
   };
 });

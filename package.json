@@ -26,6 +26,7 @@
     "monaco-editor": "^0.33.0",
     "mpegts.js": "^1.6.10",
     "naive-ui": "^2.33.2",
+    "rollup-plugin-visualizer": "^5.8.1",
     "sass": "^1.49.11",
     "semver": "^7.3.7",
     "typescript": "^4.8.2",
