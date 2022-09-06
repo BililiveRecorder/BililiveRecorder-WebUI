@@ -19,8 +19,10 @@ const routes: RouteRecordRaw[] = [
   { path: '/recorder/:id/logs', name: 'Logs', component: LogViewer, meta: { requireController: true, title: '日志', key: 'logs', allowInEmbedded: true, blockGlobalScrollBar: true } },
   { path: '/recorder/:id/files', name: 'File Browser', component: FileBrowser, meta: { requireController: true, title: '文件管理器', key: 'files', allowInEmbedded: true } },
   { path: '/recorder/:id/player', name: 'Video Player', component: () => import('./views/recorder/VideoPlayer.vue'), meta: { requireController: true, title: '视频播放器', key: 'files', allowInEmbedded: true } },
-  { path: '/componentsdebug', name: 'Components Debug', component: () => import('./views/ComponentsDebug.vue'), meta: { requireController: false, title: '组件调试', key: 'debug', allowInEmbedded: true } },
 ];
+if (import.meta.env.DEV) {
+  routes.push({ path: '/componentsdebug', name: 'Components Debug', component: () => import('./views/ComponentsDebug.vue'), meta: { requireController: false, title: '组件调试', key: 'debug', allowInEmbedded: true } });
+}
 
 const router = createRouter({
   history: createWebHistory(),

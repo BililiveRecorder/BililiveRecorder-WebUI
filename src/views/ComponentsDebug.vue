@@ -1,14 +1,7 @@
 <template>
-  <div class="debug-container">
+  <div style="height: 80vh;">
 
   </div>
 </template>
 <script setup lang="ts">
-
-
 </script>
-<style scoped lang="scss">
-.debug-container {
-  height: 80vh;
-}
-</style>

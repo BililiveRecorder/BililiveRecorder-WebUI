@@ -1,5 +1,5 @@
 <template>
-  <div class="about-container">
+  <div style="padding: 24px">
     <n-h2>关于</n-h2>
     <div class="webui-about">
       <n-h3 prefix="bar">BililiveRecorder-WebUI
@@ -124,9 +124,3 @@ onMounted(() => {
   }).catch(() => { });
 });
 </script>
-
-<style lang="scss" scoped>
-.about-container {
-  padding: 24px
-}
-</style>

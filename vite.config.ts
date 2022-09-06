@@ -45,13 +45,10 @@ export default defineConfig(({ command }) => {
       },
     },
     build: {
-      minify: 'esbuild',
+      minify: 'terser',
     },
     define: {
       __VERSION__: command == 'build' ? '"' + getVersion() + '"' : '"dev"',
-    },
-    optimizeDeps: {
-      exclude: ['monaco-editor'],
     },
   };
 });
