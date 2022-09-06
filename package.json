@@ -23,7 +23,6 @@
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-vue": "^8.5.0",
     "lodash-es": "^4.17.21",
-    "monaco-editor": "^0.33.0",
     "mpegts.js": "^1.6.10",
     "naive-ui": "^2.33.2",
     "rollup-plugin-visualizer": "^5.8.1",
