@@ -122,14 +122,9 @@
             v-model:value="newConfig['optionalTimingDanmakuRetry']" unit="毫秒" max-input-width="150px" />
         </div>
         <div id="userscript" class="setting-box">
-          <n-space :justify="'space-between'">
-            <n-h3>用户脚本</n-h3>
-            <n-button v-if="!useAdvancedEditor" size="small" @click="UseAdvancedEditor">加载高级编辑器</n-button>
-          </n-space>
-          <optional-input v-if="!useAdvancedEditor" type="textarea" :max-input-width="'700px'"
+          <n-h3>用户脚本</n-h3>
+          <optional-input  type="textarea" :max-input-width="'700px'"
             v-model:value="newConfig['optionalUserScript']" :same-as-default="true" />
-          <advanced-editor v-else v-model:value="newConfig['optionalUserScript'].value" :language="'javascript'"
-            :fullscreen="true" />
         </div>
       </n-collapse-transition>
     </div>
@@ -158,15 +153,12 @@
 
 <script setup lang="ts">
 import { NH2, NH3, NCollapseTransition, NAnchor, NAnchorLink, NSpace, NSwitch, NA, NButton, useLoadingBar, useMessage } from 'naive-ui';
-import { onMounted, ref, defineAsyncComponent } from 'vue';
+import { onMounted, ref } from 'vue';
 import { Recorder, Optional } from '../../utils/api';
 import OptionalInput from '../../components/OptionalInput.vue';
 import { recorderController } from '../../utils/RecorderController';
 import FileNamePreviewModal from '../../components/FileNamePreviewModal.vue';
 
-const AdvancedEditor = defineAsyncComponent(() => {
-  return import('../../components/AdvancedEditor.vue');
-});
 
 const loadingbar = useLoadingBar();
 const message = useMessage();
@@ -373,14 +365,8 @@ onMounted(() => {
   init();
 });
 
-// 编辑器
-const showAdvanced = ref(false);
-const useAdvancedEditor = ref(false);
 
-function UseAdvancedEditor() {
-  useAdvancedEditor.value = true;
-  newConfig.value['optionalUserScript'].hasValue = true;
-}
+const showAdvanced = ref(false);
 
 // 文件名预览
 
