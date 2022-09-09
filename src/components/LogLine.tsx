@@ -45,6 +45,16 @@ export function LogLine({ log, format: formatConfig, level: levelConfig }: {
         content.push(<span class={'variable'}>{
           typeof log[match.value[1]] === 'object' ? JSON.stringify(log[match.value[1]]) : log[match.value[1]]
         }</span>);
+      } else if (match.value[1].startsWith('@') && log[match.value[1].substring(1)]) {
+
+        content.push(<span class={'variable'}>{
+          typeof log[match.value[1].substring(1)] === 'object' ? JSON.stringify(match.value[1].substring(1)) : log[match.value[1].substring(1)]
+        }</span>);
+      } else if (match.value[1].startsWith('$') && log[match.value[1].substring(1)]) {
+
+        content.push(<span class={'variable'}>{
+          typeof log[match.value[1].substring(1)] === 'object' ? JSON.stringify(match.value[1].substring(1)) : log[match.value[1].substring(1)]
+        }</span>);
       } else {
         content.push(match.value[0]);
       }
