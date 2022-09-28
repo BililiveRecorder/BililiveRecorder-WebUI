@@ -332,7 +332,7 @@ async function onNewRoomFormSubmit() {
     message.info(`共识别到${roomIds.length}个直播间，现在开始添加`);
     const timer = setInterval(()=>{
       if (roomIds.length > 0) {
-        addNewRoom(roomIds.pop() as number, autoRecord);
+        addNewRoom(roomIds.shift() as number, autoRecord);
       } else {
         clearInterval(timer);
         getRoomList();
