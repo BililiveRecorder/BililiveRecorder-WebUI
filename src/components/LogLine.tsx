@@ -1,13 +1,14 @@
+import { defineComponent } from 'vue';
 import { RecorderLog } from '../utils/api';
 
-interface FormatConfig {
+export interface FormatConfig {
   showTime: boolean;
   showDate: boolean;
   showRoomId: boolean;
   showContext: boolean;
 }
 
-interface LevelConfig {
+export interface LevelConfig {
   Debug: boolean;
   Info: boolean;
   Warning: boolean;
@@ -20,7 +21,7 @@ function shortContext(context: string) {
   return a[a.length - 1];
 }
 
-export function LogLine({ log, format: formatConfig, level: levelConfig }: {
+export const LogLine = defineComponent(function ({ log, format: formatConfig, level: levelConfig }: {
   log: RecorderLog, format: FormatConfig, level: LevelConfig
 }) {
   const level = log['@l'] || 'Info';
@@ -86,4 +87,4 @@ export function LogLine({ log, format: formatConfig, level: levelConfig }: {
       {content}
     </div>
   </div>;
-}
+})

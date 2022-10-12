@@ -2,20 +2,20 @@
 import { onMounted, onUnmounted, ref } from 'vue';
 import { NCheckbox, NH2, NScrollbar, NDrawer, NDrawerContent, NButton, useThemeVars } from 'naive-ui';
 import { recorderController } from '../../utils/RecorderController';
-import { LogLine } from '../../components/LogLine';
+import { FormatConfig, LevelConfig, LogLine } from '../../components/LogLine';
 import { LogDetail } from '../../components/LogDetail';
 import type { RecorderLog } from '../../utils/api';
 
 </script>
 <script setup lang="ts">
 const theme = useThemeVars();
-const formatConfig = ref({
+const formatConfig = ref<FormatConfig>({
   showTime: true,
   showDate: false,
   showRoomId: true,
   showContext: true,
 });
-const levelConfig = ref({
+const levelConfig = ref<LevelConfig>({
   Debug: false,
   Info: true,
   Warning: true,

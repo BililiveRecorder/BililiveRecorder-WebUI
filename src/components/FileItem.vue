@@ -3,7 +3,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { FileDto, FolderDto } from '../utils/api';
 import { byteToHuman } from '../utils/unitConvert';
 import { NIcon, NButton, NTime, useThemeVars } from 'naive-ui';
-import { File, FileVideo, Folder } from '@vicons/fa';
+import { File as FileIcon, FileVideo, Folder } from '@vicons/fa';
 import { recorderController } from '../utils/RecorderController';
 </script>
 <script setup lang="ts">
@@ -60,7 +60,7 @@ function goVideoPreview(e: MouseEvent) {
       <n-icon v-else size="14">
         <folder v-if="file.isFolder" />
         <file-video v-else-if="file.name.endsWith('.flv')" />
-        <file v-else />
+        <file-icon v-else />
       </n-icon>
       <span class="name">{{ file.name }}</span>
       <span class="filesize" v-if="!file.isFolder">{{ byteToHuman(file.size) }}</span>
