@@ -23,7 +23,7 @@
     <n-modal v-model:show="showNewRoomDialog" style="max-width: 600px;" preset="card" title="添加房间">
       <n-form ref="newRoomFormRef" :model="newRoomModel">
         <n-form-item path="roomId" label="房间号">
-          <n-input type="textarea" v-model:value="newRoomModel.roomId" placeholder="一行一个直播间，支持直播间链接"/>
+          <n-input type="textarea" v-model:value="newRoomModel.roomId" :placeholder="'一行一个直播间，支持直播间链接\nCtrl+Enter 提交'" @keypress="quickSubmit"/>
         </n-form-item>
         <n-form-item path="autoRecord" label="自动录制">
           <n-switch v-model:value="newRoomModel.autoRecord" />
@@ -31,7 +31,7 @@
       </n-form>
       <n-space justify="end">
         <n-button @click="showNewRoomDialog = false">取消</n-button>
-        <n-button primary @click="onNewRoomFormSubmit">添加</n-button>
+        <n-button primary @click="onNewRoomFormSubmit">提交</n-button>
       </n-space>
     </n-modal>
     <n-drawer :show="showStatDrawer" :placement="'right'" @update:show="onStatDrawerUpdate" :width="400">
@@ -339,6 +339,14 @@ async function onNewRoomFormSubmit() {
       }
     }, 1000);
   });
+}
+
+function quickSubmit(e:KeyboardEvent) {
+  if (e.code == 'Enter' && e.ctrlKey && !e.altKey && !e.shiftKey) {
+    e.preventDefault();
+    e.stopPropagation();
+    onNewRoomFormSubmit();
+  }
 }
 
 interface RoomStat {
