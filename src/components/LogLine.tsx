@@ -1,4 +1,3 @@
-import { defineComponent } from 'vue';
 import { RecorderLog } from '../utils/api';
 
 export interface FormatConfig {
@@ -9,6 +8,7 @@ export interface FormatConfig {
 }
 
 export interface LevelConfig {
+  Verbose: boolean;
   Debug: boolean;
   Info: boolean;
   Warning: boolean;
@@ -25,7 +25,6 @@ export const LogLine = function ({ log, format: formatConfig, level: levelConfig
   log: RecorderLog, format: FormatConfig, level: LevelConfig
 }) {
   const level = log['@l'] || 'Info';
-  // @ts-expect-error
   if (typeof levelConfig[level] == 'boolean' && !levelConfig[level]) {
     return;
   }
@@ -42,24 +41,22 @@ export const LogLine = function ({ log, format: formatConfig, level: levelConfig
         content.push(before);
       }
       if (log[match.value[1]] == '@x') useAtX = true;
-      if (log[match.value[1]]) {
+      if (log[match.value[1]] !== undefined) {
         content.push(<span class={'variable'}>{
           typeof log[match.value[1]] === 'object' ? JSON.stringify(log[match.value[1]]) : log[match.value[1]]
         }</span>);
-      } else if (match.value[1].startsWith('@') && log[match.value[1].substring(1)]) {
-
+      } else if (match.value[1].startsWith('@') && log[match.value[1].substring(1)] !== undefined) {
         content.push(<span class={'variable'}>{
-          typeof log[match.value[1].substring(1)] === 'object' ? JSON.stringify(match.value[1].substring(1)) : log[match.value[1].substring(1)]
+          typeof log[match.value[1].substring(1)] == 'object' ? JSON.stringify(log[match.value[1].substring(1)]) : log[match.value[1].substring(1)]
         }</span>);
-      } else if (match.value[1].startsWith('$') && log[match.value[1].substring(1)]) {
-
+      } else if (match.value[1].startsWith('$') && log[match.value[1].substring(1)] !== undefined) {
         content.push(<span class={'variable'}>{
-          typeof log[match.value[1].substring(1)] === 'object' ? JSON.stringify(match.value[1].substring(1)) : log[match.value[1].substring(1)]
+          typeof log[match.value[1].substring(1)] == 'object' ? JSON.stringify(log[match.value[1].substring(1)]) : log[match.value[1].substring(1)]
         }</span>);
       } else {
         content.push(match.value[0]);
       }
-      lastIndex = match.value.index as number + match.value[0].length;
+      lastIndex = (match.value.index as number) + match.value[0].length;
       match = matches.next();
     }
     const rest = template.substring(lastIndex, template.length);
@@ -87,4 +84,4 @@ export const LogLine = function ({ log, format: formatConfig, level: levelConfig
       {content}
     </div>
   </div>;
-}
+};
