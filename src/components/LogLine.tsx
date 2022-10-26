@@ -21,7 +21,7 @@ function shortContext(context: string) {
   return a[a.length - 1];
 }
 
-export const LogLine = defineComponent(function ({ log, format: formatConfig, level: levelConfig }: {
+export const LogLine = function ({ log, format: formatConfig, level: levelConfig }: {
   log: RecorderLog, format: FormatConfig, level: LevelConfig
 }) {
   const level = log['@l'] || 'Info';
@@ -87,4 +87,4 @@ export const LogLine = defineComponent(function ({ log, format: formatConfig, le
       {content}
     </div>
   </div>;
-})
+}
