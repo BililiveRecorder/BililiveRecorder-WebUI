@@ -6,6 +6,22 @@ import { FormatConfig, LevelConfig, LogLine } from '../../components/LogLine';
 import { LogDetail } from '../../components/LogDetail';
 import type { RecorderLog } from '../../utils/api';
 
+function searchLogIndex(el:Node):number {
+  if (el instanceof HTMLElement) {
+    if (el.hasAttribute('data-log-index')) {
+      return parseInt(el.getAttribute('data-log-index') || '-1');
+    }
+  }
+  let pointer = el.parentElement;
+  while (pointer != null && pointer != document.body) {
+    if (pointer.hasAttribute('data-log-index')) {
+      return parseInt(pointer.getAttribute('data-log-index') || '-1');
+    }
+    pointer = pointer.parentElement;
+  }
+  return -1;
+}
+
 </script>
 <script setup lang="ts">
 const theme = useThemeVars();
@@ -16,12 +32,14 @@ const formatConfig = ref<FormatConfig>({
   showContext: true,
 });
 const levelConfig = ref<LevelConfig>({
+  Verbose: false,
   Debug: false,
   Info: true,
   Warning: true,
   Error: true,
   Fatal: true,
 });
+
 let lastCursor = 0;
 const logs = ref<RecorderLog[]>([]);
 let timer = 0;
@@ -45,6 +63,30 @@ function showLogDetail(log:RecorderLog) {
 }
 function closeLogDetail() {
   showDrawer.value = false;
+}
+
+function onCopyLog(e:ClipboardEvent) {
+  const selection = window.getSelection();
+  if (selection != null) {
+    if (selection.anchorNode == selection.focusNode || selection.anchorNode == null || selection.focusNode == null) {
+      return;
+    }
+    let anchorIndex = searchLogIndex(selection.anchorNode);
+    let focusIndex = searchLogIndex(selection.focusNode);
+    if (anchorIndex == -1 || focusIndex == -1) {
+      return;
+    }
+    if (anchorIndex > focusIndex) {
+      const t = anchorIndex;
+      anchorIndex = focusIndex;
+      focusIndex = t;
+    }
+    const selectedLog = logs.value.slice(anchorIndex, focusIndex + 1).filter((e)=>{
+      return levelConfig.value[typeof e['@l'] == 'string' ? e['@l'] : 'Info'];
+    });
+    e.clipboardData?.setData('text/plain', JSON.stringify(selectedLog));
+    e.preventDefault();
+  }
 }
 
 onMounted(()=>{
@@ -118,8 +160,10 @@ onUnmounted(()=>{
         '--fatal-color-text': theme.baseColor,
         '--fatal-color-hover': theme.hoverColor,
         '--fatal-color-variable': theme.tagColor,
-      }">
-        <log-line v-for="(log,index) in logs" :log="log" :format="formatConfig" :level="levelConfig" :key="index" @click="showLogDetail(log)"/>
+      }"
+      @copy="onCopyLog"
+      >
+        <log-line v-for="(log,index) in logs" :log="log" :format="formatConfig" :level="levelConfig" :key="index" @click="showLogDetail(log)" :index="index"/>
       </div>
     </n-scrollbar>
     <n-drawer v-model:show="showDrawer" :show-mask="false" :width="400" :mask-closable="false">

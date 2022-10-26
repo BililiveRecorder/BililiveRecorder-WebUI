@@ -21,8 +21,8 @@ function shortContext(context: string) {
   return a[a.length - 1];
 }
 
-export const LogLine = function ({ log, format: formatConfig, level: levelConfig }: {
-  log: RecorderLog, format: FormatConfig, level: LevelConfig
+export const LogLine = function ({ log, format: formatConfig, level: levelConfig, index }: {
+  log: RecorderLog, format: FormatConfig, level: LevelConfig, index: number,
 }) {
   const level = log['@l'] || 'Info';
   if (typeof levelConfig[level] == 'boolean' && !levelConfig[level]) {
@@ -71,7 +71,8 @@ export const LogLine = function ({ log, format: formatConfig, level: levelConfig
   } else {
     content.push('无法解析的日志');
   }
-  return <div class={`log-line ${level}`}>
+
+  return <div class={`log-line ${level}`} data-log-index={index}>
     {formatConfig.showTime ? <span class={'time'}>{formatConfig.showDate ? new Date(log['@t']).toLocaleString('zh-CN') : new Date(log['@t']).toLocaleTimeString('zh-CN')}</span> : null}
     <span class={'level'}>{level}</span>
     <div class={'content'}>
