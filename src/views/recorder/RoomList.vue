@@ -48,7 +48,7 @@
           <p>总接受字节数: {{ byteToHuman(statRoom?.recordingStats.totalInputBytes || 0) }}</p>
           <p>总写入字节数: {{ byteToHuman(statRoom?.recordingStats.totalOutputBytes || 0) }}</p>
           <p>当前文件的大小： {{ byteToHuman(statRoom?.recordingStats.currentFileSize || 0) }}</p>
-          <p>总时长：{{ msToHuman(statRoom?.recordingStats.fileMaxTimestamp || 0) }}</p>
+          <p>当前文件的最大时间戳：{{ msToHuman(statRoom?.recordingStats.fileMaxTimestamp || 0) }}</p>
           <p>录制速度比例：{{ ((statRoom?.recordingStats.durationRatio || 0) * 100).toFixed(2) }} %</p>
           <p>统计区间的直播数据时长：{{ statRoom?.recordingStats.addedDuration || 0 }} 毫秒</p>
           <p>统计区间所经过的时长：{{ statRoom?.recordingStats.passedTime || 0 }} 毫秒</p>
