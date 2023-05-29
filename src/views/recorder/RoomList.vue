@@ -163,6 +163,12 @@ function resort(rooms: RoomDto[]) {
       return a.roomId - b.roomId;
     }
     if (order.value === 'status') {
+      if (a.streaming && !b.streaming) {
+        return -1;
+      }
+      if (!a.streaming && b.streaming) {
+        return 1;
+      }
       if (a.recording && !b.recording) {
         return -1;
       }
