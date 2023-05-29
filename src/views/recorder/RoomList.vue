@@ -175,6 +175,12 @@ function resort(rooms: RoomDto[]) {
       if (!a.recording && b.recording) {
         return 1;
       }
+      if (a.autoRecord && !b.autoRecord) {
+        return -1;
+      }
+      if (!a.autoRecord && b.autoRecord) {
+        return 1;
+      }
       return 0;
     }
     return 0;
