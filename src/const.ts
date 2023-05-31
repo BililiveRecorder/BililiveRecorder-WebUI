@@ -6,3 +6,4 @@ export const STORAGE_KEY_SERVERS = 'brec.servers';
 export const STORAGE_THEME = 'brec.theme';
 export const STORAGE_LATEST_VERSION = 'brec.latestVersion';
 export const STORAGE_FILES_SORT_OPTION = 'brec.filesSortOption';
+export const STORAGE_ROOM_ORDER_METHOD = 'brec.roomOrderMethod';
