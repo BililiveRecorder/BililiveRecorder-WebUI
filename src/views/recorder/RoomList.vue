@@ -121,13 +121,11 @@ const notification = useNotification();
 
 const selectOrder = ref(1);
 
-const orders = [ORDERMETHODS.NONE];
+let orders = [ORDERMETHODS.NONE];
 
 const currentSettingRoomId = ref(0);
 const currentSettingRoomObjectId = ref('');
 const showRoomSetting = ref(false);
-
-const orderMethod: Ref<ORDERMETHODS[]> = ref([ORDERMETHODS.NONE]);
 
 function loadStorageOrder() {
   const storage = window.localStorage.getItem(STORAGE_ROOM_ORDER_METHOD);
@@ -135,14 +133,14 @@ function loadStorageOrder() {
     return;
   }
   try {
-    const order = JSON.parse(storage);
-    if (Array.isArray(order)) {
-      order.every((v) => {
+    const loadOrders = JSON.parse(storage);
+    if (Array.isArray(loadOrders)) {
+      loadOrders.every((v) => {
         return v <= ORDERMETHODS.STREAMING && v >= ORDERMETHODS.NONE;
       });
-      orderMethod.value = order as ORDERMETHODS[];
-      selectOrder.value = order[0] || 1;
+      selectOrder.value = loadOrders[0] || 1;
     }
+    orders = loadOrders;
   } catch (error) {
 
   }
@@ -203,6 +201,7 @@ async function getRoomList() {
 }
 
 onMounted(() => {
+  loadStorageOrder();
   getRoomList();
 });
 
@@ -514,7 +513,6 @@ function onVisibilityChange() {
   }
 }
 onMounted(() => {
-  loadStorageOrder();
   updateInterval = setInterval(() => {
     if (document.visibilityState === 'hidden') {
       hiddenCount++;
