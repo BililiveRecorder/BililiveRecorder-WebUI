@@ -109,7 +109,7 @@
           <optional-input style="max-width: 700px;" type="number" label="HTTP API 检查时间间隔"
             v-model:value="newConfig['optionalTimingCheckInterval']" unit="秒" max-input-width="150px" />
           <optional-input style="max-width: 700px;" type="number" label="API请求超时时间"
-            v-model:value="newConfig['optionalTimingApiTimeout']" unit="秒" max-input-width="150px" />
+            v-model:value="newConfig['optionalTimingApiTimeout']" unit="毫秒" max-input-width="150px" />
           <optional-input style="max-width: 700px;" type="number" label="录制断开重连时间间隔"
             v-model:value="newConfig['optionalTimingStreamRetry']" unit="毫秒" max-input-width="150px" />
           <optional-input style="max-width: 700px;" type="number" label="录制无指定画质重连时间间隔"
