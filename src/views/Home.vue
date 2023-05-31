@@ -41,8 +41,7 @@
           <n-input v-model:value="serverField.path" :disabled="verifying" placeholder="http://localhost:8000/"></n-input>
         </n-form-item>
         <n-form-item label="图标">
-          <n-input :disabled="verifying" v-model:value="serverField.iconPath"
-            placeholder="http://"></n-input>
+          <n-input :disabled="verifying" v-model:value="serverField.iconPath" placeholder="http://"></n-input>
         </n-form-item>
         <n-form-item label="验证方式" label-placement="left">
           <n-radio-group v-model:value="serverField.authType" :disabled="verifying">
@@ -248,28 +247,28 @@ function importServer() {
   const inputEl = document.createElement('input');
   inputEl.type = 'file';
   inputEl.accept = '.json,application/json,text/json';
-  inputEl.addEventListener('change', (ev)=>{
+  inputEl.addEventListener('change', (ev) => {
     if (inputEl.files && inputEl.files.length > 0) {
-      inputEl.files[0].text().then((text)=>{
+      inputEl.files[0].text().then((text) => {
         try {
           const servers = JSON.parse(text);
           if (!Array.isArray(servers)) {
             message.error('导入失败，文件不是json数组');
             return;
           }
-          if (servers.length > 0 ) {
+          if (servers.length > 0) {
             message.info(`导入中，疑似有${servers.length}个录播姬`);
           } else {
             message.warning('导入失败，文件是空数组');
             return;
           }
-          servers.forEach((e, i)=>{
+          servers.forEach((e, i) => {
             try {
               verifyServer(e);
               e.id = generateRandomId();
               recorderController.addServer(e);
               message.success(`第 ${i} 个录播姬导入成功：${e.name}`);
-            } catch (error:any) {
+            } catch (error: any) {
               message.error(`第 ${i} 个录播姬导入失败：${error.message || error.toString()}`);
             }
           });
@@ -303,7 +302,8 @@ function importServer() {
     margin: 1vh 0;
     --max-vh: 45vh;
   }
-  .file-operations{
+
+  .file-operations {
     margin-top: 24px;
   }
 }

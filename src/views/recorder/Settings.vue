@@ -15,8 +15,8 @@
           :same-as-default="true" />
         <p>本设置同时是所有“弹幕录制”的总开关，当本设置为 false 时其他所有“弹幕录制”设置无效，不会写入弹幕XML文件。</p>
         <n-collapse-transition :show="newConfig['optionalRecordDanmaku']?.value || false">
-          <optional-input type="boolean" label="保存 SuperChat"
-            v-model:value="newConfig['optionalRecordDanmakuSuperChat']" :same-as-default="true" />
+          <optional-input type="boolean" label="保存 SuperChat" v-model:value="newConfig['optionalRecordDanmakuSuperChat']"
+            :same-as-default="true" />
           <optional-input type="boolean" label="保存 舰长购买" v-model:value="newConfig['optionalRecordDanmakuGuard']"
             :same-as-default="true" />
           <optional-input type="boolean" label="保存 送礼信息" v-model:value="newConfig['optionalRecordDanmakuGift']"
@@ -56,8 +56,8 @@
       </div>
       <div id="filename" class="setting-box">
         <n-h3>文件名</n-h3>
-        <optional-input style="max-width: 700px;" type="text"
-          v-model:value="newConfig['optionalFileNameRecordTemplate']" :same-as-default="false" />
+        <optional-input style="max-width: 700px;" type="text" v-model:value="newConfig['optionalFileNameRecordTemplate']"
+          :same-as-default="false" />
         <n-button @click="toggleFileNamePreviewModal">预览</n-button>
       </div>
       <div id="record-quality" class="setting-box">
@@ -66,8 +66,8 @@
           :same-as-default="false" />
       </div>
       <div id="stream-cover" class="setting-box">
-        <optional-input type="boolean" label="保存直播封面"
-          v-model:value="newConfig['optionalSaveStreamCover']" :same-as-default="true" />
+        <optional-input type="boolean" label="保存直播封面" v-model:value="newConfig['optionalSaveStreamCover']"
+          :same-as-default="true" />
       </div>
       <div id="webhook" class="setting-box">
         <n-h3>Webhook</n-h3>
@@ -100,9 +100,8 @@
           <optional-input type="enum" label="允许使用的网络类型"
             v-model:value="newConfig['optionalNetworkTransportAllowedAddressFamily']" :enums="IPFamilies"
             :same-as-default="true" />
-          <optional-input type="enum" label="弹幕链接协议"
-            v-model:value="newConfig['optionalDanmakuTransport']" :enums="DanmakuTransport"
-            :same-as-default="true" />
+          <optional-input type="enum" label="弹幕链接协议" v-model:value="newConfig['optionalDanmakuTransport']"
+            :enums="DanmakuTransport" :same-as-default="true" />
         </div>
         <div id="timing" class="setting-box">
           <n-h3>时间间隔</n-h3>
@@ -123,26 +122,27 @@
         </div>
         <div id="userscript" class="setting-box">
           <n-h3>用户脚本</n-h3>
-          <optional-input  type="textarea" :max-input-width="'700px'"
-            v-model:value="newConfig['optionalUserScript']" :same-as-default="true" />
+          <optional-input type="textarea" :max-input-width="'700px'" v-model:value="newConfig['optionalUserScript']"
+            :same-as-default="true" />
         </div>
       </n-collapse-transition>
     </div>
     <div class="anchor">
       <n-anchor :show-rail="false" offset-target="#app-layout" position="fix" ignore-gap z-index="1" type="block"
         :internalScrollable="false" style="position:sticky; top:64px;">
-        <n-anchor-link title="弹幕录制" href="#danmaku-record" @click="(e)=>{e.preventDefault()}"/>
-        <n-anchor-link title="录制模式" href="#record-mode" @click="(e)=>{e.preventDefault()}"/>
-        <n-anchor-link title="自动分段" href="#auto-split" @click="(e)=>{e.preventDefault()}"/>
-        <n-anchor-link title="文件名" href="#filename" @click="(e)=>{e.preventDefault()}"/>
-        <n-anchor-link title="录制画质" href="#record-quality" @click="(e)=>{e.preventDefault()}"/>
-        <n-anchor-link title="保存封面" href="#stream-cover" @click="(e)=>{e.preventDefault()}"/>
-        <n-anchor-link title="Webhook" href="#webhook" @click="(e)=>{e.preventDefault()}"/>
-        <n-anchor-link v-if="showAdvanced" title="请求的 API Host" href="#live-api-host" @click="(e)=>{e.preventDefault()}"/>
-        <n-anchor-link v-if="showAdvanced" title="Cookie" href="#cookie" @click="(e)=>{e.preventDefault()}"/>
-        <n-anchor-link v-if="showAdvanced" title="网络设置" href="#network" @click="(e)=>{e.preventDefault()}"/>
-        <n-anchor-link v-if="showAdvanced" title="时间间隔" href="#timing" @click="(e)=>{e.preventDefault()}"/>
-        <n-anchor-link v-if="showAdvanced" title="用户脚本" href="#userscript" @click="(e)=>{e.preventDefault()}"/>
+        <n-anchor-link title="弹幕录制" href="#danmaku-record" @click="(e) => { e.preventDefault() }" />
+        <n-anchor-link title="录制模式" href="#record-mode" @click="(e) => { e.preventDefault() }" />
+        <n-anchor-link title="自动分段" href="#auto-split" @click="(e) => { e.preventDefault() }" />
+        <n-anchor-link title="文件名" href="#filename" @click="(e) => { e.preventDefault() }" />
+        <n-anchor-link title="录制画质" href="#record-quality" @click="(e) => { e.preventDefault() }" />
+        <n-anchor-link title="保存封面" href="#stream-cover" @click="(e) => { e.preventDefault() }" />
+        <n-anchor-link title="Webhook" href="#webhook" @click="(e) => { e.preventDefault() }" />
+        <n-anchor-link v-if="showAdvanced" title="请求的 API Host" href="#live-api-host"
+          @click="(e) => { e.preventDefault() }" />
+        <n-anchor-link v-if="showAdvanced" title="Cookie" href="#cookie" @click="(e) => { e.preventDefault() }" />
+        <n-anchor-link v-if="showAdvanced" title="网络设置" href="#network" @click="(e) => { e.preventDefault() }" />
+        <n-anchor-link v-if="showAdvanced" title="时间间隔" href="#timing" @click="(e) => { e.preventDefault() }" />
+        <n-anchor-link v-if="showAdvanced" title="用户脚本" href="#userscript" @click="(e) => { e.preventDefault() }" />
       </n-anchor>
     </div>
     <file-name-preview-modal v-model:show="showFileNamePreviewModal"

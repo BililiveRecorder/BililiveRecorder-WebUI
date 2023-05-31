@@ -6,7 +6,7 @@ import { FormatConfig, LevelConfig, LogLine } from '../../components/LogLine';
 import { LogDetail } from '../../components/LogDetail';
 import type { RecorderLog } from '../../utils/api';
 
-function searchLogIndex(el:Node):number {
+function searchLogIndex(el: Node): number {
   if (el instanceof HTMLElement) {
     if (el.hasAttribute('data-log-index')) {
       return parseInt(el.getAttribute('data-log-index') || '-1');
@@ -47,7 +47,7 @@ const showDrawer = ref(false);
 const showingLog = ref({ '@t': new Date().toUTCString() });
 
 function getLog() {
-  recorderController.recorder?.fetchLog(lastCursor).then((d)=>{
+  recorderController.recorder?.fetchLog(lastCursor).then((d) => {
     if (d.continuous) {
       logs.value = logs.value.concat(d.logs);
     } else {
@@ -57,7 +57,7 @@ function getLog() {
   });
 }
 
-function showLogDetail(log:RecorderLog) {
+function showLogDetail(log: RecorderLog) {
   showingLog.value = log;
   showDrawer.value = true;
 }
@@ -65,7 +65,7 @@ function closeLogDetail() {
   showDrawer.value = false;
 }
 
-function onCopyLog(e:ClipboardEvent) {
+function onCopyLog(e: ClipboardEvent) {
   const selection = window.getSelection();
   if (selection != null) {
     if (selection.anchorNode == selection.focusNode || selection.anchorNode == null || selection.focusNode == null) {
@@ -81,7 +81,7 @@ function onCopyLog(e:ClipboardEvent) {
       anchorIndex = focusIndex;
       focusIndex = t;
     }
-    const selectedLog = logs.value.slice(anchorIndex, focusIndex + 1).filter((e)=>{
+    const selectedLog = logs.value.slice(anchorIndex, focusIndex + 1).filter((e) => {
       return levelConfig.value[typeof e['@l'] == 'string' ? e['@l'] : 'Info'];
     });
     e.clipboardData?.setData('text/plain', JSON.stringify(selectedLog));
@@ -89,11 +89,11 @@ function onCopyLog(e:ClipboardEvent) {
   }
 }
 
-onMounted(()=>{
+onMounted(() => {
   getLog();
   timer = setInterval(getLog, 5000);
 });
-onUnmounted(()=>{
+onUnmounted(() => {
   clearInterval(timer);
 });
 </script>
@@ -135,35 +135,34 @@ onUnmounted(()=>{
     <n-scrollbar>
       <div class="log-area" :style="{
         '--time-color': theme.tagColor,
-        '--room-color': theme.primaryColor+'66',
+        '--room-color': theme.primaryColor + '66',
         '--base-color': theme.baseColor,
         '--text-color': theme.textColorBase,
         '--hover-color': theme.hoverColor,
         '--variable-color': theme.tagColor,
-        '--debug-color': theme.baseColor+'AA',
+        '--debug-color': theme.baseColor + 'AA',
         '--debug-color-text': theme.textColorBase,
         '--debug-color-hover': theme.hoverColor,
         '--debug-color-variable': theme.tagColor,
-        '--info-color': theme.infoColor+'AA',
-        '--info-color-hover': theme.infoColorHover+'22',
+        '--info-color': theme.infoColor + 'AA',
+        '--info-color-hover': theme.infoColorHover + '22',
         '--info-color-text': theme.baseColor,
-        '--info-color-variable': theme.infoColor+'66',
-        '--warning-color': theme.warningColor+'AA',
+        '--info-color-variable': theme.infoColor + '66',
+        '--warning-color': theme.warningColor + 'AA',
         '--warning-color-text': theme.baseColor,
-        '--warning-color-hover': theme.warningColorHover+'22',
-        '--warning-color-variable': theme.warningColor+'66',
-        '--error-color': theme.errorColor+'AA',
+        '--warning-color-hover': theme.warningColorHover + '22',
+        '--warning-color-variable': theme.warningColor + '66',
+        '--error-color': theme.errorColor + 'AA',
         '--error-color-text': theme.baseColor,
-        '--error-color-hover': theme.errorColorHover+'22',
-        '--error-color-variable': theme.errorColor+'66',
-        '--fatal-color': theme.textColorBase+'A',
+        '--error-color-hover': theme.errorColorHover + '22',
+        '--error-color-variable': theme.errorColor + '66',
+        '--fatal-color': theme.textColorBase + 'A',
         '--fatal-color-text': theme.baseColor,
         '--fatal-color-hover': theme.hoverColor,
         '--fatal-color-variable': theme.tagColor,
-      }"
-      @copy="onCopyLog"
-      >
-        <log-line v-for="(log,index) in logs" :log="log" :format="formatConfig" :level="levelConfig" :key="index" @click="showLogDetail(log)" :index="index"/>
+      }" @copy="onCopyLog">
+        <log-line v-for="(log, index) in logs" :log="log" :format="formatConfig" :level="levelConfig" :key="index"
+          @click="showLogDetail(log)" :index="index" />
       </div>
     </n-scrollbar>
     <n-drawer v-model:show="showDrawer" :show-mask="false" :width="400" :mask-closable="false">
@@ -172,7 +171,7 @@ onUnmounted(()=>{
           详细
         </template>
         <n-scrollbar>
-          <log-detail :log="showingLog"/>
+          <log-detail :log="showingLog" />
         </n-scrollbar>
         <template #footer>
           <n-button @click="closeLogDetail">关闭</n-button>
@@ -183,23 +182,27 @@ onUnmounted(()=>{
   </div>
 </template>
 <style lang="scss">
-.log-container{
+.log-container {
   height: calc(100% - 48px);
   display: flex;
   flex-direction: column;
   padding: 24px;
-  .log-area{
+
+  .log-area {
     font-family: 'Courier New', Courier, monospace
   }
-  .log-line{
+
+  .log-line {
     display: flex;
     align-items: flex-start;
-    .content{
+
+    .content {
       flex: 1;
       margin-left: 0.25em;
       word-break: break-all;
     }
-    .level{
+
+    .level {
       text-align: center;
       min-width: 5em;
       max-width: 5em;
@@ -211,100 +214,123 @@ onUnmounted(()=>{
       font-weight: bold;
       flex-shrink: 0;
     }
-    .variable{
+
+    .variable {
       background-color: var(--variable-color);
     }
-    .room-id{
+
+    .room-id {
       background-color: var(--room-color);
       padding: 0.125em 0.25em;
       margin-right: 0.25em;
       border-radius: 0.5em;
     }
-    .context{
+
+    .context {
       background-color: var(--variable-color);
       padding: 0.125em 0.25em;
       margin-right: 0.25em;
       border-radius: 0.5em;
     }
-    &:hover{
+
+    &:hover {
       background-color: var(--hover-color);
     }
   }
-  .log-line.Debug{
-    .level{
+
+  .log-line.Debug {
+    .level {
       font-weight: normal;
       background-color: var(--debug-color);
       color: var(--debug-color-text);
     }
-    .variable{
+
+    .variable {
       background-color: var(--debug-color-variable);
     }
-    &:hover{
+
+    &:hover {
       background-color: var(--debug-color-hover);
     }
   }
-  .log-line.Info{
-    .level{
+
+  .log-line.Info {
+    .level {
       background-color: var(--info-color);
       color: var(--info-color-text);
     }
-    .variable{
+
+    .variable {
       background-color: var(--info-color-variable);
     }
-    &:hover{
+
+    &:hover {
       background-color: var(--info-color-hover);
     }
   }
-  .log-line.Warning{
-    .level{
+
+  .log-line.Warning {
+    .level {
       background-color: var(--warning-color);
       color: var(--warning-color-text);
     }
-    .variable{
+
+    .variable {
       background-color: var(--warning-color-variable);
     }
-    &:hover{
+
+    &:hover {
       background-color: var(--warning-color-hover);
     }
   }
-  .log-line.Error{
-    .level{
+
+  .log-line.Error {
+    .level {
       background-color: var(--error-color);
       color: var(--error-color-text);
     }
-    .variable{
+
+    .variable {
       background-color: var(--error-color-variable);
     }
-    &:hover{
+
+    &:hover {
       background-color: var(--error-color-hover);
     }
   }
-  .log-line.Fatal{
-    .level{
+
+  .log-line.Fatal {
+    .level {
       background-color: var(--fatal-color);
       color: var(--fatal-color-text);
     }
-    .variable{
+
+    .variable {
       background-color: var(--fatal-color-variable);
     }
-    &:hover{
+
+    &:hover {
       background-color: var(--fatal-color-hover);
     }
   }
 }
-.log-detail{
+
+.log-detail {
   display: grid;
   grid-template-columns: 1fr 2fr;
   word-break: break-all;
 }
-@media (max-width: 768px){
-  .log-container{
-    .log-line{
+
+@media (max-width: 768px) {
+  .log-container {
+    .log-line {
       display: block;
-      .level{
+
+      .level {
         display: inline-block;
       }
-      .content{
+
+      .content {
         display: inline;
       }
     }

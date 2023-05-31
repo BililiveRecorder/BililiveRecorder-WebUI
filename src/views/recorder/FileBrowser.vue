@@ -40,7 +40,7 @@ const theme = useThemeVars();
 const route = useRoute();
 const router = useRouter();
 
-const updateTitle = inject<(...extra:string[])=>void>('updateTitle') || function () {};
+const updateTitle = inject<(...extra: string[]) => void>('updateTitle') || function () { };
 
 const currentPath = ref('/');
 const files = ref<Array<FileDto | FolderDto>>([]);
@@ -62,30 +62,30 @@ const path = computed(() => {
   return result;
 });
 
-function sortFiles(files:Array<FileDto|FolderDto>) {
+function sortFiles(files: Array<FileDto | FolderDto>) {
   switch (sort.value) {
     case 1:
-      return files.sort((a, b)=>{
+      return files.sort((a, b) => {
         return new Date(b.lastModified).valueOf() - new Date(a.lastModified).valueOf();
       });
     case 2:
-      return files.sort((a, b)=>{
+      return files.sort((a, b) => {
         return new Date(a.lastModified).valueOf() - new Date(b.lastModified).valueOf();
       });
     case 3:
-      return files.sort((a, b)=>{
+      return files.sort((a, b) => {
         return b.name > a.name ? 1 : -1;
       });
     case 4:
-      return files.sort((a, b)=>{
+      return files.sort((a, b) => {
         return a.name > b.name ? 1 : -1;
       });
     case 5:
-      return files.sort((a, b)=>{
+      return files.sort((a, b) => {
         return (b.isFolder ? 0 : b.size) - (a.isFolder ? 0 : a.size);
       });
     case 6:
-      return files.sort((a, b)=>{
+      return files.sort((a, b) => {
         return (a.isFolder ? 0 : a.size) - (b.isFolder ? 0 : b.size);
       });
     default:
@@ -137,10 +137,10 @@ onBeforeRouteUpdate((to, from) => {
   });
 });
 
-watch(currentPath, (newVal)=>{
-  setTimeout(()=>updateTitle(newVal), 0);
+watch(currentPath, (newVal) => {
+  setTimeout(() => updateTitle(newVal), 0);
 });
-watch(sort, (newVal)=>{
+watch(sort, (newVal) => {
   window.localStorage.setItem(STORAGE_FILES_SORT_OPTION, newVal.toString());
   files.value = sortFiles(files.value);
 });
@@ -152,22 +152,22 @@ function goFolder(path: string) {
 </script>
 <template>
   <div class="file-browser-container" :style="{
-      '--border-radius': theme.borderRadius,
-      '--background-color': theme.cardColor
-    }">
-      <div class="head">
-        <n-breadcrumb>
-          <n-breadcrumb-item v-for="folder in path" :key="folder.path" @click="goFolder(folder.path)">
-            {{ folder.name }}
-          </n-breadcrumb-item>
-        </n-breadcrumb>
-        <div class="sort">
-          <n-select v-model:value="sort" size="small" :options="sortOptions"></n-select>
-        </div>
+    '--border-radius': theme.borderRadius,
+    '--background-color': theme.cardColor
+  }">
+    <div class="head">
+      <n-breadcrumb>
+        <n-breadcrumb-item v-for="folder in path" :key="folder.path" @click="goFolder(folder.path)">
+          {{ folder.name }}
+        </n-breadcrumb-item>
+      </n-breadcrumb>
+      <div class="sort">
+        <n-select v-model:value="sort" size="small" :options="sortOptions"></n-select>
       </div>
-      <div class="files">
-        <file-item v-for="file in files" :key="file.name" :file="file" :current-path="currentPath" />
-      </div>
+    </div>
+    <div class="files">
+      <file-item v-for="file in files" :key="file.name" :file="file" :current-path="currentPath" />
+    </div>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -176,20 +176,24 @@ function goFolder(path: string) {
   display: flex;
   gap: 8px;
   flex-direction: column;
-  .head{
+
+  .head {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    .sort{
+
+    .sort {
       min-width: 10rem;
     }
   }
-  .files{
+
+  .files {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
   }
 }
+
 @media (min-width: 668px) {
   .file-browser-container {
     padding: 24px;

@@ -11,7 +11,7 @@ const router = useRouter();
 const route = useRoute();
 
 const controller = recorderController;
-const updateTitle = inject<(...extra:string[])=>void>('updateTitle') || function () {};
+const updateTitle = inject<(...extra: string[]) => void>('updateTitle') || function () { };
 
 const version = ref('unknown');
 
@@ -24,7 +24,7 @@ onMounted(() => {
       if (route.query.target) {
         router.replace(decodeURIComponent(route.query.target as string));
       } else {
-        setTimeout(()=>updateTitle(controller.recorder!.meta.name), 0);
+        setTimeout(() => updateTitle(controller.recorder!.meta.name), 0);
         controller.recorder.getVersion().then((v) => {
           version.value = v.fullSemVer;
         });
@@ -36,7 +36,7 @@ onMounted(() => {
         if (route.query.target) {
           router.replace(decodeURIComponent(route.query.target as string));
         } else {
-          setTimeout(()=>updateTitle(controller.recorder!.meta.name), 0);
+          setTimeout(() => updateTitle(controller.recorder!.meta.name), 0);
           controller.recorder!.getVersion().then((v) => {
             version.value = v.fullSemVer;
           });
@@ -65,10 +65,10 @@ onBeforeRouteUpdate((to, from, next) => {
         if (server) {
           controller.changeHost(server.id);
           next();
-          setTimeout(()=>updateTitle(controller.recorder!.meta.name), 0);
+          setTimeout(() => updateTitle(controller.recorder!.meta.name), 0);
           controller.recorder!.getVersion().then((v) => {
             version.value = v.fullSemVer;
-          }).catch(()=>{
+          }).catch(() => {
             version.value = 'unknown';
           });
         } else if (!EMBEDDED_BUILD) {
