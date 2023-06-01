@@ -22,7 +22,7 @@ function shortContext(context: string) {
 }
 
 export const LogLine = function ({ log, format: formatConfig, level: levelConfig, index }: {
-  log: RecorderLog, format: FormatConfig, level: LevelConfig, index: number,
+  log: RecorderLog, format: FormatConfig, level: LevelConfig, index: number, [x:string]:any
 }) {
   const level = log['@l'] || 'Info';
   if (typeof levelConfig[level] == 'boolean' && !levelConfig[level]) {
