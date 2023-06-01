@@ -1,12 +1,13 @@
-import { defineConfig } from 'vite';
+import { PluginOption, defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { execSync } from 'child_process';
 import { inc } from 'semver';
+import { resolve } from 'path';
 
 function getVersion() {
-  const desc = execSync('git describe --always --tags --abbrev=8') .toString() .trim();
+  const desc = execSync('git describe --always --tags --abbrev=8').toString().trim();
   if (desc.indexOf('-') === -1) {
     return desc;
   }
@@ -22,7 +23,7 @@ function getVersion() {
 export default defineConfig(({ command }) => {
   return {
     base: process.env.BASE_URL || './',
-    plugins: [vue(), vueJsx(), visualizer()],
+    plugins: [vue(), vueJsx(), visualizer()] as PluginOption[],
     server: {
       proxy: {
         '/api': {
@@ -49,6 +50,9 @@ export default defineConfig(({ command }) => {
     },
     define: {
       __VERSION__: command == 'build' ? '"' + getVersion() + '"' : '"dev"',
+    },
+    resolve: {
+      'alias': { '@': resolve('./src') },
     },
   };
 });
