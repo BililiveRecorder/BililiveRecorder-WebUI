@@ -13,6 +13,8 @@ const routes: RouteRecordRaw[] = [
   { path: '/:pathMatch(.*)*', component: Blank, meta: { key: '404', allowInEmbedded: true } },
   { path: '/', component: Home, meta: { key: 'index' } },
   { path: '/about', component: () => import('./views/About.vue'), meta: { title: '关于', key: 'about', allowInEmbedded: true } },
+  { path: '/toolbox', component: () => import('./views/toolbox/ToolboxHome.vue'), meta: { title: '工具箱', key: 'toolbox' } },
+  { path: '/toolbox/sameroom', component: () => import('./views/toolbox/FindSameRoom.vue'), meta: { title: '工具箱 - 查找相同房间', key: 'toolbox' } },
   { path: '/recorder/:id', name: 'Recorder', component: Dashboard, meta: { key: 'dashboard', allowInEmbedded: true } },
   { path: '/recorder/:id/rooms', name: 'Rooms', component: RoomList, meta: { requireController: true, title: '房间列表', key: 'rooms', allowInEmbedded: true } },
   { path: '/recorder/:id/settings', name: 'Settings', component: Settings, meta: { requireController: true, title: '设置', key: 'settings', allowInEmbedded: true } },

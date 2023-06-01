@@ -8,7 +8,7 @@
 <script lang="ts">
 import { Component, h, onMounted, onUnmounted, ref } from 'vue';
 import { NLayoutSider, NIcon, NMenu, MenuOption, MenuGroupOption } from 'naive-ui';
-import { HomeOutline, CaretDownOutline, ListOutline, SpeedometerOutline, FolderOpenOutline, SettingsOutline, DocumentTextOutline, InformationOutline } from '@vicons/ionicons5';
+import { HomeOutline, CaretDownOutline, ListOutline, SpeedometerOutline, FolderOpenOutline, SettingsOutline, DocumentTextOutline, InformationOutline, HammerOutline } from '@vicons/ionicons5';
 import { RouterLink, useRouter } from 'vue-router';
 import { EMBEDDED_BUILD, DEV } from '../const';
 import { recorderController, Server } from '../utils/RecorderController';
@@ -24,9 +24,9 @@ function renderIcon(icon: Component) {
   return () => h(NIcon, null, { default: () => h(icon) });
 }
 
-function renderServerIcon(server:Server) {
+function renderServerIcon(server: Server) {
   if (server.iconPath && typeof server.iconPath === 'string' && server.iconPath.length > 0) {
-    return ()=>h('img', {
+    return () => h('img', {
       'src': server.iconPath,
       'referrerpolicy': 'no-referrer',
       'style': {
@@ -53,6 +53,12 @@ function connectedMenu(): Array<MenuOption | MenuGroupOption> {
       key: 'about',
       path: '/about',
       icon: renderIcon(InformationOutline),
+    },
+    {
+      label: '工具箱',
+      key: 'toolbox',
+      path: '/toolbox',
+      icon: renderIcon(HammerOutline),
     },
   ];
   if (DEV) {
