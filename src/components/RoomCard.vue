@@ -257,7 +257,11 @@ const emit = defineEmits(['start-record', 'stop-record', 'refresh-room-info', 's
 function handleSelect(option: any) {
   switch (option) {
     case 'open-room':
-      window.open('https://live.bilibili.com/' + props.room.roomId, undefined);
+      const link = document.createElement('a');
+      link.href = 'https://live.bilibili.com/' + props.room.roomId;
+      link.referrerPolicy = 'no-referrer';
+      link.target = '_blank';
+      link.click();
       break;
     default:
       emit(option);
