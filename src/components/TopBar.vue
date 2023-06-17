@@ -6,7 +6,7 @@
         B站录播姬
       </n-h3>
       <n-button @click="switchTheme">
-        <n-icon :component="ContrastOutline"/>
+        <n-icon :component="ContrastOutline" />
       </n-button>
     </div>
   </n-layout-header>

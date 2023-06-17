@@ -56,36 +56,36 @@
       </div>
       <div v-if="props.room.recording">
         <n-popover class="network" :delay="500" :duration="500" :show="isPopoverShow"
-        @update:show="handlePopoverVisibleChange">
-        <template #trigger>
-          <n-button quaternary size="small" :style="{ margin: '0 -0.5em' }">
-            <n-gradient-text :type="statColor(props.room.recordingStats.durationRatio)" @click="emit('show-stats')">
-              {{ props.room.ioStats.networkMbps.toFixed(2) }} Mbps
-            </n-gradient-text>
-          </n-button>
-        </template>
-        <div class="stat" v-if="isDataLoaded">
-          <p>服务器：{{ stat.streamHost }}</p>
-          <p>下载速度：{{ stat.networkMbps.toFixed(2) }} Mbps</p>
-          <p>录制速度比例：{{ (stat.durationRatio * 100).toFixed(2) }} %</p>
-          <p>文件大小：{{ byteToHuman(stat.currentFileSize) }}</p>
-          <p>会话时长：{{ msToHuman(stat.sessionDuration) }}</p>
-          <p>已录制时长：{{ msToHuman(stat.sessionMaxTimestamp) }}</p>
-        </div>
-        <div class="stat" v-else>
-          <p v-for="i in 6" :key="i">
-            <n-skeleton text :style="{ width: '300px' }" />
-          </p>
-        </div>
-      </n-popover>
-      <n-popover>
-        <template #trigger>
-          <n-button quaternary size="small" @click="splitRecord">
-            <n-icon :component="CutSharp" />
-          </n-button>
-        </template>
-        <span>手动分段</span>
-      </n-popover>
+          @update:show="handlePopoverVisibleChange">
+          <template #trigger>
+            <n-button quaternary size="small" :style="{ margin: '0 -0.5em' }">
+              <n-gradient-text :type="statColor(props.room.recordingStats.durationRatio)" @click="emit('show-stats')">
+                {{ props.room.ioStats.networkMbps.toFixed(2) }} Mbps
+              </n-gradient-text>
+            </n-button>
+          </template>
+          <div class="stat" v-if="isDataLoaded">
+            <p>服务器：{{ stat.streamHost }}</p>
+            <p>下载速度：{{ stat.networkMbps.toFixed(2) }} Mbps</p>
+            <p>录制速度比例：{{ (stat.durationRatio * 100).toFixed(2) }} %</p>
+            <p>文件大小：{{ byteToHuman(stat.currentFileSize) }}</p>
+            <p>会话时长：{{ msToHuman(stat.sessionDuration) }}</p>
+            <p>已录制时长：{{ msToHuman(stat.sessionMaxTimestamp) }}</p>
+          </div>
+          <div class="stat" v-else>
+            <p v-for="i in 6" :key="i">
+              <n-skeleton text :style="{ width: '300px' }" />
+            </p>
+          </div>
+        </n-popover>
+        <n-popover>
+          <template #trigger>
+            <n-button quaternary size="small" @click="splitRecord">
+              <n-icon :component="CutSharp" />
+            </n-button>
+          </template>
+          <span>手动分段</span>
+        </n-popover>
       </div>
     </div>
   </n-card>
@@ -400,10 +400,10 @@ async function splitRecord() {
   if (recorderController.recorder == null) {
     return;
   }
-  recorderController.recorder.splitRecordByObjectId(props.room.objectId).then((e)=>{
+  recorderController.recorder.splitRecordByObjectId(props.room.objectId).then((e) => {
     emit('self-update', e);
     message.success('手动分段成功');
-  }).catch((e)=>{
+  }).catch((e) => {
     message.error('手动分段失败：' + e?.message || e.toString());
     console.error(e);
   });

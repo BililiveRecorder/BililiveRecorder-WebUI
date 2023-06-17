@@ -2,7 +2,7 @@
   <n-list-item class="server" :style="style">
     <div class="item">
       <div class="icon">
-        <img v-if="server.iconPath" :src="server.iconPath" referrerpolicy="no-referrer"/>
+        <img v-if="server.iconPath" :src="server.iconPath" referrerpolicy="no-referrer" />
         <component v-else :is="icon" />
       </div>
       <span>{{ server.name }}</span>
@@ -105,37 +105,38 @@ function onSelect(key: string) {
 </script>
 
 <style lang="scss" scoped>
-
-.server{
+.server {
   color: var(--n-color);
   background: var(--n-bg-color);
 
-  &:hover{
+  &:hover {
     color: var(--n-hover-color);
     background: var(--n-bg-hover-color);
   }
 
-  &:active{
+  &:active {
     color: var(--n-pressed-color);
     background: var(--n-bg-pressed-color);
   }
 }
-.item{
+
+.item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+
   .icon {
     max-width: 32px;
     max-height: 32px;
     width: 32px;
     height: 32px;
     display: inline-block;
-    img{
+
+    img {
       width: 100%;
       height: 100%;
       border-radius: 100%;
     }
   }
 }
-
 </style>

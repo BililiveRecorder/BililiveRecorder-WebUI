@@ -26,7 +26,7 @@ let currentTheme = 0;
 const themeMap = [darkTheme, lightTheme];
 const theme = ref(darkTheme);
 
-onMounted(()=>{
+onMounted(() => {
   const storageValue = localStorage.getItem(STORAGE_THEME);
   if (storageValue !== null) {
     currentTheme = parseInt(storageValue);
@@ -51,7 +51,7 @@ function saveTheme() {
   }
 }
 
-function updateTitle(...extra:string[]) {
+function updateTitle(...extra: string[]) {
   const currentRoute = router.currentRoute.value;
   let titleElement = ['B站录播姬'];
   if (currentRoute.meta.requireController && recorderController.recorder && !EMBEDDED_BUILD) {

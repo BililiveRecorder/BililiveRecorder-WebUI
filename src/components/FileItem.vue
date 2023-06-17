@@ -43,13 +43,15 @@ function goVideoPreview(e: MouseEvent) {
 
 </script>
 <template>
-  <a class="item" :href="file.isFolder ? (router.currentRoute.value.path + '#' + props.currentPath + file.name) : calcFilePath(file.url)" :style="{
-    '--text-color': theme.textColor1,
-    '--hover-color': theme.hoverColor,
-    '--pressed-color': theme.pressedColor,
-    '--border-radius': theme.borderRadius,
-    '--background-color': theme.cardColor,
-  }" @click="onClick">
+  <a class="item"
+    :href="file.isFolder ? (router.currentRoute.value.path + '#' + props.currentPath + file.name) : calcFilePath(file.url)"
+    :style="{
+      '--text-color': theme.textColor1,
+      '--hover-color': theme.hoverColor,
+      '--pressed-color': theme.pressedColor,
+      '--border-radius': theme.borderRadius,
+      '--background-color': theme.cardColor,
+    }" @click="onClick">
     <div class="item-left">
       <n-button v-if="file.name.endsWith('.flv')" quaternary tiny style="padding:0;line-height:14px;height:unset"
         @click="goVideoPreview">
@@ -99,35 +101,41 @@ function goVideoPreview(e: MouseEvent) {
   &:active {
     background-color: var(--pressed-color);
   }
-  .name{
+
+  .name {
     text-overflow: ellipsis;
     overflow: hidden;
     flex: 1;
     white-space: nowrap;
     max-width: calc(100% - 20px - 3rem);
   }
-  .time{
+
+  .time {
     display: none;
   }
 
 
-  .filesize{
+  .filesize {
     min-width: 2rem;
   }
 }
+
 @media (min-width: 668px) {
-  .item{
+  .item {
     .item-left {
       width: 100%;
     }
-    .name{
+
+    .name {
       flex: initial;
       max-width: initial;
     }
-    .time{
+
+    .time {
       display: inline;
     }
-    .filesize{
+
+    .filesize {
       justify-self: flex-end;
     }
   }
