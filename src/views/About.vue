@@ -9,7 +9,7 @@
       <p>Github: <n-a href="https://github.com/BililiveRecorder/BililiveRecorder-WebUI" target="_blank">
           https://github.com/BililiveRecorder/BililiveRecorder-WebUI</n-a>
       </p>
-      <p>Copyright (C) 2023 <n-a href="https://github.com/shugen002" target="_blank">Shugen002</n-a>
+      <p>Copyright (C) 2022-2023 <n-a href="https://github.com/shugen002" target="_blank">Shugen002</n-a>
       </p>
       <p>GNU General Public License v3.0</p>
       <p>
