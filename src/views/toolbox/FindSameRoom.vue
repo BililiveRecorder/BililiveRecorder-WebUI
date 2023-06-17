@@ -14,24 +14,38 @@
         </n-collapse-transition>
       </div>
     </div>
-    <div class="result">
+    <div class="filter" v-if="result.length > 0">
+      过滤：
+      <n-checkbox v-model:checked="displayConfig.hideOnlyOneAutoRecord">
+        隐藏只有一个自动录制的房间
+      </n-checkbox>
+      <n-checkbox v-model:checked="displayConfig.hideAllAutoRecord">
+        隐藏全部开启自动录制的房间
+      </n-checkbox>
+      <n-checkbox v-model:checked="displayConfig.hideAllNotAutoRecord">
+        隐藏全部禁用录制的房间
+      </n-checkbox>
+    </div>
+    <div class="result" v-if="result.length > 0">
       <n-collapse>
-        <n-collapse-item v-for="room in result" :title="room.roomId + ' - ' + room.name" :name="room.roomId"
-          :key="room.roomId">
-          <n-grid x-gap="12" y-gap="12" cols="1 750:2 1100:3 1450:4 1800:5 2150:6 2500:7 2850:8">
-            <n-grid-item v-for="recorder in room.recorders" :key="recorder.id">
-              <n-card :title="findRecorder(recorder.id)?.name">
-                自动录制：{{ recorder.autoRecord ? "是" : "否" }}
-              </n-card>
-            </n-grid-item>
-          </n-grid>
-        </n-collapse-item>
+        <template v-for="room in result">
+          <n-collapse-item :title="room.roomId + ' - ' + room.name" :name="room.roomId" :key="room.roomId"
+            v-if="shouldDisplay(room)">
+            <n-grid x-gap="12" y-gap="12" cols="1 750:2 1100:3 1450:4 1800:5 2150:6 2500:7 2850:8">
+              <n-grid-item v-for="recorder in room.recorders" :key="recorder.id">
+                <n-card :title="findRecorder(recorder.id)?.name">
+                  自动录制：{{ recorder.autoRecord ? "是" : "否" }}
+                </n-card>
+              </n-grid-item>
+            </n-grid>
+          </n-collapse-item>
+        </template>
       </n-collapse>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { NProgress, NButton, NCollapseTransition, NCollapse, NCollapseItem, NCard, NGrid, NGridItem } from 'naive-ui';
+import { NProgress, NButton, NCollapseTransition, NCollapse, NCollapseItem, NCard, NGrid, NCheckbox, NGridItem } from 'naive-ui';
 import { recorderController, Server } from '@/utils/RecorderController';
 import { Ref, ref } from 'vue';
 import { Status } from 'naive-ui/es/progress/src/interface';
@@ -58,12 +72,31 @@ const logs: Ref<string[]> = ref([]);
 const scanned = ref(false);
 const showLog = ref(true);
 const result: Ref<{ roomId: string, name: string, recorders: Array<{ id: string, autoRecord: boolean }> }[]> = ref([]);
+const displayConfig = ref({
+  hideAllNotAutoRecord: false,
+  hideAllAutoRecord: false,
+  hideOnlyOneAutoRecord: true,
+});
+
 
 function toggleLog() {
   showLog.value = !showLog.value;
 }
 
-function findRecorder(id) {
+function shouldDisplay(room: { roomId: string, name: string, recorders: Array<{ id: string, autoRecord: boolean }> }) {
+  let c = 0;
+  room.recorders.forEach((i) => {
+    if (i.autoRecord) {
+      c++;
+    }
+  });
+  if (displayConfig.value.hideAllAutoRecord && c == room.recorders.length) return false;
+  if (displayConfig.value.hideAllNotAutoRecord && c == 0) return false;
+  if (displayConfig.value.hideOnlyOneAutoRecord && c == 1) return false;
+  return true;
+}
+
+function findRecorder(id: string) {
   return recorders.value.find((v) => {
     return v.id == id;
   });
