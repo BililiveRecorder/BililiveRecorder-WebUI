@@ -79,6 +79,7 @@ export interface DefaultConfig {
   networkTransportUseSystemProxy: boolean;
   networkTransportAllowedAddressFamily: number;
   userScript: string;
+  flvWriteMetadata: boolean;
 }
 
 export interface GlobalConfigDto {
@@ -112,6 +113,7 @@ export interface GlobalConfigDto {
   optionalNetworkTransportUseSystemProxy: BooleanOptional;
   optionalNetworkTransportAllowedAddressFamily: AllowedAddressFamilyOptional;
   optionalUserScript: StringOptional;
+  optionalFlvWriteMetadata: BooleanOptional;
 }
 
 export interface RecorderVersion {
@@ -501,6 +503,7 @@ export class Recorder<T = any> {
       'networkTransportUseSystemProxy': false,
       'networkTransportAllowedAddressFamily': 0,
       'userScript': '',
+      'flvWriteMetadata': true,
     };
   }
   static getMockGlobalConfig(): GlobalConfigDto {

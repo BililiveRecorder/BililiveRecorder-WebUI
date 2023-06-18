@@ -54,20 +54,20 @@
         </n-collapse-transition>
 
       </div>
-      <div id="filename" class="setting-box">
-        <n-h3>文件名</n-h3>
-        <optional-input style="max-width: 700px;" type="text" v-model:value="newConfig['optionalFileNameRecordTemplate']"
-          :same-as-default="false" />
-        <n-button @click="toggleFileNamePreviewModal">预览</n-button>
+      <div id="storage" class="setting-box">
+        <n-h3>文件写入</n-h3>
+        <optional-input style="max-width: 700px;" label="文件名" type="text"
+          v-model:value="newConfig['optionalFileNameRecordTemplate']" :same-as-default="false" />
+        <n-button @click="toggleFileNamePreviewModal">预览文件名</n-button>
+        <optional-input type="boolean" label="保存直播封面" v-model:value="newConfig['optionalSaveStreamCover']"
+          :same-as-default="true" />
+        <optional-input type="boolean" label="在flv中写入直播信息" v-model:value="newConfig['optionalFlvWriteMetadata']"
+          :same-as-default="true" />
       </div>
       <div id="record-quality" class="setting-box">
         <n-h3>录制画质</n-h3>
         <optional-input style="max-width: 700px;" type="text" v-model:value="newConfig['optionalRecordingQuality']"
           :same-as-default="false" />
-      </div>
-      <div id="stream-cover" class="setting-box">
-        <optional-input type="boolean" label="保存直播封面" v-model:value="newConfig['optionalSaveStreamCover']"
-          :same-as-default="true" />
       </div>
       <div id="webhook" class="setting-box">
         <n-h3>Webhook</n-h3>
@@ -133,9 +133,8 @@
         <n-anchor-link title="弹幕录制" href="#danmaku-record" @click="(e) => { e.preventDefault() }" />
         <n-anchor-link title="录制模式" href="#record-mode" @click="(e) => { e.preventDefault() }" />
         <n-anchor-link title="自动分段" href="#auto-split" @click="(e) => { e.preventDefault() }" />
-        <n-anchor-link title="文件名" href="#filename" @click="(e) => { e.preventDefault() }" />
+        <n-anchor-link title="文件写入" href="#storage" @click="(e) => { e.preventDefault() }" />
         <n-anchor-link title="录制画质" href="#record-quality" @click="(e) => { e.preventDefault() }" />
-        <n-anchor-link title="保存封面" href="#stream-cover" @click="(e) => { e.preventDefault() }" />
         <n-anchor-link title="Webhook" href="#webhook" @click="(e) => { e.preventDefault() }" />
         <n-anchor-link v-if="showAdvanced" title="请求的 API Host" href="#live-api-host"
           @click="(e) => { e.preventDefault() }" />
@@ -269,6 +268,7 @@ const newConfig = ref<{ [key: string]: ConfigItem }>({
   'optionalNetworkTransportAllowedAddressFamily': getEmptyConfigItem(defaultConfig.value.networkTransportAllowedAddressFamily),
   'optionalUserScript': getEmptyConfigItem(defaultConfig.value.userScript),
   'optionalSaveStreamCover': getEmptyConfigItem(defaultConfig.value.saveStreamCover),
+  'optionalFlvWriteMetadata': getEmptyConfigItem(defaultConfig.value.flvWriteMetadata),
 });
 
 let lastload: string | undefined = '';
