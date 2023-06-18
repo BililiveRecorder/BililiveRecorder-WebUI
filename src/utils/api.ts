@@ -27,12 +27,11 @@ enum RecordMode {
   RawData = 1,
 }
 
-enum AllowedAddressFamily
-{
-    System = -1,
-    Any = 0,
-    Ipv4 = 1,
-    Ipv6 = 2,
+enum AllowedAddressFamily {
+  System = -1,
+  Any = 0,
+  Ipv4 = 1,
+  Ipv6 = 2,
 }
 
 enum DanmakuTransportMode {
@@ -208,7 +207,7 @@ export interface RoomDto {
 export interface FileApiResult {
   exist: boolean;
   path: string;
-  files: Array<FileDto|FolderDto>;
+  files: Array<FileDto | FolderDto>;
 }
 
 export interface FileDto {
@@ -225,7 +224,7 @@ export interface FileLikeDto {
   lastModified: string;
 }
 
-export interface FileNameTemplateContextDto{
+export interface FileNameTemplateContextDto {
   roomId: number;
   shortId: number;
   name: string;
@@ -237,7 +236,7 @@ export interface FileNameTemplateContextDto{
   json: string;
 }
 
-export interface FileNameTemplateOutput{
+export interface FileNameTemplateOutput {
   status: FileNameTemplateStatus;
   errorMessage: string;
   relativePath: string;
@@ -262,7 +261,7 @@ export interface GenerateFileNameInput {
   context: FileNameTemplateContextDto;
 }
 
-export interface RoomIOStatsDto{
+export interface RoomIOStatsDto {
   streamHost: string;
   startTime: string;
   endTime: string;
@@ -454,11 +453,11 @@ export class Recorder<T = any> {
     return await this.request<RoomDto>('POST', `api/room/${objectId}/refresh`, {});
   }
 
-  async fetchLog(after:number = 0):Promise<JsonLogDto> {
+  async fetchLog(after: number = 0): Promise<JsonLogDto> {
     return await this.request<JsonLogDto>('GET', `api/log/fetch?${new URLSearchParams({ after: after.toFixed(0) }).toString()}`);
   }
 
-  async graphql<T>(queryName: string, query: string, variables: any|null): Promise<T> {
+  async graphql<T>(queryName: string, query: string, variables: any | null): Promise<T> {
     const res = await this.request<any>('POST', `graphql`, { queryName, query, variables });
     if (res.error) {
       throw res.error;
@@ -507,9 +506,9 @@ export class Recorder<T = any> {
     };
   }
   static getMockGlobalConfig(): GlobalConfigDto {
-    const result:{[key:string]:Optional<any>} = {};
+    const result: { [key: string]: Optional<any> } = {};
     const defaultConfig = this.getMockDefaultConfig();
-    Object.keys(this.getMockDefaultConfig()).forEach((e)=>{
+    Object.keys(this.getMockDefaultConfig()).forEach((e) => {
       const key = 'Optional' + e[0].toUpperCase() + e.slice(1 - e.length);
       result[key] = {
         hasValue: false,
