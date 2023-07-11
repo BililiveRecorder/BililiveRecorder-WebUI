@@ -93,7 +93,7 @@ onBeforeRouteUpdate((to, from, next) => {
   <div class="dashboard-container">
     <div class="title">
       <h1>
-        B站录播姬
+        mikufans录播姬
         <version-tag :version="'v' + version" type="recorder" />
       </h1>
       <p>{{ recorderController.recorder?.meta.name }}
