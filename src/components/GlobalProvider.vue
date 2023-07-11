@@ -53,7 +53,7 @@ function saveTheme() {
 
 function updateTitle(...extra: string[]) {
   const currentRoute = router.currentRoute.value;
-  let titleElement = ['B站录播姬'];
+  let titleElement = ['mikufans录播姬'];
   if (currentRoute.meta.requireController && recorderController.recorder && !EMBEDDED_BUILD) {
     titleElement.unshift(recorderController.recorder.meta.name || '？？？？');
   }
