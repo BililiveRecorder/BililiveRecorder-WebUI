@@ -102,6 +102,8 @@
             :same-as-default="true" />
           <optional-input type="enum" label="弹幕链接协议" v-model:value="newConfig['optionalDanmakuTransport']"
             :enums="DanmakuTransport" :same-as-default="true" />
+          <optional-input type="boolean" label="使用直播间主播的uid进行弹幕服务器认证"
+            v-model:value="newConfig['optionalDanmakuAuthenticateWithStreamerUid']" :same-as-default="true" />
         </div>
         <div id="timing" class="setting-box">
           <n-h3>时间间隔</n-h3>
@@ -264,6 +266,8 @@ const newConfig = ref<{ [key: string]: ConfigItem }>({
   'optionalTimingStreamConnect': getEmptyConfigItem(defaultConfig.value.timingStreamConnect),
   'optionalTimingDanmakuRetry': getEmptyConfigItem(defaultConfig.value.timingDanmakuRetry),
   'optionalTimingWatchdogTimeout': getEmptyConfigItem(defaultConfig.value.timingWatchdogTimeout),
+  'optionalDanmakuTransport': getEmptyConfigItem(defaultConfig.value.danmakuTransport),
+  'optionalDanmakuAuthenticateWithStreamerUid': getEmptyConfigItem(defaultConfig.value.danmakuAuthenticateWithStreamerUid),
   'optionalNetworkTransportUseSystemProxy': getEmptyConfigItem(defaultConfig.value.networkTransportUseSystemProxy),
   'optionalNetworkTransportAllowedAddressFamily': getEmptyConfigItem(defaultConfig.value.networkTransportAllowedAddressFamily),
   'optionalUserScript': getEmptyConfigItem(defaultConfig.value.userScript),

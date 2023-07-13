@@ -75,6 +75,7 @@ export interface DefaultConfig {
   timingWatchdogTimeout: number;
   recordDanmakuFlushInterval: number;
   danmakuTransport: number;
+  danmakuAuthenticateWithStreamerUid: boolean;
   networkTransportUseSystemProxy: boolean;
   networkTransportAllowedAddressFamily: number;
   userScript: string;
@@ -109,6 +110,7 @@ export interface GlobalConfigDto {
   optionalTimingWatchdogTimeout: UInt32Optional;
   optionalRecordDanmakuFlushInterval: UInt32Optional;
   optionalDanmakuTransport: DanmakuTransportModeOptional;
+  optionalDanmakuAuthenticateWithStreamerUid: BooleanOptional;
   optionalNetworkTransportUseSystemProxy: BooleanOptional;
   optionalNetworkTransportAllowedAddressFamily: AllowedAddressFamilyOptional;
   optionalUserScript: StringOptional;
@@ -499,6 +501,7 @@ export class Recorder<T = any> {
       'timingWatchdogTimeout': 10000,
       'recordDanmakuFlushInterval': 20,
       'danmakuTransport': 0,
+      'danmakuAuthenticateWithStreamerUid': false,
       'networkTransportUseSystemProxy': false,
       'networkTransportAllowedAddressFamily': 0,
       'userScript': '',
