@@ -90,6 +90,9 @@
         </div>
         <div id="cookie" class="setting-box">
           <n-h3>Cookie</n-h3>
+          <p>Cookie 会用于获取直播间信息、获取直播流地址、连接弹幕服务器以及未来开发者更新增加功能所需要的操作。</p>
+          <p>软件开发者不对账号发生的任何事情负责，包括并不限于被标记为<b>机器人账号、大会员被冻结、无法参与各种抽奖和活动等</b>。<b style="color:red">建议使用小号。</b></p>
+          <p>如您知晓您的账号会因以上所列出来的部分原因所导致无法使用或权益受损等情况，并愿意承担由此所会带来的一系列后果，请继续以下的操作，软件开发者不会对您账号所发生的任何后果承担责任。 </p>
           <optional-input type="text" :max-input-width="'700px'" v-model:value="newConfig['optionalCookie']"
             :same-as-default="true" />
         </div>
