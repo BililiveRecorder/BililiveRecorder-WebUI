@@ -377,7 +377,7 @@ interface NewRoomModelType {
   autoRecord: boolean;
 }
 
-const ROOM_ID_FROM_LINK_REGEX = /^(?:(?:https?:\/\/)?live\.bilibili\.com\/(?:blanc\/|h5\/)?)?(\d+)(?:\?.*)?(?:#.*)?$/;
+const ROOM_ID_FROM_LINK_REGEX = /^(?:(?:https?:\/\/)?live\.bilibili\.com\/(?:blanc\/|h5\/)?)?(\d+)\/?(?:[#\?].*)?$/;
 
 const showNewRoomDialog = ref(false);
 const newRoomFormRef = ref<FormInst | null>(null);
