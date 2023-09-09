@@ -134,8 +134,10 @@
         :bottom="16"
         :trigger-bottom="128"
         :listen-to="() => containerRef"
-        style="max-width: 700px; width: 100%;">
-        <n-card  size="small">注意！你尚未保存修改！<n-button @click="saveConfig" type="primary" style="float: right;">保存</n-button></n-card>
+        style="max-width: 700px; width: calc(100% - 80px);">
+        <n-card size="small">
+          <div style="margin:4px 0;font-size: 1.125em;">注意！你尚未保存修改！</div><n-button @click="saveConfig" type="primary" style="float: right;">保存</n-button>
+        </n-card>
       </n-affix>
     </div>
     <div class="anchor">
