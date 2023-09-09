@@ -1,73 +1,72 @@
 <template>
   <div class="settings-container">
-    <div style="flex:1;max-width: 700px;margin: auto;">
+    <div class="settings-container-internal">
       <n-space :justify="'space-between'">
         <n-space :align="'baseline'">
           <n-h2>全局设置</n-h2>
           <span>高级设置</span>
           <n-switch v-model:value="showAdvanced"></n-switch>
         </n-space>
-        <n-button @click="saveConfig">保存</n-button>
       </n-space>
       <div id="danmaku-record" class="setting-box">
         <n-h3>弹幕录制</n-h3>
         <optional-input type="boolean" label="保存弹幕" v-model:value="newConfig['optionalRecordDanmaku']"
-          :same-as-default="true" />
+          :same-as-default="true" @changed="onChanged"/>
         <p>本设置同时是所有“弹幕录制”的总开关，当本设置为 false 时其他所有“弹幕录制”设置无效，不会写入弹幕XML文件。</p>
         <n-collapse-transition :show="newConfig['optionalRecordDanmaku']?.value || false">
           <optional-input type="boolean" label="保存 SuperChat" v-model:value="newConfig['optionalRecordDanmakuSuperChat']"
-            :same-as-default="true" />
+            :same-as-default="true" @changed="onChanged"/>
           <optional-input type="boolean" label="保存 舰长购买" v-model:value="newConfig['optionalRecordDanmakuGuard']"
-            :same-as-default="true" />
+            :same-as-default="true" @changed="onChanged"/>
           <optional-input type="boolean" label="保存 送礼信息" v-model:value="newConfig['optionalRecordDanmakuGift']"
-            :same-as-default="true" />
+            :same-as-default="true" @changed="onChanged"/>
           <optional-input type="boolean" label="保存 弹幕原始数据" v-model:value="newConfig['optionalRecordDanmakuRaw']"
-            :same-as-default="true" />
+            :same-as-default="true" @changed="onChanged"/>
           <n-collapse-transition :show="showAdvanced">
             <optional-input type="number" label="触发写硬盘所需的弹幕数量"
               v-model:value="newConfig['optionalRecordDanmakuFlushInterval']" :same-as-default="true" unit="个"
-              max-input-width="150px" />
+              max-input-width="150px" @changed="onChanged"/>
           </n-collapse-transition>
         </n-collapse-transition>
       </div>
       <div id="record-mode" class="setting-box">
         <n-h3>录制模式</n-h3>
         <optional-input type="enum" v-model:value="newConfig['optionalRecordMode']" :enums="RecordModes"
-          :same-as-default="true" />
+          :same-as-default="true" @changed="onChanged"/>
         <n-collapse-transition :show="newConfig['optionalRecordMode']?.value == 0">
           <n-h3>标准模式录制修复设置</n-h3>
           <optional-input type="boolean" label="检测到可能缺少数据时分段"
-            v-model:value="newConfig['optionalFlvProcessorSplitOnScriptTag']" :same-as-default="true" />
+            v-model:value="newConfig['optionalFlvProcessorSplitOnScriptTag']" :same-as-default="true" @changed="onChanged"/>
         </n-collapse-transition>
       </div>
       <div id="auto-split" class="setting-box">
         <n-h3>自动分段</n-h3>
         <optional-input type="enum" v-model:value="newConfig['optionalCuttingMode']" :enums="CuttingModes"
-          :same-as-default="true" />
+          :same-as-default="true" @changed="onChanged"/>
         <n-collapse-transition :show="newConfig['optionalCuttingMode']?.value == 1">
           <optional-input type="number" prefix="每" suffix="保存为一个文件" v-model:value="newConfig['optionalCuttingNumber']"
-            :same-as-default="true" unit="分" max-input-width="150px" />
+            :same-as-default="true" unit="分" max-input-width="150px" @changed="onChanged"/>
         </n-collapse-transition>
         <n-collapse-transition :show="newConfig['optionalCuttingMode']?.value == 2">
           <optional-input type="number" prefix="每" suffix="保存为一个文件" v-model:value="newConfig['optionalCuttingNumber']"
-            :same-as-default="true" unit="MiB" max-input-width="150px" />
+            :same-as-default="true" unit="MiB" max-input-width="150px" @changed="onChanged"/>
         </n-collapse-transition>
 
       </div>
       <div id="storage" class="setting-box">
         <n-h3>文件写入</n-h3>
         <optional-input style="max-width: 700px;" label="文件名" type="text"
-          v-model:value="newConfig['optionalFileNameRecordTemplate']" :same-as-default="false" />
+          v-model:value="newConfig['optionalFileNameRecordTemplate']" :same-as-default="false" @changed="onChanged"/>
         <n-button @click="toggleFileNamePreviewModal">预览文件名</n-button>
         <optional-input type="boolean" label="保存直播封面" v-model:value="newConfig['optionalSaveStreamCover']"
-          :same-as-default="true" />
+          :same-as-default="true" @changed="onChanged"/>
         <optional-input type="boolean" label="在flv中写入直播信息" v-model:value="newConfig['optionalFlvWriteMetadata']"
-          :same-as-default="true" />
+          :same-as-default="true" @changed="onChanged"/>
       </div>
       <div id="record-quality" class="setting-box">
         <n-h3>录制画质</n-h3>
         <optional-input style="max-width: 700px;" type="text" v-model:value="newConfig['optionalRecordingQuality']"
-          :same-as-default="false" />
+          :same-as-default="false" @changed="onChanged"/>
       </div>
       <div id="webhook" class="setting-box">
         <n-h3>Webhook</n-h3>
@@ -77,16 +76,16 @@
         </p>
         <p>Webhook V1</p>
         <optional-input type="textarea" :max-input-width="'700px'" v-model:value="newConfig['optionalWebHookUrls']"
-          :same-as-default="true" />
+          :same-as-default="true" @changed="onChanged"/>
         <p>Webhook V2</p>
         <optional-input type="textarea" :max-input-width="'700px'" v-model:value="newConfig['optionalWebHookUrlsV2']"
-          :same-as-default="true" />
+          :same-as-default="true" @changed="onChanged"/>
       </div>
       <n-collapse-transition :show="showAdvanced">
         <div id="live-api-host">
           <n-h3>请求的 API Host</n-h3>
           <optional-input style="max-width: 700px;" type="text" v-model:value="newConfig['optionalLiveApiHost']"
-            :same-as-default="false" />
+            :same-as-default="false" @changed="onChanged"/>
         </div>
         <div id="cookie" class="setting-box">
           <n-h3>Cookie</n-h3>
@@ -94,43 +93,50 @@
           <p>软件开发者不对账号发生的任何事情负责，包括并不限于被标记为<b>机器人账号、大会员被冻结、无法参与各种抽奖和活动等</b>。<b style="color:red">建议使用小号。</b></p>
           <p>如您知晓您的账号会因以上所列出来的部分原因所导致无法使用或权益受损等情况，并愿意承担由此所会带来的一系列后果，请继续以下的操作，软件开发者不会对您账号所发生的任何后果承担责任。 </p>
           <optional-input type="text" :max-input-width="'700px'" v-model:value="newConfig['optionalCookie']"
-            :same-as-default="true" />
+            :same-as-default="true" @changed="onChanged"/>
         </div>
         <div id="network" class="setting-box">
           <n-h3>网络设置</n-h3>
           <optional-input type="boolean" label="使用系统代理"
-            v-model:value="newConfig['optionalNetworkTransportUseSystemProxy']" :same-as-default="true" />
+            v-model:value="newConfig['optionalNetworkTransportUseSystemProxy']" :same-as-default="true" @changed="onChanged"/>
           <optional-input type="enum" label="允许使用的网络类型"
             v-model:value="newConfig['optionalNetworkTransportAllowedAddressFamily']" :enums="IPFamilies"
-            :same-as-default="true" />
+            :same-as-default="true" @changed="onChanged"/>
           <optional-input type="enum" label="弹幕链接协议" v-model:value="newConfig['optionalDanmakuTransport']"
-            :enums="DanmakuTransport" :same-as-default="true" />
+            :enums="DanmakuTransport" :same-as-default="true" @changed="onChanged"/>
           <optional-input type="boolean" label="使用直播间主播的uid进行弹幕服务器认证"
-            v-model:value="newConfig['optionalDanmakuAuthenticateWithStreamerUid']" :same-as-default="true" />
+            v-model:value="newConfig['optionalDanmakuAuthenticateWithStreamerUid']" :same-as-default="true" @changed="onChanged"/>
         </div>
         <div id="timing" class="setting-box">
           <n-h3>时间间隔</n-h3>
           <optional-input style="max-width: 700px;" type="number" label="HTTP API 检查时间间隔"
-            v-model:value="newConfig['optionalTimingCheckInterval']" unit="秒" max-input-width="150px" />
+            v-model:value="newConfig['optionalTimingCheckInterval']" unit="秒" max-input-width="150px" @changed="onChanged"/>
           <optional-input style="max-width: 700px;" type="number" label="API请求超时时间"
-            v-model:value="newConfig['optionalTimingApiTimeout']" unit="毫秒" max-input-width="150px" />
+            v-model:value="newConfig['optionalTimingApiTimeout']" unit="毫秒" max-input-width="150px" @changed="onChanged"/>
           <optional-input style="max-width: 700px;" type="number" label="录制断开重连时间间隔"
-            v-model:value="newConfig['optionalTimingStreamRetry']" unit="毫秒" max-input-width="150px" />
+            v-model:value="newConfig['optionalTimingStreamRetry']" unit="毫秒" max-input-width="150px" @changed="onChanged"/>
           <optional-input style="max-width: 700px;" type="number" label="录制无指定画质重连时间间隔"
-            v-model:value="newConfig['optionalTimingStreamRetryNoQn']" unit="秒" max-input-width="150px" />
+            v-model:value="newConfig['optionalTimingStreamRetryNoQn']" unit="秒" max-input-width="150px"  @changed="onChanged"/>
           <optional-input style="max-width: 700px;" type="number" label="最大允许未收到直播数据时间"
-            v-model:value="newConfig['optionalTimingWatchdogTimeout']" unit="毫秒" max-input-width="150px" />
+            v-model:value="newConfig['optionalTimingWatchdogTimeout']" unit="毫秒" max-input-width="150px" @changed="onChanged"/>
           <optional-input style="max-width: 700px;" type="number" label="连接直播服务器超时时间"
-            v-model:value="newConfig['optionalTimingStreamConnect']" unit="毫秒" max-input-width="150px" />
+            v-model:value="newConfig['optionalTimingStreamConnect']" unit="毫秒" max-input-width="150px" @changed="onChanged"/>
           <optional-input style="max-width: 700px;" type="number" label="弹幕服务器重连时间间隔"
-            v-model:value="newConfig['optionalTimingDanmakuRetry']" unit="毫秒" max-input-width="150px" />
+            v-model:value="newConfig['optionalTimingDanmakuRetry']" unit="毫秒" max-input-width="150px" @changed="onChanged"/>
         </div>
         <div id="userscript" class="setting-box">
           <n-h3>用户脚本</n-h3>
           <optional-input type="textarea" :max-input-width="'700px'" v-model:value="newConfig['optionalUserScript']"
-            :same-as-default="true" />
+            :same-as-default="true" @changed="onChanged"/>
         </div>
       </n-collapse-transition>
+      <n-affix v-if="isChanged"
+        :bottom="16"
+        :trigger-bottom="128"
+        :listen-to="() => containerRef"
+        style="max-width: 700px; width: 100%;">
+        <n-card  size="small">注意！你尚未保存修改！<n-button @click="saveConfig" type="primary" style="float: right;">保存</n-button></n-card>
+      </n-affix>
     </div>
     <div class="anchor">
       <n-anchor :show-rail="false" offset-target="#app-layout" position="fix" ignore-gap z-index="1" type="block"
@@ -156,7 +162,7 @@
 </template>
 
 <script setup lang="ts">
-import { NH2, NH3, NCollapseTransition, NAnchor, NAnchorLink, NSpace, NSwitch, NA, NButton, useLoadingBar, useMessage } from 'naive-ui';
+import { NH2, NH3, NCollapseTransition, NAnchor, NAnchorLink, NSpace, NSwitch, NA, NButton, NAffix, NCard, useLoadingBar, useMessage } from 'naive-ui';
 import { onMounted, ref } from 'vue';
 import { Recorder, Optional } from '../../utils/api';
 import OptionalInput from '../../components/OptionalInput.vue';
@@ -357,6 +363,7 @@ async function saveConfig() {
     loadingbar.finish();
     loadMessage.destroy();
     message.success('保存成功');
+    isChanged.value = false;
   } catch (error: any) {
     loadMessage.destroy();
     message.error('保存设置时出错：' + (error?.message || error.toString()), {
@@ -385,7 +392,15 @@ function toggleFileNamePreviewModal() {
 function handleFileNamePreviewModalClose(newTemplate: string) {
   newConfig.value['optionalFileNameRecordTemplate'].value = newTemplate;
   newConfig.value['optionalFileNameRecordTemplate'].hasValue = true;
+  isChanged.value = true;
 }
+
+const isChanged = ref(false);
+function onChanged() {
+  isChanged.value = true;
+}
+
+const containerRef = ref(document.getElementById('content-scrollbar')?.children[0] as HTMLElement);
 
 </script>
 <style scoped lang="scss">
@@ -393,6 +408,13 @@ function handleFileNamePreviewModalClose(newTemplate: string) {
   padding: 8px;
   display: flex;
   flex-direction: row
+}
+
+.settings-container-internal{
+  flex:1;
+  max-width: 700px;
+  margin: auto;
+  padding-bottom: 64px;
 }
 
 .setting-box {

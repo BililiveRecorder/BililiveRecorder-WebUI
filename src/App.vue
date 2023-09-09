@@ -5,7 +5,7 @@
       <n-layout position="absolute" style="top:64px" has-sider>
         <side-menu></side-menu>
         <n-layout content-style="height: 100%;" id="app-layout" :style="{}">
-          <n-scrollbar :class="{ 'block-scrollbar': blockScrollbar }">
+          <n-scrollbar :class="{ 'block-scrollbar': blockScrollbar }" id="content-scrollbar">
             <router-view></router-view>
           </n-scrollbar>
         </n-layout>
