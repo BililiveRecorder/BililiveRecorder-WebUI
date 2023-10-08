@@ -17,9 +17,11 @@ enum CuttingMode {
   // 禁用
   Disabled = 0,
   // 根据时间切割
-  ByTime = 1,
+  ByTime = 1 << 0,
   // 根据文件大小切割
-  BySize = 2,
+  BySize = 1 << 1,
+  // 根据直播间标题切割
+  ByTitle = 1 << 2, // 4, 0b_0100
 }
 
 enum RecordMode {

@@ -52,6 +52,9 @@
             :same-as-default="true" unit="MiB" max-input-width="150px" @changed="onChanged"/>
         </n-collapse-transition>
 
+          <optional-input type="boolean" label="根据直播间标题切割" v-model:value="isByTitle"
+          @changed="onChanged"/>
+
       </div>
       <div id="storage" class="setting-box">
         <n-h3>文件写入</n-h3>
@@ -216,6 +219,10 @@ const CuttingModes = [
   },
 ];
 
+const CuttingModeByTitleFlag = 0b0100;
+const CuttingModeByTitleFlagReversed = 0b1011;
+const isByTitle = getEmptyConfigItem(false);
+
 const IPFamilies = [
   {
     label: '系统(禁用录播姬的IP随机选择)',
@@ -323,7 +330,13 @@ async function init(): Promise<void> {
         defaultValue: defaultConfig.value[rawkey],
       };
     });
+
+    // setup CuttingMode.isByValue
+    isByTitle.value = Boolean(temp.optionalCuttingMode.value & CuttingModeByTitleFlag)
+    temp.optionalCuttingMode.value &= CuttingModeByTitleFlagReversed
+
     newConfig.value = temp;
+
     // avoid loadingbar bug
     setTimeout(() => {
       loadingbar.finish();
@@ -350,6 +363,9 @@ async function saveConfig() {
     duration: 0,
   });
   try {
+    if(isByTitle.value===true){
+      newConfig.value["optionalCuttingMode"].value |= CuttingModeByTitleFlag;
+    }
     const globalConfig = (await recorderController.recorder.setGlobalConfig(newConfig.value)) as unknown as { [key: string]: Optional<any> };
     const keys = Object.keys(globalConfig);
     const temp: any = {};

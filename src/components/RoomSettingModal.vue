@@ -34,6 +34,7 @@
           <optional-input type="number" prefix="每" suffix="保存为一个文件" v-model:value="newRoomConfig['optionalCuttingNumber']"
             unit="MiB" max-input-width="150px" />
         </n-collapse-transition>
+        <optional-input type="boolean" label="根据直播间标题切割" v-model:value="isByTitle"/>
       </div>
       <div id="record-quality" class="setting-box">
         <n-h3>录制画质</n-h3>
@@ -134,6 +135,18 @@ interface ConfigItem<T = any> {
   defaultValue: T,
 }
 
+function initEmptyConfigItem(defaultValue: any): ConfigItem {
+  return {
+    hasValue: false,
+    value: defaultValue,
+    defaultValue: defaultValue,
+  };
+}
+
+const isByTitle  = initEmptyConfigItem(false);
+const CuttingModeByTitleFlag = 0b0100;
+const CuttingModeByTitleFlagReversed = 0b1011;
+
 function close() {
   emit('update:show', false);
 }
@@ -181,6 +194,11 @@ async function initSetting() {
       value: !!roomConfig['autoRecord'],
       defaultValue: true,
     };
+
+    // setup CuttingMode.isByValue
+    isByTitle.value = Boolean(temp["optionalCuttingMode"].value & CuttingModeByTitleFlag)
+    temp["optionalCuttingMode"].value &= CuttingModeByTitleFlagReversed
+
     newRoomConfig.value = temp;
     loadMessage.destroy();
     loading.value = false;
@@ -212,6 +230,9 @@ async function saveConfig() {
   saving.value = true;
   const toSave: any = Object.assign({}, newRoomConfig.value);
   toSave.autoRecord = toSave.autoRecord.value;
+  if(isByTitle.value===true){
+    toSave["optionalCuttingMode"].value |= CuttingModeByTitleFlag;
+  }
   try {
     await recorderController.recorder.setRoomConfigByObjectId(props.objectId, toSave);
     msg.destroy();
