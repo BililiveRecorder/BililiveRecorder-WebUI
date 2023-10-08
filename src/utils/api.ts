@@ -51,6 +51,7 @@ export interface DefaultConfig {
   recordMode: RecordMode;
   cuttingMode: CuttingMode;
   cuttingNumber: number;
+  cuttingByTitle: boolean;
   recordDanmaku: boolean;
   recordDanmakuRaw: boolean;
   recordDanmakuSuperChat: boolean;
@@ -86,6 +87,7 @@ export interface GlobalConfigDto {
   optionalRecordMode: RecordModeOptional;
   optionalCuttingMode: CuttingModeOptional;
   optionalCuttingNumber: UInt32Optional;
+  optionalCuttingByTitle: BooleanOptional;
   optionalRecordDanmaku: BooleanOptional;
   optionalRecordDanmakuRaw: BooleanOptional;
   optionalRecordDanmakuSuperChat: BooleanOptional;
@@ -179,6 +181,7 @@ export interface RoomConfigDto {
   optionalRecordMode: RecordModeOptional;
   optionalCuttingMode: CuttingModeOptional;
   optionalCuttingNumber: UInt32Optional;
+  optionalCuttingByTitle: BooleanOptional;
   optionalRecordDanmaku: BooleanOptional;
   optionalRecordDanmakuRaw: BooleanOptional;
   optionalRecordDanmakuSuperChat: BooleanOptional;
@@ -477,6 +480,7 @@ export class Recorder<T = any> {
       'recordMode': 0,
       'cuttingMode': 0,
       'cuttingNumber': 100,
+      'cuttingByTitle': false,
       'recordDanmaku': false,
       'recordDanmakuRaw': false,
       'recordDanmakuSuperChat': true,
