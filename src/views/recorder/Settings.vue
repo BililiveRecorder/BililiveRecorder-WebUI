@@ -51,7 +51,8 @@
           <optional-input type="number" prefix="每" suffix="保存为一个文件" v-model:value="newConfig['optionalCuttingNumber']"
             :same-as-default="true" unit="MiB" max-input-width="150px" @changed="onChanged"/>
         </n-collapse-transition>
-        <optional-input type="boolean" label="根据直播间标题切割" v-model:value="newConfig['optionalCuttingByTitle']" :same-as-default="true"/>
+        <optional-input type="boolean" label="根据直播间标题切割" v-model:value="newConfig['optionalCuttingByTitle']"
+          :same-as-default="true" @changed="onChanged"/>
       </div>
       <div id="storage" class="setting-box">
         <n-h3>文件写入</n-h3>
@@ -267,6 +268,7 @@ const newConfig = ref<{ [key: string]: ConfigItem }>({
   'optionalFlvProcessorSplitOnScriptTag': getEmptyConfigItem(defaultConfig.value.flvProcessorSplitOnScriptTag),
   'optionalRecordingQuality': getEmptyConfigItem(defaultConfig.value.recordingQuality),
   'optionalCuttingNumber': getEmptyConfigItem(defaultConfig.value.cuttingNumber),
+  'optionalCuttingByTitle': getEmptyConfigItem(defaultConfig.value.cuttingByTitle),
   'optionalLiveApiHost': getEmptyConfigItem(defaultConfig.value.liveApiHost),
   'optionalCookie': getEmptyConfigItem(defaultConfig.value.cookie),
   'optionalWebHookUrls': getEmptyConfigItem(defaultConfig.value.webHookUrls),
