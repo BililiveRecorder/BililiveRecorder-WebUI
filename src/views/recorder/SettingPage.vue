@@ -51,7 +51,7 @@
           <optional-input type="number" prefix="每" suffix="保存为一个文件" v-model:value="newConfig['optionalCuttingNumber']"
             :same-as-default="true" unit="MiB" max-input-width="150px" @changed="onChanged"/>
         </n-collapse-transition>
-        <optional-input type="boolean" label="根据直播间标题切割" v-model:value="newConfig['optionalCuttingByTitle']"
+        <optional-input type="boolean" label="直播间标题修改时切分文件" v-model:value="newConfig['optionalCuttingByTitle']"
           :same-as-default="true" @changed="onChanged"/>
       </div>
       <div id="storage" class="setting-box">
