@@ -2,7 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Blank from './views/Blank.vue';
 import Dashboard from './views/recorder/Dashboard.vue';
 import RoomList from './views/recorder/RoomList.vue';
-import Settings from './views/recorder/Settings.vue';
+import Settings from './views/recorder/SettingPage.vue';
 import FileBrowser from './views/recorder/FileBrowser.vue';
 import Home from './views/Home.vue';
 import LogViewer from './views/recorder/LogViewer.vue';

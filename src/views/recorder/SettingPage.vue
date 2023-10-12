@@ -41,7 +41,7 @@
       </div>
       <div id="auto-split" class="setting-box">
         <n-h3>自动分段</n-h3>
-        <optional-input type="enum" v-model:value="newConfig['optionalCuttingMode']" :enums="CuttingModes"
+        <optional-input type="enum" label="分段模式" v-model:value="newConfig['optionalCuttingMode']" :enums="CuttingModes"
           :same-as-default="true" @changed="onChanged"/>
         <n-collapse-transition :show="newConfig['optionalCuttingMode']?.value == 1">
           <optional-input type="number" prefix="每" suffix="保存为一个文件" v-model:value="newConfig['optionalCuttingNumber']"
@@ -51,7 +51,8 @@
           <optional-input type="number" prefix="每" suffix="保存为一个文件" v-model:value="newConfig['optionalCuttingNumber']"
             :same-as-default="true" unit="MiB" max-input-width="150px" @changed="onChanged"/>
         </n-collapse-transition>
-
+        <optional-input type="boolean" label="直播间标题修改时切分文件" v-model:value="newConfig['optionalCuttingByTitle']"
+          :same-as-default="true" @changed="onChanged"/>
       </div>
       <div id="storage" class="setting-box">
         <n-h3>文件写入</n-h3>
@@ -267,6 +268,7 @@ const newConfig = ref<{ [key: string]: ConfigItem }>({
   'optionalFlvProcessorSplitOnScriptTag': getEmptyConfigItem(defaultConfig.value.flvProcessorSplitOnScriptTag),
   'optionalRecordingQuality': getEmptyConfigItem(defaultConfig.value.recordingQuality),
   'optionalCuttingNumber': getEmptyConfigItem(defaultConfig.value.cuttingNumber),
+  'optionalCuttingByTitle': getEmptyConfigItem(defaultConfig.value.cuttingByTitle),
   'optionalLiveApiHost': getEmptyConfigItem(defaultConfig.value.liveApiHost),
   'optionalCookie': getEmptyConfigItem(defaultConfig.value.cookie),
   'optionalWebHookUrls': getEmptyConfigItem(defaultConfig.value.webHookUrls),

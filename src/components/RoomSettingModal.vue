@@ -34,6 +34,7 @@
           <optional-input type="number" prefix="每" suffix="保存为一个文件" v-model:value="newRoomConfig['optionalCuttingNumber']"
             unit="MiB" max-input-width="150px" />
         </n-collapse-transition>
+        <optional-input type="boolean" label="直播间标题修改时切分文件" v-model:value="newRoomConfig['optionalCuttingByTitle']"/>
       </div>
       <div id="record-quality" class="setting-box">
         <n-h3>录制画质</n-h3>
