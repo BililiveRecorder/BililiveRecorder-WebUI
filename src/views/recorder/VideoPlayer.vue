@@ -100,7 +100,7 @@ onMounted(() => {
     }
     flvfile.value = e.files.find((f) => f.name === filename && !f.isFolder) as FileDto;
     const xmlFile = e.files.find((f) => f.name === xmlFileName && !f.isFolder) as FileDto;
-    if (!flvfile) {
+    if (!flvfile.value) {
       return router.push({ path: `/recorder/${route.params.id}/files`, hash: '#/' });
     }
     playerOptions.value = {
