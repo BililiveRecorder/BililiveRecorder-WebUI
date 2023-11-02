@@ -8,6 +8,12 @@
           <n-switch v-model:value="showAdvanced"></n-switch>
         </n-space>
       </n-space>
+      <n-collapse-transition :show="showAdvanced">
+        <n-alert type="info" style="margin-bottom: 1em;" title="提示">
+          所有高级设置项目均不是录播姬的“正式功能”，它们的作用是便于 power users 在不修改录播姬源码重新编译的情况下深度调整录播姬的行为。
+          请根据个人实际需求谨慎使用高级设置，不要随意修改。
+        </n-alert>
+      </n-collapse-transition>
       <div id="danmaku-record" class="setting-box">
         <n-h3>弹幕录制</n-h3>
         <optional-input type="boolean" label="保存弹幕" v-model:value="newConfig['optionalRecordDanmaku']"
@@ -90,9 +96,11 @@
         </div>
         <div id="cookie" class="setting-box">
           <n-h3>Cookie</n-h3>
-          <p>Cookie 会用于获取直播间信息、获取直播流地址、连接弹幕服务器以及未来开发者更新增加功能所需要的操作。</p>
-          <p>软件开发者不对账号发生的任何事情负责，包括并不限于被标记为<b>机器人账号、大会员被冻结、无法参与各种抽奖和活动等</b>。<b style="color:red">建议使用小号。</b></p>
-          <p>如您知晓您的账号会因以上所列出来的部分原因所导致无法使用或权益受损等情况，并愿意承担由此所会带来的一系列后果，请继续以下的操作，软件开发者不会对您账号所发生的任何后果承担责任。 </p>
+          <n-alert type="warning" title="警告">
+            <p>Cookie 会用于包括获取直播间信息、获取直播流地址、连接弹幕服务器在内的所有 API 请求中。录播姬的请求与浏览器内正常使用所发送的请求不完全一致，能通过分析请求日志识别出来。</p>
+            <p>软件开发者不对账号发生的任何事情负责，包括并不限于<b>被标记为机器人账号、大会员被冻结、无法参与各种抽奖和活动等</b>。<b style="color:red">建议使用小号。</b></p>
+            <p>如您知晓您的账号会因以上所列出来的部分原因所导致无法使用或权益受损等情况，并愿意承担由此所会带来的一系列后果，请继续以下的操作，软件开发者不会对您账号所发生的任何后果承担责任。 </p>
+          </n-alert>
           <optional-input type="text" :max-input-width="'700px'" v-model:value="newConfig['optionalCookie']"
             :same-as-default="true" @changed="onChanged"/>
         </div>
@@ -165,7 +173,7 @@
 </template>
 
 <script setup lang="ts">
-import { NH2, NH3, NCollapseTransition, NAnchor, NAnchorLink, NSpace, NSwitch, NA, NButton, NAffix, NCard, useLoadingBar, useMessage } from 'naive-ui';
+import { NH2, NH3, NCollapseTransition, NAnchor, NAnchorLink, NSpace, NSwitch, NA, NAlert, NButton, NAffix, NCard, useLoadingBar, useMessage } from 'naive-ui';
 import { onMounted, ref } from 'vue';
 import { Recorder, Optional } from '../../utils/api';
 import OptionalInput from '../../components/OptionalInput.vue';
