@@ -146,6 +146,7 @@ function handleValueInput(value: any) {
 }
 
 function handleHasValueInput(value: boolean) {
+  emit('changed');
   if (value) {
     emit('update:value', {
       value: props.value.defaultValue,
