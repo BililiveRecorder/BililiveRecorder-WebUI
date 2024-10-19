@@ -79,7 +79,7 @@
         <n-h3>Webhook</n-h3>
         <p>
           每行一个，详情参阅
-          <n-a href="https://rec.danmuji.org/docs/basic/webhook/">文档</n-a>
+          <n-a href="https://rec.danmuji.org/reference/webhook/">文档</n-a>
         </p>
         <p>Webhook V1</p>
         <optional-input type="textarea" :max-input-width="'700px'" v-model:value="newConfig['optionalWebHookUrls']"
