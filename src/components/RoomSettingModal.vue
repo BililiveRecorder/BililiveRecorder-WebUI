@@ -21,20 +21,27 @@
           <n-h3>标准模式录制修复设置</n-h3>
           <optional-input type="boolean" label="检测到可能缺少数据时分段"
             v-model:value="newRoomConfig['optionalFlvProcessorSplitOnScriptTag']" :same-as-default="true" />
+          <optional-input type="boolean" label="检测到 H264 Annex-B 时禁用修复分段"
+            v-model:value="newRoomConfig['optionalFlvProcessorDisableSplitOnH264AnnexB']" :same-as-default="true" />
         </n-collapse-transition>
       </div>
       <div id="auto-split" class="setting-box">
         <n-h3>自动分段</n-h3>
         <optional-input type="enum" v-model:value="newRoomConfig['optionalCuttingMode']" :enums="CuttingModes" />
         <n-collapse-transition :show="newRoomConfig['optionalCuttingMode'].value == 1">
-          <optional-input type="number" prefix="每" suffix="保存为一个文件" v-model:value="newRoomConfig['optionalCuttingNumber']"
-            unit="分" max-input-width="150px" />
+          <optional-input type="number" prefix="每" suffix="保存为一个文件"
+            v-model:value="newRoomConfig['optionalCuttingNumber']" unit="分" max-input-width="150px" />
         </n-collapse-transition>
         <n-collapse-transition :show="newRoomConfig['optionalCuttingMode'].value == 2">
-          <optional-input type="number" prefix="每" suffix="保存为一个文件" v-model:value="newRoomConfig['optionalCuttingNumber']"
-            unit="MiB" max-input-width="150px" />
+          <optional-input type="number" prefix="每" suffix="保存为一个文件"
+            v-model:value="newRoomConfig['optionalCuttingNumber']" unit="MiB" max-input-width="150px" />
         </n-collapse-transition>
-        <optional-input type="boolean" label="直播间标题修改时切分文件" v-model:value="newRoomConfig['optionalCuttingByTitle']"/>
+        <optional-input type="boolean" label="直播间标题修改时切分文件" v-model:value="newRoomConfig['optionalCuttingByTitle']" />
+      </div>
+      <div id="record-condition" class="setting-box">
+        <p>直播间标题过滤 </p>
+        <p>跳过录制的直播标题正则匹配表达式，每行一个</p>
+        <optional-input type="textarea" v-model:value="newRoomConfig['optionalTitleFilterPatterns']" />
       </div>
       <div id="record-quality" class="setting-box">
         <n-h3>录制画质</n-h3>

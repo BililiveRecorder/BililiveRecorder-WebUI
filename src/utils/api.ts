@@ -60,7 +60,10 @@ export interface DefaultConfig {
   saveStreamCover: boolean;
   recordingQuality: string;
   fileNameRecordTemplate: string;
+  flvProcessorDisableSplitOnH264AnnexB: boolean;
   flvProcessorSplitOnScriptTag: boolean;
+  flvWriteMetadata: boolean;
+  titleFilterPatterns: string;
   webHookUrls: string;
   webHookUrlsV2: string;
   wpfShowTitleAndArea: boolean;
@@ -80,7 +83,6 @@ export interface DefaultConfig {
   networkTransportUseSystemProxy: boolean;
   networkTransportAllowedAddressFamily: number;
   userScript: string;
-  flvWriteMetadata: boolean;
 }
 
 export interface GlobalConfigDto {
@@ -96,7 +98,10 @@ export interface GlobalConfigDto {
   optionalSaveStreamCover: BooleanOptional;
   optionalRecordingQuality: StringOptional;
   optionalFileNameRecordTemplate: StringOptional;
+  optionalFlvProcessorDisableSplitOnH264AnnexB: BooleanOptional;
   optionalFlvProcessorSplitOnScriptTag: BooleanOptional;
+  optionalFlvWriteMetadata: BooleanOptional;
+  optionalTitleFilterPatterns: StringOptional;
   optionalWebHookUrls: StringOptional;
   optionalWebHookUrlsV2: StringOptional;
   optionalWpfShowTitleAndArea: BooleanOptional;
@@ -116,7 +121,6 @@ export interface GlobalConfigDto {
   optionalNetworkTransportUseSystemProxy: BooleanOptional;
   optionalNetworkTransportAllowedAddressFamily: AllowedAddressFamilyOptional;
   optionalUserScript: StringOptional;
-  optionalFlvWriteMetadata: BooleanOptional;
 }
 
 export interface RecorderVersion {
@@ -190,6 +194,8 @@ export interface RoomConfigDto {
   optionalSaveStreamCover: BooleanOptional;
   optionalRecordingQuality: StringOptional;
   optionalFlvProcessorSplitOnScriptTag: BooleanOptional;
+  optionalFlvProcessorDisableSplitOnH264AnnexB: BooleanOptional;
+  optionalTitleFilterPatterns: StringOptional;
 }
 
 export interface RoomDto {
@@ -489,7 +495,10 @@ export class Recorder<T = any> {
       'recordingQuality': '10000',
       'saveStreamCover': false,
       'fileNameRecordTemplate': '{{ roomId }}-{{ name }}/录制-{{ roomId }}-{{ "now" | time_zone: "Asia/Shanghai" | format_date: "yyyyMMdd-HHmmss-fff" }}-{{ title }}.flv',
+      'flvProcessorDisableSplitOnH264AnnexB': false,
       'flvProcessorSplitOnScriptTag': false,
+      'titleFilterPatterns': '',
+      'flvWriteMetadata': true,
       'webHookUrls': '',
       'webHookUrlsV2': '',
       'wpfShowTitleAndArea': true,
@@ -509,7 +518,6 @@ export class Recorder<T = any> {
       'networkTransportUseSystemProxy': false,
       'networkTransportAllowedAddressFamily': 0,
       'userScript': '',
-      'flvWriteMetadata': true,
     };
   }
   static getMockGlobalConfig(): GlobalConfigDto {
