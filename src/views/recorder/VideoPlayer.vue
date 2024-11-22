@@ -104,7 +104,6 @@ onMounted(() => {
       return router.push({ path: `/recorder/${route.params.id}/files`, hash: '#/' });
     }
     playerOptions.value = {
-      title: flvfile.value.name,
       url: calcFilePath(flvfile.value.url),
       pip: true,
       setting: true,
