@@ -170,19 +170,18 @@
     <div class="anchor">
       <n-anchor :show-rail="false" offset-target="#app-layout" position="fix" ignore-gap z-index="1" type="block"
         :internalScrollable="false" style="position:sticky; top:64px;">
-        <n-anchor-link title="弹幕录制" href="#danmaku-record" @click="(e: any) => { e.preventDefault() }" />
-        <n-anchor-link title="录制模式" href="#record-mode" @click="(e: any) => { e.preventDefault() }" />
-        <n-anchor-link title="自动分段" href="#auto-split" @click="(e: any) => { e.preventDefault() }" />
-        <n-anchor-link title="录制条件" href="#record-condition" @click="(e: any) => { e.preventDefault() }" />
-        <n-anchor-link title="文件写入" href="#storage" @click="(e: any) => { e.preventDefault() }" />
-        <n-anchor-link title="录制画质" href="#record-quality" @click="(e: any) => { e.preventDefault() }" />
-        <n-anchor-link title="Webhook" href="#webhook" @click="(e: any) => { e.preventDefault() }" />
+        <n-anchor-link title="弹幕录制" href="#danmaku-record" @click="(e) => { e.preventDefault() }" />
+        <n-anchor-link title="录制模式" href="#record-mode" @click="(e) => { e.preventDefault() }" />
+        <n-anchor-link title="自动分段" href="#auto-split" @click="(e) => { e.preventDefault() }" />
+        <n-anchor-link title="文件写入" href="#storage" @click="(e) => { e.preventDefault() }" />
+        <n-anchor-link title="录制画质" href="#record-quality" @click="(e) => { e.preventDefault() }" />
+        <n-anchor-link title="Webhook" href="#webhook" @click="(e) => { e.preventDefault() }" />
         <n-anchor-link v-if="showAdvanced" title="请求的 API Host" href="#live-api-host"
-          @click="(e: any) => { e.preventDefault() }" />
-        <n-anchor-link v-if="showAdvanced" title="Cookie" href="#cookie" @click="(e: any) => { e.preventDefault() }" />
-        <n-anchor-link v-if="showAdvanced" title="网络设置" href="#network" @click="(e: any) => { e.preventDefault() }" />
-        <n-anchor-link v-if="showAdvanced" title="时间间隔" href="#timing" @click="(e: any) => { e.preventDefault() }" />
-        <n-anchor-link v-if="showAdvanced" title="用户脚本" href="#userscript" @click="(e: any) => { e.preventDefault() }" />
+          @click="(e) => { e.preventDefault() }" />
+        <n-anchor-link v-if="showAdvanced" title="Cookie" href="#cookie" @click="(e) => { e.preventDefault() }" />
+        <n-anchor-link v-if="showAdvanced" title="网络设置" href="#network" @click="(e) => { e.preventDefault() }" />
+        <n-anchor-link v-if="showAdvanced" title="时间间隔" href="#timing" @click="(e) => { e.preventDefault() }" />
+        <n-anchor-link v-if="showAdvanced" title="用户脚本" href="#userscript" @click="(e) => { e.preventDefault() }" />
       </n-anchor>
     </div>
     <file-name-preview-modal v-model:show="showFileNamePreviewModal"

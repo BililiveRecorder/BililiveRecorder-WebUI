@@ -75,7 +75,7 @@ const jsonVerifyStatus = computed(() => {
 });
 </script>
 <template>
-  <n-modal preset="card" :show="props.show" :on-update:show="(e: any) => emits('update:show', e)"
+  <n-modal preset="card" :show="props.show" :on-update:show="(e) => emits('update:show', e)"
     :style="{ maxWidth: '600px' }" title="预览输出文件名" @after-enter="syncTemplate">
     <div>
       <div>
