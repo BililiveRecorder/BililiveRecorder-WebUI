@@ -31,7 +31,7 @@ jobs:
       - name: Build
         run: npx vite build
       - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v3.0.0
+        uses: actions/upload-artifact@v4
         with:
           name: dist
           path: dist
@@ -40,7 +40,7 @@ jobs:
         env:
           VITE_EMBEDDED_BUILD: true
       - name: Upload a Build Artifact for Embedded
-        uses: actions/upload-artifact@v3.0.0
+        uses: actions/upload-artifact@v4
         with:
           name: dist-embedded
           path: dist
@@ -53,7 +53,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Download Artifact from latest build
-        uses: actions/download-artifact@v4.1.7
+        uses: actions/download-artifact@v4
         with:
           name: dist
           path: dist
