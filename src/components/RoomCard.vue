@@ -80,11 +80,11 @@
         </n-popover>
         <n-popover>
           <template #trigger>
-            <n-button quaternary size="small" :disabled="props.room.recordMode === 1" @click="splitRecord">
+            <n-button quaternary size="small" :disabled="props.room.recordModeForThisSession === 1" @click="splitRecord">
               <n-icon :component="CutSharp" />
             </n-button>
           </template>
-          <span>{{ props.room.recordMode === 1 ? '原始数据模式禁用手动分段' : '手动分段' }}</span>
+          <span>{{ props.room.recordModeForThisSession === 1 ? '原始数据模式禁用手动分段' : '手动分段' }}</span>
         </n-popover>
       </div>
     </div>
@@ -197,6 +197,7 @@ const props = defineProps({
       'roomId': 0,
       'autoRecord': false,
       'recordMode': 0,
+      'recordModeForThisSession': 0,
       'shortId': 0,
       'name': '用户昵称',
       'title': '直播间标题',

@@ -49,23 +49,26 @@
             @changed="onChanged" />
         </n-collapse-transition>
       </div>
-      <n-collapse-transition :show="globalConfig.recordMode === 0">
-        <div id="auto-split" class="setting-box">
-          <n-h3>自动分段</n-h3>
-          <optional-input type="enum" label="分段模式" v-model:value="newConfig['optionalCuttingMode']" :enums="CuttingModes"
-            :same-as-default="true" @changed="onChanged" />
-          <n-collapse-transition :show="newConfig['optionalCuttingMode']?.value == 1">
-            <optional-input type="number" prefix="每" suffix="保存为一个文件" v-model:value="newConfig['optionalCuttingNumber']"
-              :same-as-default="true" unit="分" max-input-width="150px" @changed="onChanged" />
-          </n-collapse-transition>
-          <n-collapse-transition :show="newConfig['optionalCuttingMode']?.value == 2">
-            <optional-input type="number" prefix="每" suffix="保存为一个文件" v-model:value="newConfig['optionalCuttingNumber']"
-              :same-as-default="true" unit="MiB" max-input-width="150px" @changed="onChanged" />
-          </n-collapse-transition>
-          <optional-input type="boolean" label="直播间标题修改时切分文件" v-model:value="newConfig['optionalCuttingByTitle']"
-            :same-as-default="true" @changed="onChanged" />
-        </div>
-      </n-collapse-transition>
+      <div id="auto-split" class="setting-box">
+        <n-h3>自动分段</n-h3>
+        <n-collapse-transition :show="newConfig['optionalRecordMode']?.value == 1">
+          <n-alert type="warning" title="提示" style="margin-bottom: 1em;">
+            原始数据模式下自动分段功能不可用
+          </n-alert>
+        </n-collapse-transition>
+        <optional-input type="enum" label="分段模式" v-model:value="newConfig['optionalCuttingMode']" :enums="CuttingModes"
+          :same-as-default="true" @changed="onChanged" />
+        <n-collapse-transition :show="newConfig['optionalCuttingMode']?.value == 1">
+          <optional-input type="number" prefix="每" suffix="保存为一个文件" v-model:value="newConfig['optionalCuttingNumber']"
+            :same-as-default="true" unit="分" max-input-width="150px" @changed="onChanged" />
+        </n-collapse-transition>
+        <n-collapse-transition :show="newConfig['optionalCuttingMode']?.value == 2">
+          <optional-input type="number" prefix="每" suffix="保存为一个文件" v-model:value="newConfig['optionalCuttingNumber']"
+            :same-as-default="true" unit="MiB" max-input-width="150px" @changed="onChanged" />
+        </n-collapse-transition>
+        <optional-input type="boolean" label="直播间标题修改时切分文件" v-model:value="newConfig['optionalCuttingByTitle']"
+          :same-as-default="true" @changed="onChanged" />
+      </div>
       <div id="record-condition" class="setting-box">
         <n-h3>录制条件</n-h3>
         <p>直播间标题过滤 </p>
@@ -174,8 +177,7 @@
         :internalScrollable="false" style="position:sticky; top:64px;">
         <n-anchor-link title="弹幕录制" href="#danmaku-record" @click="(e: any) => { e.preventDefault() }" />
         <n-anchor-link title="录制模式" href="#record-mode" @click="(e: any) => { e.preventDefault() }" />
-        <n-anchor-link v-if="globalConfig.recordMode === 0" title="自动分段" href="#auto-split"
-          @click="(e: any) => { e.preventDefault() }" />
+        <n-anchor-link title="自动分段" href="#auto-split" @click="(e: any) => { e.preventDefault() }" />
         <n-anchor-link title="录制条件" href="#record-condition" @click="(e: any) => { e.preventDefault() }" />
         <n-anchor-link title="文件写入" href="#storage" @click="(e: any) => { e.preventDefault() }" />
         <n-anchor-link title="录制画质" href="#record-quality" @click="(e: any) => { e.preventDefault() }" />
@@ -197,7 +199,7 @@
 
 <script setup lang="ts">
 import { NH2, NH3, NCollapseTransition, NAnchor, NAnchorLink, NSpace, NSwitch, NA, NAlert, NButton, NAffix, NCard, useLoadingBar, useMessage } from 'naive-ui';
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { Recorder, Optional } from '../../utils/api';
 import OptionalInput from '../../components/OptionalInput.vue';
 import { recorderController } from '../../utils/RecorderController';
@@ -321,10 +323,6 @@ const newConfig = ref<{ [key: string]: ConfigItem }>({
   'optionalTitleFilterPatterns': getEmptyConfigItem(defaultConfig.value.titleFilterPatterns),
 });
 
-const globalConfig = computed(() => ({
-  recordMode: newConfig.value['optionalRecordMode']?.value ?? defaultConfig.value.recordMode,
-}));
-
 let lastload: string | undefined = '';
 
 async function init(): Promise<void> {
@@ -351,14 +349,14 @@ async function init(): Promise<void> {
     }
   }
   try {
-    const globalConfigDto = (await recorderController.recorder.getGlobalConfig()) as unknown as { [key: string]: Optional<any> };
-    const keys = Object.keys(globalConfigDto);
+    const globalConfig = (await recorderController.recorder.getGlobalConfig()) as unknown as { [key: string]: Optional<any> };
+    const keys = Object.keys(globalConfig);
     const temp: any = {};
     keys.forEach((key) => {
       const rawkey = key.substring(8, 9).toLowerCase() + key.substring(9);
       temp[key] = {
-        hasValue: globalConfigDto[key].hasValue,
-        value: globalConfigDto[key].hasValue ? globalConfigDto[key].value : defaultConfig.value[rawkey],
+        hasValue: globalConfig[key].hasValue,
+        value: globalConfig[key].hasValue ? globalConfig[key].value : defaultConfig.value[rawkey],
         defaultValue: defaultConfig.value[rawkey],
       };
     });
@@ -389,14 +387,14 @@ async function saveConfig() {
     duration: 0,
   });
   try {
-    const globalConfigDto = (await recorderController.recorder.setGlobalConfig(newConfig.value)) as unknown as { [key: string]: Optional<any> };
-    const keys = Object.keys(globalConfigDto);
+    const globalConfig = (await recorderController.recorder.setGlobalConfig(newConfig.value)) as unknown as { [key: string]: Optional<any> };
+    const keys = Object.keys(globalConfig);
     const temp: any = {};
     keys.forEach((key) => {
       const rawkey = key.substring(8, 9).toLowerCase() + key.substring(9);
       temp[key] = {
-        hasValue: globalConfigDto[key].hasValue,
-        value: globalConfigDto[key].hasValue ? globalConfigDto[key].value : defaultConfig.value[rawkey],
+        hasValue: globalConfig[key].hasValue,
+        value: globalConfig[key].hasValue ? globalConfig[key].value : defaultConfig.value[rawkey],
         defaultValue: defaultConfig.value[rawkey],
       };
     });

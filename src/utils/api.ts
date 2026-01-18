@@ -203,6 +203,7 @@ export interface RoomDto {
   roomId: number;
   autoRecord: boolean;
   recordMode: RecordMode;
+  recordModeForThisSession: RecordMode;
   shortId: number;
   name: string;
   title: string;
