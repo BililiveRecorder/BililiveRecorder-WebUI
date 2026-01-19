@@ -349,14 +349,14 @@ async function init(): Promise<void> {
     }
   }
   try {
-    const globalConfig = (await recorderController.recorder.getGlobalConfig()) as unknown as { [key: string]: Optional<any> };
-    const keys = Object.keys(globalConfig);
+    const globalConfigDto = (await recorderController.recorder.getGlobalConfig()) as unknown as { [key: string]: Optional<any> };
+    const keys = Object.keys(globalConfigDto);
     const temp: any = {};
     keys.forEach((key) => {
       const rawkey = key.substring(8, 9).toLowerCase() + key.substring(9);
       temp[key] = {
-        hasValue: globalConfig[key].hasValue,
-        value: globalConfig[key].hasValue ? globalConfig[key].value : defaultConfig.value[rawkey],
+        hasValue: globalConfigDto[key].hasValue,
+        value: globalConfigDto[key].hasValue ? globalConfigDto[key].value : defaultConfig.value[rawkey],
         defaultValue: defaultConfig.value[rawkey],
       };
     });
@@ -387,14 +387,14 @@ async function saveConfig() {
     duration: 0,
   });
   try {
-    const globalConfig = (await recorderController.recorder.setGlobalConfig(newConfig.value)) as unknown as { [key: string]: Optional<any> };
-    const keys = Object.keys(globalConfig);
+    const globalConfigDto = (await recorderController.recorder.setGlobalConfig(newConfig.value)) as unknown as { [key: string]: Optional<any> };
+    const keys = Object.keys(globalConfigDto);
     const temp: any = {};
     keys.forEach((key) => {
       const rawkey = key.substring(8, 9).toLowerCase() + key.substring(9);
       temp[key] = {
-        hasValue: globalConfig[key].hasValue,
-        value: globalConfig[key].hasValue ? globalConfig[key].value : defaultConfig.value[rawkey],
+        hasValue: globalConfigDto[key].hasValue,
+        value: globalConfigDto[key].hasValue ? globalConfigDto[key].value : defaultConfig.value[rawkey],
         defaultValue: defaultConfig.value[rawkey],
       };
     });

@@ -163,7 +163,7 @@ async function initSetting() {
     duration: 0,
   });
   let defaultConfig: { [key: string]: Optional<any> } = Recorder.getMockDefaultConfig() as any;
-  let globalConfig: { [key: string]: Optional<any> } = Recorder.getMockGlobalConfig() as any;
+  let globalConfigDto: { [key: string]: Optional<any> } = Recorder.getMockGlobalConfig() as any;
   let roomConfig: { [key: string]: Optional<any> };
   try {
     defaultConfig = await recorderController.recorder.getDefaultConfig() as any;
@@ -172,7 +172,7 @@ async function initSetting() {
     message.error('获取默认配置失败，部分设置可能与实际不符');
   }
   try {
-    globalConfig = await recorderController.recorder.getGlobalConfig() as any;
+    globalConfigDto = await recorderController.recorder.getGlobalConfig() as any;
   } catch (error: any) {
     message.error(error?.message || error.toString());
     message.error('获取全局配置失败，部分设置可能与实际不符');
@@ -185,8 +185,8 @@ async function initSetting() {
       const rawkey = key.substring(8, 9).toLowerCase() + key.substring(9);
       temp[key] = {
         hasValue: roomConfig[key].hasValue,
-        value: roomConfig[key].hasValue ? roomConfig[key].value : (globalConfig[key]?.hasValue ? globalConfig[key].value : defaultConfig[rawkey]),
-        defaultValue: (globalConfig[key]?.hasValue ? globalConfig[key].value : defaultConfig[rawkey]),
+        value: roomConfig[key].hasValue ? roomConfig[key].value : (globalConfigDto[key]?.hasValue ? globalConfigDto[key].value : defaultConfig[rawkey]),
+        defaultValue: (globalConfigDto[key]?.hasValue ? globalConfigDto[key].value : defaultConfig[rawkey]),
       };
     });
     temp['autoRecord'] = {
