@@ -82,6 +82,7 @@ export interface DefaultConfig {
   danmakuAuthenticateWithStreamerUid: boolean;
   networkTransportUseSystemProxy: boolean;
   networkTransportAllowedAddressFamily: number;
+  networkTransportBindAddress: string;
   userScript: string;
 }
 
@@ -120,6 +121,7 @@ export interface GlobalConfigDto {
   optionalDanmakuAuthenticateWithStreamerUid: BooleanOptional;
   optionalNetworkTransportUseSystemProxy: BooleanOptional;
   optionalNetworkTransportAllowedAddressFamily: AllowedAddressFamilyOptional;
+  optionalNetworkTransportBindAddress: StringOptional;
   optionalUserScript: StringOptional;
 }
 
@@ -517,6 +519,7 @@ export class Recorder<T = any> {
       'danmakuAuthenticateWithStreamerUid': false,
       'networkTransportUseSystemProxy': false,
       'networkTransportAllowedAddressFamily': 0,
+      'networkTransportBindAddress': '',
       'userScript': '',
     };
   }
