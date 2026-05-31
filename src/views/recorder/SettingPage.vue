@@ -123,6 +123,9 @@
           <optional-input type="enum" label="允许使用的网络类型"
             v-model:value="newConfig['optionalNetworkTransportAllowedAddressFamily']" :enums="IPFamilies"
             :same-as-default="true" @changed="onChanged" />
+          <optional-input type="text" label="绑定的网络接口或IP地址"
+            v-model:value="newConfig['optionalNetworkTransportBindAddress']" :same-as-default="true"
+            @changed="onChanged" />
           <optional-input type="enum" label="弹幕链接协议" v-model:value="newConfig['optionalDanmakuTransport']"
             :enums="DanmakuTransport" :same-as-default="true" @changed="onChanged" />
           <optional-input type="boolean" label="使用直播间主播的uid进行弹幕服务器认证"
@@ -312,6 +315,7 @@ const newConfig = ref<{ [key: string]: ConfigItem }>({
   'optionalDanmakuAuthenticateWithStreamerUid': getEmptyConfigItem(defaultConfig.value.danmakuAuthenticateWithStreamerUid),
   'optionalNetworkTransportUseSystemProxy': getEmptyConfigItem(defaultConfig.value.networkTransportUseSystemProxy),
   'optionalNetworkTransportAllowedAddressFamily': getEmptyConfigItem(defaultConfig.value.networkTransportAllowedAddressFamily),
+  'optionalNetworkTransportBindAddress': getEmptyConfigItem(defaultConfig.value.networkTransportBindAddress),
   'optionalUserScript': getEmptyConfigItem(defaultConfig.value.userScript),
   'optionalSaveStreamCover': getEmptyConfigItem(defaultConfig.value.saveStreamCover),
   'optionalFlvWriteMetadata': getEmptyConfigItem(defaultConfig.value.flvWriteMetadata),
