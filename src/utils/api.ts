@@ -1,4 +1,4 @@
-/* eslint-disable no-unused-vars */
+
 
 export interface Optional<T = any> {
   hasValue: boolean;
@@ -329,7 +329,7 @@ export interface JsonLogDto {
   logs: Array<RecorderLog>;
 }
 
-/* eslint-enable no-unused-vars */
+
 export class Recorder<T = any> {
   public readonly host: string;
   private headers: { [key: string]: string; } | undefined;
@@ -358,7 +358,7 @@ export class Recorder<T = any> {
       }
       throw error ? error : new Error(`${response.status} ${response.statusText}`);
     }
-    return rawText ? await response.text() : response.json();
+    return (rawText ? await response.text() : await response.json()) as T;
   }
 
 
@@ -485,42 +485,42 @@ export class Recorder<T = any> {
 
   static getMockDefaultConfig(): DefaultConfig {
     return {
-      'recordMode': 0,
-      'cuttingMode': 0,
-      'cuttingNumber': 100,
-      'cuttingByTitle': false,
-      'recordDanmaku': false,
-      'recordDanmakuRaw': false,
-      'recordDanmakuSuperChat': true,
-      'recordDanmakuGift': false,
-      'recordDanmakuGuard': true,
-      'recordingQuality': '10000',
-      'saveStreamCover': false,
-      'fileNameRecordTemplate': '{{ roomId }}-{{ name }}/录制-{{ roomId }}-{{ "now" | time_zone: "Asia/Shanghai" | format_date: "yyyyMMdd-HHmmss-fff" }}-{{ title }}.flv',
-      'flvProcessorDisableSplitOnH264AnnexB': false,
-      'flvProcessorSplitOnScriptTag': false,
-      'titleFilterPatterns': '',
-      'flvWriteMetadata': true,
-      'webHookUrls': '',
-      'webHookUrlsV2': '',
-      'wpfShowTitleAndArea': true,
-      'wpfNotifyStreamStart': false,
-      'cookie': '',
-      'liveApiHost': 'https://api.live.bilibili.com',
-      'timingCheckInterval': 600,
-      'timingApiTimeout': 10000,
-      'timingStreamRetry': 6000,
-      'timingStreamRetryNoQn': 90,
-      'timingStreamConnect': 5000,
-      'timingDanmakuRetry': 9000,
-      'timingWatchdogTimeout': 10000,
-      'recordDanmakuFlushInterval': 20,
-      'danmakuTransport': 0,
-      'danmakuAuthenticateWithStreamerUid': false,
-      'networkTransportUseSystemProxy': false,
-      'networkTransportAllowedAddressFamily': 0,
-      'networkTransportBindAddress': '',
-      'userScript': '',
+      "recordMode": 0,
+      "cuttingMode": 0,
+      "cuttingNumber": 100,
+      "cuttingByTitle": false,
+      "recordDanmaku": false,
+      "recordDanmakuRaw": false,
+      "recordDanmakuSuperChat": true,
+      "recordDanmakuGift": false,
+      "recordDanmakuGuard": true,
+      "saveStreamCover": false,
+      "recordingQuality": "avc10000,hevc10000",
+      "fileNameRecordTemplate": "{{ roomId }}-{{ name | unescape }}/录制-{{ roomId }}-{{ \"now\" | time_zone: \"Asia/Shanghai\" | format_date: \"yyyyMMdd-HHmmss-fff\" }}-{{ title | unescape }}.flv",
+      "flvProcessorSplitOnScriptTag": false,
+      "flvProcessorDisableSplitOnH264AnnexB": false,
+      "flvWriteMetadata": true,
+      "titleFilterPatterns": "",
+      "webHookUrls": "",
+      "webHookUrlsV2": "",
+      "wpfShowTitleAndArea": true,
+      "wpfNotifyStreamStart": false,
+      "cookie": "",
+      "liveApiHost": "https://api.live.bilibili.com",
+      "timingCheckInterval": 180,
+      "timingApiTimeout": 10000,
+      "timingStreamRetry": 6000,
+      "timingStreamRetryNoQn": 90,
+      "timingStreamConnect": 5000,
+      "timingDanmakuRetry": 9000,
+      "timingWatchdogTimeout": 10000,
+      "recordDanmakuFlushInterval": 20,
+      "danmakuTransport": 3,
+      "danmakuAuthenticateWithStreamerUid": false,
+      "networkTransportUseSystemProxy": false,
+      "networkTransportAllowedAddressFamily": 0,
+      "networkTransportBindAddress": "",
+      "userScript": ""
     };
   }
   static getMockGlobalConfig(): GlobalConfigDto {
@@ -530,7 +530,7 @@ export class Recorder<T = any> {
       const key = 'Optional' + e[0].toUpperCase() + e.slice(1 - e.length);
       result[key] = {
         hasValue: false,
-        // @ts-ignore
+        // @ts-expect-error not fully matching type, but it's okay
         value: defaultConfig[e],
       };
     });

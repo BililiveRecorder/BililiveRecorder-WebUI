@@ -92,7 +92,7 @@
 </template>
 <script lang="ts">
 import { RoomDto } from '../../utils/api';
-import { h, onMounted, onUnmounted, Ref, ref } from 'vue';
+import { h, onMounted, onUnmounted, ref } from 'vue';
 import {
   NSpace, NGrid, NGridItem, NModal, NDrawer, NDrawerContent, NAlert,
   NH2, NButton, NIcon, NForm, NFormItem, NSelect, NInput, NSwitch,
@@ -106,7 +106,7 @@ import { recorderController } from '../../utils/RecorderController';
 import { msToHuman, byteToHuman, dateToTimeWithMs } from '../../utils/unitConvert';
 import { STORAGE_ROOM_ORDER_METHOD } from '../../const';
 </script>
-<script setup lang = "ts" >
+<script setup lang="ts">
 enum ORDERMETHODS {
   NONE = 1,
   ROOMID,
@@ -246,7 +246,6 @@ function resort(rooms: RoomDto[]) {
           break;
         default:
           return 0;
-          break;
       }
     }
     return 0;

@@ -48,7 +48,7 @@
 import { NProgress, NButton, NCollapseTransition, NCollapse, NCollapseItem, NCard, NGrid, NCheckbox, NGridItem } from 'naive-ui';
 import { recorderController, Server } from '@/utils/RecorderController';
 import { Ref, ref } from 'vue';
-import { Status } from 'naive-ui/es/progress/src/interface';
+import { ProgressStatus } from 'naive-ui';
 import { Recorder } from '@/utils/api';
 interface GRoomInfo {
   r: {
@@ -67,7 +67,7 @@ const controller = recorderController;
 const recorders: Ref<Server[]> = ref(controller.listServers());
 
 const progress = ref(0);
-const status: Ref<Status> = ref('info');
+const status: Ref<ProgressStatus> = ref('info');
 const logs: Ref<string[]> = ref([]);
 const scanned = ref(false);
 const showLog = ref(true);

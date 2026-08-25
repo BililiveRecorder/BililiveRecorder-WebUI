@@ -6,14 +6,14 @@
 export type ArtPlayerOptions = Omit<ConstructorParameters<typeof ArtPlayer>[0], 'container' | 'customType'>
 
 import { ref, onMounted, onUnmounted, PropType } from 'vue';
-import ArtPlayer, { } from 'artplayer';
+import ArtPlayer from 'artplayer';
 import artPlayerPluginDanmuku from 'artplayer-plugin-danmuku';
 import mpegtsjs from 'mpegts.js';
 
 </script>
 <script setup lang="ts">
 
-let instance: Artplayer | null = null;
+let instance: ArtPlayer | null = null;
 defineExpose({
   instance,
 });

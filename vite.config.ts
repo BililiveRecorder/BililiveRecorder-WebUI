@@ -1,7 +1,6 @@
 import { PluginOption, defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
-import { visualizer } from 'rollup-plugin-visualizer';
 import { execSync } from 'child_process';
 import { inc } from 'semver';
 import { resolve } from 'path';
@@ -23,7 +22,7 @@ function getVersion() {
 export default defineConfig(({ command }) => {
   return {
     base: process.env.BASE_URL || './',
-    plugins: [vue(), vueJsx(), visualizer()] as PluginOption[],
+    plugins: [vue(), vueJsx()] as PluginOption[],
     server: {
       proxy: {
         '/api': {

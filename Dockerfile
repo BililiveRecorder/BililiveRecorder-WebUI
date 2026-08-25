@@ -1,4 +1,4 @@
-FROM node:16-alpine AS BUILD
+FROM node:24-alpine AS BUILD
 COPY . /src
 RUN apk add git
 RUN cd /src && npm install && npx vite build

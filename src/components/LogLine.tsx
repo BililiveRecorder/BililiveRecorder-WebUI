@@ -1,3 +1,4 @@
+import { JSX } from 'vue/jsx-runtime';
 import { RecorderLog } from '../utils/api';
 
 export interface FormatConfig {

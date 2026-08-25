@@ -171,7 +171,7 @@
       </n-affix>
     </div>
     <div class="anchor">
-      <n-anchor :show-rail="false" offset-target="#app-layout" position="fix" ignore-gap z-index="1" type="block"
+      <n-anchor :show-rail="false" offset-target="#app-layout" position="fixed" ignore-gap z-index="1" type="block"
         :internalScrollable="false" style="position:sticky; top:64px;">
         <n-anchor-link title="弹幕录制" href="#danmaku-record" @click="(e: any) => { e.preventDefault() }" />
         <n-anchor-link title="录制模式" href="#record-mode" @click="(e: any) => { e.preventDefault() }" />
