@@ -123,7 +123,7 @@
           <optional-input type="enum" label="允许使用的网络类型"
             v-model:value="newConfig['optionalNetworkTransportAllowedAddressFamily']" :enums="IPFamilies"
             :same-as-default="true" @changed="onChanged" />
-          <optional-input type="text" label="绑定的网络接口或IP地址"
+          <network-interface-input type="text" label="绑定的网络接口或IP地址"
             v-model:value="newConfig['optionalNetworkTransportBindAddress']" :same-as-default="true"
             @changed="onChanged" />
           <optional-input type="enum" label="弹幕链接协议" v-model:value="newConfig['optionalDanmakuTransport']"
@@ -200,6 +200,7 @@ import { NH2, NH3, NCollapseTransition, NAnchor, NAnchorLink, NSpace, NSwitch, N
 import { onMounted, ref } from 'vue';
 import { Recorder, Optional } from '../../utils/api';
 import OptionalInput from '../../components/OptionalInput.vue';
+import NetworkInterfaceInput from '../../components/NetworkInterfaceInput.vue';
 import { recorderController } from '../../utils/RecorderController';
 import FileNamePreviewModal from '../../components/FileNamePreviewModal.vue';
 

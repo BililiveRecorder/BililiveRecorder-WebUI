@@ -329,6 +329,13 @@ export interface JsonLogDto {
   logs: Array<RecorderLog>;
 }
 
+export interface NetworkInterfaceDto {
+  name: string;
+  description: string;
+  networkInterfaceType: string;
+  addresses: string[];
+}
+
 
 export class Recorder<T = any> {
   public readonly host: string;
@@ -384,6 +391,10 @@ export class Recorder<T = any> {
 
   async generateFileName(template: string, context: FileNameTemplateContextDto): Promise<FileNameTemplateOutput> {
     return await this.request('POST', 'api/misc/generatefilename', { template, context } as GenerateFileNameInput);
+  }
+
+  async getNetworkInterfaces(): Promise<NetworkInterfaceDto[]> {
+    return await this.request<NetworkInterfaceDto[]>('GET', 'api/misc/networkinterfaces');
   }
 
   async getRoomList(): Promise<RoomDto[]> {
