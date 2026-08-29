@@ -204,6 +204,8 @@ export interface RoomDto {
   objectId: string;
   roomId: number;
   autoRecord: boolean;
+  recordMode: RecordMode;
+  recordModeForThisSession: RecordMode;
   shortId: number;
   name: string;
   title: string;

@@ -51,6 +51,11 @@
       </div>
       <div id="auto-split" class="setting-box">
         <n-h3>自动分段</n-h3>
+        <n-collapse-transition :show="newConfig['optionalRecordMode']?.value == 1">
+          <n-alert type="warning" title="提示" style="margin-bottom: 1em;">
+            原始数据模式下自动分段功能不可用
+          </n-alert>
+        </n-collapse-transition>
         <optional-input type="enum" label="分段模式" v-model:value="newConfig['optionalCuttingMode']" :enums="CuttingModes"
           :same-as-default="true" @changed="onChanged" />
         <n-collapse-transition :show="newConfig['optionalCuttingMode']?.value == 1">
@@ -349,14 +354,14 @@ async function init(): Promise<void> {
     }
   }
   try {
-    const globalConfig = (await recorderController.recorder.getGlobalConfig()) as unknown as { [key: string]: Optional<any> };
-    const keys = Object.keys(globalConfig);
+    const globalConfigDto = (await recorderController.recorder.getGlobalConfig()) as unknown as { [key: string]: Optional<any> };
+    const keys = Object.keys(globalConfigDto);
     const temp: any = {};
     keys.forEach((key) => {
       const rawkey = key.substring(8, 9).toLowerCase() + key.substring(9);
       temp[key] = {
-        hasValue: globalConfig[key].hasValue,
-        value: globalConfig[key].hasValue ? globalConfig[key].value : defaultConfig.value[rawkey],
+        hasValue: globalConfigDto[key].hasValue,
+        value: globalConfigDto[key].hasValue ? globalConfigDto[key].value : defaultConfig.value[rawkey],
         defaultValue: defaultConfig.value[rawkey],
       };
     });
@@ -387,14 +392,14 @@ async function saveConfig() {
     duration: 0,
   });
   try {
-    const globalConfig = (await recorderController.recorder.setGlobalConfig(newConfig.value)) as unknown as { [key: string]: Optional<any> };
-    const keys = Object.keys(globalConfig);
+    const globalConfigDto = (await recorderController.recorder.setGlobalConfig(newConfig.value)) as unknown as { [key: string]: Optional<any> };
+    const keys = Object.keys(globalConfigDto);
     const temp: any = {};
     keys.forEach((key) => {
       const rawkey = key.substring(8, 9).toLowerCase() + key.substring(9);
       temp[key] = {
-        hasValue: globalConfig[key].hasValue,
-        value: globalConfig[key].hasValue ? globalConfig[key].value : defaultConfig.value[rawkey],
+        hasValue: globalConfigDto[key].hasValue,
+        value: globalConfigDto[key].hasValue ? globalConfigDto[key].value : defaultConfig.value[rawkey],
         defaultValue: defaultConfig.value[rawkey],
       };
     });
