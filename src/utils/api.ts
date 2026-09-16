@@ -136,12 +136,9 @@ export interface RecorderVersion {
   preReleaseNumber: string;
   weightedPreReleaseNumber: string;
   buildMetaData: string;
-  buildMetaDataPadded: string;
   fullBuildMetaData: string;
   majorMinorPatch: string;
   semVer: string;
-  legacySemVer: string;
-  legacySemVerPadded: string;
   assemblySemVer: string;
   assemblySemFileVer: string;
   fullSemVer: string;
@@ -150,13 +147,8 @@ export interface RecorderVersion {
   escapedBranchName: string;
   sha: string;
   shortSha: string;
-  nuGetVersionV2: string;
-  nuGetVersion: string;
-  nuGetPreReleaseTagV2: string;
-  nuGetPreReleaseTag: string;
   versionSourceSha: string;
   commitsSinceVersionSource: string;
-  commitsSinceVersionSourcePadded: string;
   uncommittedChanges: string;
   commitDate: string;
 }
