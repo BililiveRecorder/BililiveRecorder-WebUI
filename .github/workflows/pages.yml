@@ -22,9 +22,12 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: '.node-version'
       - name: NPM install
         run: npm install
       - name: Build for Github Pages
@@ -34,7 +37,7 @@ jobs:
           sed -i 's/<base href="\/">/<base href="\/BililiveRecorder-WebUI\/">/g' dist/index.html
           cp dist/index.html dist/404.html
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v4
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
