@@ -80,18 +80,18 @@
         </n-popover>
         <n-popover>
           <template #trigger>
-            <n-button quaternary size="small" @click="splitRecord">
+            <n-button quaternary size="small" :disabled="isRawMode" @click="splitRecord">
               <n-icon :component="CutSharp" />
             </n-button>
           </template>
-          <span>手动分段</span>
+          <span>{{ isRawMode ? '原始数据模式禁用手动分段' : '手动分段' }}</span>
         </n-popover>
       </div>
     </div>
   </n-card>
 </template>
 <script lang="ts">
-import { Component, h, onMounted, onUnmounted, PropType, ref, watch } from 'vue';
+import { Component, computed, h, onMounted, onUnmounted, PropType, ref, watch } from 'vue';
 import {
   DropdownOption, useMessage, NCard, NH3, NIcon,
   NSpace, NTooltip, NDropdown, NButton, NSkeleton, useThemeVars, NPopover,
@@ -196,6 +196,8 @@ const props = defineProps({
       'objectId': '00000000-0000-0000-0000-000000000000',
       'roomId': 0,
       'autoRecord': false,
+      'recordMode': 0,
+      'recordModeForThisSession': 0,
       'shortId': 0,
       'name': '用户昵称',
       'title': '直播间标题',
@@ -250,6 +252,10 @@ const props = defineProps({
     default: false,
   },
 });
+
+const isRawMode = computed(() =>
+  (props.room.recordModeForThisSession ?? props.room.recordMode) === 1
+);
 
 const emit = defineEmits(['start-record', 'stop-record', 'refresh-room-info', 'start-auto-record',
   'stop-auto-record', 'delete', 'self-update', 'show-stats', 'room-setting']);

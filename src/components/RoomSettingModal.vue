@@ -27,6 +27,11 @@
       </div>
       <div id="auto-split" class="setting-box">
         <n-h3>自动分段</n-h3>
+        <n-collapse-transition :show="newRoomConfig['optionalRecordMode']?.value == 1">
+          <n-alert type="warning" title="提示" style="margin-bottom: 1em;">
+            原始数据模式下自动分段功能不可用
+          </n-alert>
+        </n-collapse-transition>
         <optional-input type="enum" v-model:value="newRoomConfig['optionalCuttingMode']" :enums="CuttingModes" />
         <n-collapse-transition :show="newRoomConfig['optionalCuttingMode'].value == 1">
           <optional-input type="number" prefix="每" suffix="保存为一个文件"
@@ -75,7 +80,7 @@
 <script lang="ts">
 import { ref, watch } from 'vue';
 import {
-  useLoadingBar, useMessage, NCollapseTransition, NH3,
+  useLoadingBar, useMessage, NAlert, NCollapseTransition, NH3,
   NSpace, NButton, NModal, NSkeleton,
 } from 'naive-ui';
 import OptionalInput from './OptionalInput.vue';
@@ -158,7 +163,7 @@ async function initSetting() {
     duration: 0,
   });
   let defaultConfig: { [key: string]: Optional<any> } = Recorder.getMockDefaultConfig() as any;
-  let globalConfig: { [key: string]: Optional<any> } = Recorder.getMockGlobalConfig() as any;
+  let globalConfigDto: { [key: string]: Optional<any> } = Recorder.getMockGlobalConfig() as any;
   let roomConfig: { [key: string]: Optional<any> };
   try {
     defaultConfig = await recorderController.recorder.getDefaultConfig() as any;
@@ -167,7 +172,7 @@ async function initSetting() {
     message.error('获取默认配置失败，部分设置可能与实际不符');
   }
   try {
-    globalConfig = await recorderController.recorder.getGlobalConfig() as any;
+    globalConfigDto = await recorderController.recorder.getGlobalConfig() as any;
   } catch (error: any) {
     message.error(error?.message || error.toString());
     message.error('获取全局配置失败，部分设置可能与实际不符');
@@ -180,8 +185,8 @@ async function initSetting() {
       const rawkey = key.substring(8, 9).toLowerCase() + key.substring(9);
       temp[key] = {
         hasValue: roomConfig[key].hasValue,
-        value: roomConfig[key].hasValue ? roomConfig[key].value : (globalConfig[key]?.hasValue ? globalConfig[key].value : defaultConfig[rawkey]),
-        defaultValue: (globalConfig[key]?.hasValue ? globalConfig[key].value : defaultConfig[rawkey]),
+        value: roomConfig[key].hasValue ? roomConfig[key].value : (globalConfigDto[key]?.hasValue ? globalConfigDto[key].value : defaultConfig[rawkey]),
+        defaultValue: (globalConfigDto[key]?.hasValue ? globalConfigDto[key].value : defaultConfig[rawkey]),
       };
     });
     temp['autoRecord'] = {
